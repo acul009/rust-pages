@@ -1,13 +1,13 @@
 use crate::widget::{Element, Widget};
 use std::fmt::Write;
 
-pub struct Div<'a> {
+pub struct Ul<'a> {
     children: Vec<Element<'a>>,
 }
 
-impl<'a> Div<'a> {
-    pub fn new() -> Self {
-        Div {
+impl<'a> Ul<'a> {
+    pub fn new() -> Ul<'a> {
+        Ul {
             children: Vec::new(),
         }
     }
@@ -18,19 +18,19 @@ impl<'a> Div<'a> {
         }
     }
 
-    pub fn child(mut self, child: impl Into<Element<'a>>) -> Self {
-        self.children.push(child.into());
+    pub fn li(mut self, content: impl Into<Element<'a>>) -> Self {
+        self.children.push(content.into());
         self
     }
 }
 
-impl Widget for Div<'_> {
+impl Widget for Ul<'_> {
     fn html(&self, f: &mut String) -> std::fmt::Result {
-        write!(f, "<div>")?;
-        for child in &self.children {
-            child.html(f)?;
+        write!(f, "<ul>")?;
+        for element in &self.children {
+            element.html(f)?;
         }
-        write!(f, "</div>")?;
+        write!(f, "</ul>")?;
         Ok(())
     }
 }

@@ -1,3 +1,6 @@
+[workspace]
+members = [ "site"]
+
 [package]
 name = "rust-pages"
 version = "0.1.0"

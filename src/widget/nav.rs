@@ -1,13 +1,13 @@
 use crate::widget::{Element, Widget};
 use std::fmt::Write;
 
-pub struct Div<'a> {
+pub struct Nav<'a> {
     children: Vec<Element<'a>>,
 }
 
-impl<'a> Div<'a> {
+impl<'a> Nav<'a> {
     pub fn new() -> Self {
-        Div {
+        Nav {
             children: Vec::new(),
         }
     }
@@ -24,13 +24,12 @@ impl<'a> Div<'a> {
     }
 }
 
-impl Widget for Div<'_> {
+impl<'a> Widget for Nav<'a> {
     fn html(&self, f: &mut String) -> std::fmt::Result {
-        write!(f, "<div>")?;
-        for child in &self.children {
-            child.html(f)?;
+        write!(f, "<nav>")?;
+        for item in &self.children {
+            item.html(f)?;
         }
-        write!(f, "</div>")?;
-        Ok(())
+        write!(f, "</nav>")
     }
 }

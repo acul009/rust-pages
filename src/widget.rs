@@ -1,14 +1,16 @@
-mod div;
+pub mod a;
+pub mod details;
+pub mod div;
+mod helpers;
+pub mod nav;
+pub mod p;
+pub mod str;
+pub mod ul;
 
-pub trait Page {
-    type Data;
-
-    fn load_data(&self) -> anyhow::Result<Self::Data>;
-    fn render(data: &Self::Data) -> impl Widget;
-}
+pub use helpers::*;
 
 pub trait Widget {
-    fn to_html(&self) -> String;
+    fn html(&self, f: &mut String) -> std::fmt::Result;
 }
 
 pub struct Element<'a> {
@@ -20,6 +22,10 @@ impl<'a> Element<'a> {
         Element {
             widget: Box::new(widget),
         }
+    }
+
+    pub fn html(&self, f: &mut String) -> std::fmt::Result {
+        self.widget.html(f)
     }
 }
 
