@@ -1,5 +1,5 @@
 use rust_pages::{
-    nav, ul,
+    div, nav, ul,
     widget::{Component, ContextElement, ToElement, a, details},
 };
 
@@ -13,7 +13,7 @@ impl NavBar {
 
 impl Component for NavBar {
     fn view(&self) -> ContextElement<'_, Self> {
-        nav!(ul![
+        div![nav!(ul![
             a("Notdienst").href("/emergency"),
             details(ul![
                 a("Dienste").href("/services"),
@@ -29,11 +29,8 @@ impl Component for NavBar {
             ])
             .summary("Unternehmen"),
             a("Kontakt").href("/contact")
-        ])
+        ])]
+        .class("test2")
         .to_element()
-    }
-
-    fn style(&self) -> Option<&'static str> {
-        todo!()
     }
 }

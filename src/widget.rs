@@ -10,20 +10,22 @@ pub mod ul;
 use std::{marker::PhantomData, ops::Deref};
 
 pub use helpers::*;
+use itertools::Itertools;
 
 use crate::html_sanitize;
 
-pub trait Renderable {
-    fn html(&self, f: &mut String) -> std::fmt::Result;
-}
-
 pub trait Component {
     fn view(&self) -> ContextElement<'_, Self>;
-    fn style(&self) -> Option<&'static str>;
 }
 
 pub trait Widget<Context> {
     fn html(&self, f: &mut String) -> std::fmt::Result;
+}
+
+impl<Context, C: Component> Widget<Context> for C {
+    fn html(&self, f: &mut String) -> std::fmt::Result {
+        Component::view(self).html(f)
+    }
 }
 
 pub trait WidgetWrapper {
@@ -36,47 +38,19 @@ impl<'a, Context> WidgetWrapper for Box<dyn Widget<Context> + 'a> {
     }
 }
 
-pub trait ComponentWrapper {
-    fn view(&self) -> ElementWrapper<'_>;
-    fn style(&self) -> Option<&'static str>;
-}
-
-pub enum ContextElement<'a, Context: ?Sized> {
-    Widget(Box<dyn Widget<Context> + 'a>),
-    Component(Box<dyn ComponentWrapper + 'a>),
+pub struct ContextElement<'a, Context: ?Sized> {
+    widget: Box<dyn Widget<Context> + 'a>,
 }
 
 impl<'a, Context> ContextElement<'a, Context> {
     pub fn new<W: Widget<Context> + 'a>(widget: W) -> Self {
-        ContextElement::Widget(Box::new(widget))
+        Self {
+            widget: Box::new(widget),
+        }
     }
 
     pub fn html(&self, f: &mut String) -> std::fmt::Result {
-        match self {
-            ContextElement::Widget(widget) => widget.html(f),
-            ContextElement::Component(component) => component.view().html(f),
-        }
-    }
-}
-
-pub enum ElementWrapper<'a> {
-    Widget(Box<dyn WidgetWrapper + 'a>),
-    Component(Box<dyn ComponentWrapper + 'a>),
-}
-
-impl<'a> ElementWrapper<'a> {
-    pub fn new<Context: 'a>(element: ContextElement<'a, Context>) -> Self {
-        match element {
-            ContextElement::Widget(widget) => ElementWrapper::Widget(Box::new(widget)),
-            ContextElement::Component(component) => ElementWrapper::Component(component),
-        }
-    }
-
-    pub fn html(&'a self, f: &mut String) -> std::fmt::Result {
-        match self {
-            ElementWrapper::Widget(widget) => widget.html(f),
-            ElementWrapper::Component(component) => component.view().html(f),
-        }
+        self.widget.html(f)
     }
 }
 
@@ -86,7 +60,7 @@ pub trait ToElement<'a, Context> {
 
 impl<'a, Context, W: Widget<Context> + 'a> ToElement<'a, Context> for W {
     fn to_element(self) -> ContextElement<'a, Context> {
-        ContextElement::Widget(Box::new(self))
+        ContextElement::new(self)
     }
 }
 
@@ -97,6 +71,9 @@ pub trait Class<Context> {
 
 impl<Context> Class<Context> for &str {
     fn resolve(&self) -> String {
-        html_sanitize(format!("{}-{}", std::any::type_name::<Context>(), self))
+        let scope_name = std::any::type_name::<Context>().replace(':', "_");
+        self.split_ascii_whitespace()
+            .map(|class| format!("{}-{}", scope_name, html_sanitize(class)))
+            .join(" ")
     }
 }

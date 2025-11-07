@@ -1,10 +1,9 @@
 use crate::widget::{Class, ContextElement, Widget};
-use std::{fmt::Write, marker::PhantomData};
+use std::fmt::Write;
 
 pub struct Div<'a, Context> {
     children: Vec<ContextElement<'a, Context>>,
     class: Option<String>,
-    context: PhantomData<Context>,
 }
 
 impl<'a, Context> Div<'a, Context> {
@@ -12,7 +11,6 @@ impl<'a, Context> Div<'a, Context> {
         Self {
             children: Vec::new(),
             class: None,
-            context: PhantomData,
         }
     }
 
@@ -20,7 +18,6 @@ impl<'a, Context> Div<'a, Context> {
         Self {
             children: children.into_iter().collect(),
             class: None,
-            context: PhantomData,
         }
     }
 

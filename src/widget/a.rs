@@ -1,7 +1,4 @@
-use std::{
-    borrow::Cow,
-    fmt::{Display, Write},
-};
+use std::{borrow::Cow, fmt::Write};
 
 use crate::{
     html_sanitize,
