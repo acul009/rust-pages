@@ -1,8 +1,5 @@
-use std::borrow::Cow;
-
-use crate::widget::Widget;
-
 pub mod page;
+pub mod style;
 pub mod widget;
 
 fn html_sanitize<'a>(input: impl AsRef<str>) -> String {

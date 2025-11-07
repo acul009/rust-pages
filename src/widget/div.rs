@@ -1,4 +1,7 @@
-use crate::widget::{Class, ContextElement, Widget};
+use crate::{
+    style::Class,
+    widget::{ContextElement, Widget},
+};
 use std::fmt::Write;
 
 pub struct Div<'a, Context> {

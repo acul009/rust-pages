@@ -63,17 +63,3 @@ impl<'a, Context, W: Widget<Context> + 'a> ToElement<'a, Context> for W {
         ContextElement::new(self)
     }
 }
-
-pub trait Class<Context> {
-    // basically just appends the type id to the class name
-    fn resolve(&self) -> String;
-}
-
-impl<Context> Class<Context> for &str {
-    fn resolve(&self) -> String {
-        let scope_name = std::any::type_name::<Context>().replace(':', "_");
-        self.split_ascii_whitespace()
-            .map(|class| format!("{}-{}", scope_name, html_sanitize(class)))
-            .join(" ")
-    }
-}
