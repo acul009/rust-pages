@@ -1,30 +1,33 @@
-use std::fmt::{Display, Write};
+use std::{
+    borrow::Cow,
+    fmt::{Display, Write},
+};
 
 use crate::{
     html_sanitize,
-    widget::{Element, Widget},
+    widget::{ContextElement, ToElement, Widget},
 };
 
-pub struct A<'a> {
-    href: String,
-    content: Element<'a>,
+pub struct A<'a, Context> {
+    href: Cow<'a, str>,
+    content: ContextElement<'a, Context>,
 }
 
-impl<'a> A<'a> {
-    pub fn new(content: impl Into<Element<'a>>) -> A<'a> {
+impl<'a, Context> A<'a, Context> {
+    pub fn new(content: impl ToElement<'a, Context>) -> A<'a, Context> {
         A {
-            href: String::new(),
-            content: content.into(),
+            href: Cow::Borrowed(""),
+            content: content.to_element(),
         }
     }
 
-    pub fn href(mut self, href: impl Display) -> Self {
-        self.href = href.to_string();
+    pub fn href(mut self, href: impl Into<Cow<'a, str>>) -> Self {
+        self.href = href.into();
         self
     }
 }
 
-impl<'a> Widget for A<'a> {
+impl<Context> Widget<Context> for A<'_, Context> {
     fn html(&self, f: &mut String) -> std::fmt::Result {
         write!(f, "<a href=\"{}\">", html_sanitize(&self.href))?;
         self.content.html(f)?;

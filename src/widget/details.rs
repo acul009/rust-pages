@@ -1,35 +1,31 @@
-use crate::widget::{Element, Widget};
+use crate::widget::{ContextElement, ToElement, Widget};
 use std::fmt::Write;
 
-pub struct Details<'a> {
-    summary: Option<Element<'a>>,
-    content: Element<'a>,
+pub struct Details<'a, Context> {
+    summary: Option<ContextElement<'a, Context>>,
+    content: ContextElement<'a, Context>,
 }
 
-pub fn details<'a>(content: impl Into<Element<'a>>) -> Details<'a> {
-    Details::new(content.into())
-}
-
-impl<'a> Details<'a> {
-    pub fn new(content: Element<'a>) -> Self {
+impl<'a, Context> Details<'a, Context> {
+    pub fn new(content: impl ToElement<'a, Context>) -> Self {
         Details {
             summary: None,
-            content,
+            content: content.to_element(),
         }
     }
 
-    pub fn summary(mut self, summary: impl Into<Element<'a>>) -> Self {
-        self.summary = Some(summary.into());
+    pub fn summary(mut self, summary: impl ToElement<'a, Context>) -> Self {
+        self.summary = Some(summary.to_element());
         self
     }
 
-    pub fn content(mut self, content: impl Into<Element<'a>>) -> Self {
-        self.content = content.into();
+    pub fn content(mut self, content: impl ToElement<'a, Context>) -> Self {
+        self.content = content.to_element();
         self
     }
 }
 
-impl<'a> Widget for Details<'a> {
+impl<Context> Widget<Context> for Details<'_, Context> {
     fn html(&self, f: &mut String) -> std::fmt::Result {
         write!(f, "<details><summary>")?;
         if let Some(summary) = &self.summary {

@@ -14,7 +14,7 @@ impl<'a> P<'a> {
     }
 }
 
-impl<'a> Widget for P<'a> {
+impl<'a, Context> Widget<Context> for P<'a> {
     fn html(&self, f: &mut String) -> std::fmt::Result {
         write!(f, "<p>{}</p>", html_sanitize(self.text.as_ref()))
     }

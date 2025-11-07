@@ -1,9 +1,13 @@
 use std::{fs::File, io::Write};
 
+mod navbar;
+
 use rust_pages::{
     div, nav, render, ul,
-    widget::{Element, a, details::details},
+    widget::{Component, Element, ToElement, a, details::details},
 };
+
+use crate::navbar::NavBar;
 
 fn main() {
     let html = render(div![navbar(), "Hello 2"]);
@@ -13,23 +17,14 @@ fn main() {
     println!("{}", html);
 }
 
-fn navbar() -> Element<'static> {
-    nav!(ul![
-        a("Notdienst").href("/emergency"),
-        details(ul![
-            a("Dienste").href("/services"),
-            a("E-Mail").href("/services/email"),
-            a("Linux & Proxmox").href("/services/linux")
-        ])
-        .summary("Leistungen"),
-        a("Preise").href("/pricing"),
-        a("Fernwartung").href("/remote"),
-        details(ul![
-            a("Unsere Prinzipien").href("/about_us"),
-            a("Das Team").href("/about_us/people")
-        ])
-        .summary("Unternehmen"),
-        a("Kontakt").href("/contact")
-    ])
-    .into()
+pub struct Page {}
+
+impl Component for Page {
+    fn view(&self) -> rust_pages::widget::ContextElement<'_, Self> {
+        div!["Test", NavBar::new()].to_element()
+    }
+
+    fn style(&self) -> Option<&'static str> {
+        todo!()
+    }
 }

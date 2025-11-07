@@ -1,30 +1,30 @@
-use crate::widget::{Element, Widget};
+use crate::widget::{ContextElement, Widget};
 use std::fmt::Write;
 
-pub struct Nav<'a> {
-    children: Vec<Element<'a>>,
+pub struct Nav<'a, Context> {
+    children: Vec<ContextElement<'a, Context>>,
 }
 
-impl<'a> Nav<'a> {
+impl<'a, Context> Nav<'a, Context> {
     pub fn new() -> Self {
         Nav {
             children: Vec::new(),
         }
     }
 
-    pub fn with_children(children: impl IntoIterator<Item = Element<'a>>) -> Self {
+    pub fn with_children(children: impl IntoIterator<Item = ContextElement<'a, Context>>) -> Self {
         Self {
             children: children.into_iter().collect(),
         }
     }
 
-    pub fn child(mut self, child: impl Into<Element<'a>>) -> Self {
+    pub fn child(mut self, child: impl Into<ContextElement<'a, Context>>) -> Self {
         self.children.push(child.into());
         self
     }
 }
 
-impl<'a> Widget for Nav<'a> {
+impl<Context> Widget<Context> for Nav<'_, Context> {
     fn html(&self, f: &mut String) -> std::fmt::Result {
         write!(f, "<nav>")?;
         for item in &self.children {

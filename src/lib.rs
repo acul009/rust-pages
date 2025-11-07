@@ -1,9 +1,12 @@
+use std::borrow::Cow;
+
 use crate::widget::Widget;
 
 pub mod page;
 pub mod widget;
 
-fn html_sanitize(input: &str) -> String {
+fn html_sanitize<'a>(input: impl AsRef<str>) -> String {
+    let input = input.as_ref();
     let mut sanitized = String::with_capacity(input.len());
 
     for char in input.chars() {
@@ -24,10 +27,4 @@ fn html_sanitize(input: &str) -> String {
     }
 
     sanitized
-}
-
-pub fn render(widget: impl Widget) -> String {
-    let mut buffer = String::new();
-    widget.html(&mut buffer).unwrap();
-    buffer
 }
