@@ -7,7 +7,7 @@ pub mod p;
 pub mod str;
 pub mod ul;
 
-use std::{marker::PhantomData, ops::Deref};
+use std::ops::Deref;
 
 pub use helpers::*;
 use itertools::Itertools;
