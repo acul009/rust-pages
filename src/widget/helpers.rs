@@ -5,20 +5,30 @@ use crate::widget::{ToElement, a::A, details::Details, p::P, raw_html::RawHtml};
 #[macro_export]
 macro_rules! div {
     () => {
-        $crate::widget::div::Div::new()
+        $crate::widget::container::Container::new("div")
     };
     ($($child:expr),*) => {
-        $crate::widget::div::Div::with_children([$($crate::widget::ToElement::to_element($child)),+])
+        $crate::widget::container::Container::with_children("div", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
 
 #[macro_export]
 macro_rules! nav {
     () => {
-        $crate::widget::Div::new()
+        $crate::widget::container::Container::new("nav")
     };
     ($($child:expr),*) => {
-        $crate::widget::nav::Nav::with_children([$($crate::widget::ToElement::to_element($child)),+])
+        $crate::widget::container::Container::with_children("nav", [$($crate::widget::ToElement::to_element($child)),+])
+    };
+}
+
+#[macro_export]
+macro_rules! span {
+    () => {
+        $crate::widget::container::Container::new("span")
+    };
+    ($($child:expr),*) => {
+        $crate::widget::container::Container::with_children("span", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
 

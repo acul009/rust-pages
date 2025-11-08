@@ -1,24 +1,31 @@
+use std::borrow::Cow;
+
 use crate::{
     style::Class,
     widget::{ContextElement, Widget},
 };
-use std::fmt::Write;
 
-pub struct Div<'a, Context> {
+pub struct Container<'a, Context> {
+    tag: Cow<'a, str>,
     children: Vec<ContextElement<'a, Context>>,
     class: Option<String>,
 }
 
-impl<'a, Context> Div<'a, Context> {
-    pub fn new() -> Self {
+impl<'a, Context> Container<'a, Context> {
+    pub fn new(tag: impl Into<Cow<'a, str>>) -> Self {
         Self {
+            tag: tag.into(),
             children: Vec::new(),
             class: None,
         }
     }
 
-    pub fn with_children(children: impl IntoIterator<Item = ContextElement<'a, Context>>) -> Self {
+    pub fn with_children(
+        tag: impl Into<Cow<'a, str>>,
+        children: impl IntoIterator<Item = ContextElement<'a, Context>>,
+    ) -> Self {
         Self {
+            tag: tag.into(),
             children: children.into_iter().collect(),
             class: None,
         }
@@ -35,17 +42,22 @@ impl<'a, Context> Div<'a, Context> {
     }
 }
 
-impl<Context> Widget<Context> for Div<'_, Context> {
+impl<Context> Widget<Context> for Container<'_, Context> {
     fn html(&self, f: &mut String) -> std::fmt::Result {
-        write!(f, "<div")?;
+        f.push('<');
+        f.push_str(&self.tag);
         if let Some(class) = &self.class {
-            write!(f, " class=\"{}\"", class)?;
+            f.push_str(" class=\"");
+            f.push_str(class);
+            f.push_str("\"");
         }
-        write!(f, ">")?;
+        f.push('>');
         for child in &self.children {
             child.html(f)?;
         }
-        write!(f, "</div>")?;
+        f.push_str("</");
+        f.push_str(&self.tag);
+        f.push('>');
         Ok(())
     }
 

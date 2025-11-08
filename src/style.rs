@@ -10,6 +10,7 @@ fn scope_name<Context>() -> String {
     scope
 }
 
+#[derive(Debug)]
 pub struct Stylesheet {
     styles: HashMap<std::any::TypeId, String>,
 }

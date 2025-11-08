@@ -85,10 +85,12 @@ impl SiteBuilder<String> {
 
                 let mut page_html = String::new();
                 page.html(&mut page_html)?;
+                page.style(&mut stylesheet);
                 for layout in &layouts {
                     if path.starts_with(layout.path()) {
                         let mut new = String::new();
                         layout.html(&mut new, &page_html)?;
+                        layout.style(&mut stylesheet);
                         page_html = new;
                     }
                 }

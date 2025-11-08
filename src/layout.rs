@@ -1,6 +1,6 @@
 use crate::{
     style::{Style, Stylesheet},
-    widget::ToElement,
+    widget::{ToElement, raw_html},
 };
 
 pub trait Layout {
@@ -56,7 +56,7 @@ impl<L: Layout> LayoutWrapper for LayoutContainer<L> {
     }
 
     fn html(&self, f: &mut String, page: &str) -> std::fmt::Result {
-        let view = L::view(&self.data, page).to_element();
+        let view = L::view(&self.data, raw_html(page)).to_element();
         view.html(f)
     }
 
