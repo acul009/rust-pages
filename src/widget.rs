@@ -12,19 +12,29 @@ use std::ops::Deref;
 pub use helpers::*;
 use itertools::Itertools;
 
-use crate::html_sanitize;
+use crate::style::{Style, Stylesheet};
 
 pub trait Component {
     fn view(&self) -> ContextElement<'_, Self>;
+    fn style(&self) -> Vec<Style<Self>>;
 }
 
 pub trait Widget<Context> {
     fn html(&self, f: &mut String) -> std::fmt::Result;
+    fn style(&self, stylesheet: &mut crate::style::Stylesheet);
 }
 
-impl<Context, C: Component> Widget<Context> for C {
+impl<Context, C: Component + 'static> Widget<Context> for C {
     fn html(&self, f: &mut String) -> std::fmt::Result {
         Component::view(self).html(f)
+    }
+
+    fn style(&self, stylesheet: &mut Stylesheet) {
+        if !stylesheet.contains::<C>() {
+            let styles = Component::style(self);
+            stylesheet.add_styles(&styles);
+        }
+        Component::view(self).style(stylesheet);
     }
 }
 
@@ -51,6 +61,10 @@ impl<'a, Context> ContextElement<'a, Context> {
 
     pub fn html(&self, f: &mut String) -> std::fmt::Result {
         self.widget.html(f)
+    }
+
+    pub fn style(&self, stylesheet: &mut Stylesheet) {
+        self.widget.style(stylesheet);
     }
 }
 

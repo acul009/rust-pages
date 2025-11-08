@@ -33,4 +33,10 @@ impl<'a, Context> Widget<Context> for Ul<'a, Context> {
         write!(f, "</ul>")?;
         Ok(())
     }
+
+    fn style(&self, stylesheet: &mut crate::style::Stylesheet) {
+        for child in &self.children {
+            child.style(stylesheet);
+        }
+    }
 }

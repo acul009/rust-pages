@@ -1,5 +1,7 @@
 use rust_pages::{
-    div, nav, ul,
+    div, nav,
+    style::Style,
+    ul,
     widget::{Component, ContextElement, ToElement, a, details},
 };
 
@@ -32,5 +34,9 @@ impl Component for NavBar {
         ])]
         .class("test2")
         .to_element()
+    }
+
+    fn style(&self) -> Vec<rust_pages::style::Style<Self>> {
+        vec![Style::new("nav").property("width", "100%")]
     }
 }

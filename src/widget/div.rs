@@ -48,4 +48,10 @@ impl<Context> Widget<Context> for Div<'_, Context> {
         write!(f, "</div>")?;
         Ok(())
     }
+
+    fn style(&self, stylesheet: &mut crate::style::Stylesheet) {
+        for child in &self.children {
+            child.style(stylesheet);
+        }
+    }
 }

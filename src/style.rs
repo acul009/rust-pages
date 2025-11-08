@@ -1,11 +1,40 @@
-use std::marker::PhantomData;
+use std::{collections::HashMap, marker::PhantomData};
 
 use itertools::Itertools;
 
 use crate::html_sanitize;
 
 fn scope_name<Context>() -> String {
-    std::any::type_name::<Context>().replace(':', "_")
+    let mut scope = std::any::type_name::<Context>().replace(':', "_");
+    scope.push_str("__");
+    scope
+}
+
+pub struct Stylesheet {
+    styles: HashMap<std::any::TypeId, String>,
+}
+
+impl Stylesheet {
+    pub fn new() -> Self {
+        Stylesheet {
+            styles: HashMap::new(),
+        }
+    }
+
+    pub fn contains<Context: 'static>(&self) -> bool {
+        self.styles.contains_key(&std::any::TypeId::of::<Context>())
+    }
+
+    pub fn add_styles<Context: 'static>(&mut self, styles: &[Style<Context>]) {
+        let type_id = std::any::TypeId::of::<Context>();
+        let stylesheet = styles.iter().map(|style| style.to_stylesheet()).join(" ");
+
+        self.styles.entry(type_id).or_insert_with(|| stylesheet);
+    }
+
+    pub fn to_css(&self) -> String {
+        self.styles.values().join(" ")
+    }
 }
 
 pub trait Class<Context> {
@@ -22,14 +51,14 @@ impl<Context> Class<Context> for &str {
     }
 }
 
-pub struct Style<Context> {
-    selector: String,
-    properties: Vec<(String, String)>,
+pub struct Style<Context: ?Sized> {
+    selector: &'static str,
+    properties: Vec<(&'static str, &'static str)>,
     context: PhantomData<Context>,
 }
 
 impl<Context> Style<Context> {
-    pub fn new(selector: String) -> Self {
+    pub fn new(selector: &'static str) -> Self {
         Style {
             selector,
             properties: Vec::new(),
@@ -37,7 +66,7 @@ impl<Context> Style<Context> {
         }
     }
 
-    pub fn property(mut self, name: String, value: String) -> Self {
+    pub fn property(mut self, name: &'static str, value: &'static str) -> Self {
         self.properties.push((name, value));
         self
     }

@@ -35,4 +35,11 @@ impl<Context> Widget<Context> for Details<'_, Context> {
         self.content.html(f)?;
         write!(f, "</details>")
     }
+
+    fn style(&self, stylesheet: &mut crate::style::Stylesheet) {
+        if let Some(summary) = &self.summary {
+            summary.style(stylesheet);
+        }
+        self.content.style(stylesheet);
+    }
 }

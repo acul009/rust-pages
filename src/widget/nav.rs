@@ -32,4 +32,10 @@ impl<Context> Widget<Context> for Nav<'_, Context> {
         }
         write!(f, "</nav>")
     }
+
+    fn style(&self, stylesheet: &mut crate::style::Stylesheet) {
+        for child in &self.children {
+            child.style(stylesheet);
+        }
+    }
 }

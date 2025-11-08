@@ -2,6 +2,7 @@ use std::{borrow::Cow, fmt::Write};
 
 use crate::{
     html_sanitize,
+    style::Stylesheet,
     widget::{ContextElement, ToElement, Widget},
 };
 
@@ -29,5 +30,9 @@ impl<Context> Widget<Context> for A<'_, Context> {
         write!(f, "<a href=\"{}\">", html_sanitize(&self.href))?;
         self.content.html(f)?;
         write!(f, "</a>")
+    }
+
+    fn style(&self, stylesheet: &mut Stylesheet) {
+        self.content.style(stylesheet);
     }
 }
