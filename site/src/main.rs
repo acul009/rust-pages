@@ -1,25 +1,18 @@
-use std::{fs::File, io::Write};
-
+mod index;
 mod navbar;
 
 use rust_pages::{
+    builder::SiteBuilder,
     div, nav,
     style::{Style, Stylesheet},
-    ul,
     widget::{Component, ContextElement, ToElement, Widget, a},
 };
 
-use crate::navbar::NavBar;
+use crate::{index::Index, navbar::NavBar};
 
 fn main() {
-    let mut html = String::new();
-    let mut stylesheet = Stylesheet::new();
-    let tester = ContextElement::<()>::new(Tester::new());
-    tester.html(&mut html).unwrap();
-    tester.style(&mut stylesheet);
-    let mut file = File::create("output.html").unwrap();
-    file.write_all(html.as_bytes()).unwrap();
-    println!("{}", stylesheet.to_css());
+    let builder = SiteBuilder::new().title("Rahn-IT");
+    builder.build_page(Index).unwrap();
 }
 
 pub struct Tester {}
@@ -31,8 +24,8 @@ impl Tester {
 }
 
 impl Component for Tester {
-    fn view(&self) -> rust_pages::widget::ContextElement<'_, Self> {
-        div![NavBar::new(), div!["Test"].class("myclass")].to_element()
+    fn view(&self) -> impl rust_pages::widget::ToElement<'_, Self> {
+        div![NavBar::new(), div!["Test"].class("myclass")]
     }
 
     fn style(&self) -> Vec<rust_pages::style::Style<Self>> {

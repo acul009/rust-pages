@@ -15,7 +15,7 @@ use itertools::Itertools;
 use crate::style::{Style, Stylesheet};
 
 pub trait Component {
-    fn view(&self) -> ContextElement<'_, Self>;
+    fn view(&self) -> impl crate::widget::ToElement<'_, Self>;
     fn style(&self) -> Vec<Style<Self>>;
 }
 
@@ -26,7 +26,7 @@ pub trait Widget<Context> {
 
 impl<Context, C: Component + 'static> Widget<Context> for C {
     fn html(&self, f: &mut String) -> std::fmt::Result {
-        Component::view(self).html(f)
+        Component::view(self).to_element().html(f)
     }
 
     fn style(&self, stylesheet: &mut Stylesheet) {
@@ -34,7 +34,7 @@ impl<Context, C: Component + 'static> Widget<Context> for C {
             let styles = Component::style(self);
             stylesheet.add_styles(&styles);
         }
-        Component::view(self).style(stylesheet);
+        Component::view(self).to_element().style(stylesheet);
     }
 }
 
@@ -68,7 +68,7 @@ impl<'a, Context> ContextElement<'a, Context> {
     }
 }
 
-pub trait ToElement<'a, Context> {
+pub trait ToElement<'a, Context: ?Sized> {
     fn to_element(self) -> ContextElement<'a, Context>;
 }
 

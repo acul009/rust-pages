@@ -14,7 +14,7 @@ impl NavBar {
 }
 
 impl Component for NavBar {
-    fn view(&self) -> ContextElement<'_, Self> {
+    fn view(&self) -> impl ToElement<'_, Self> {
         div![nav!(ul![
             a("Notdienst").href("/emergency"),
             details(ul![
@@ -33,7 +33,6 @@ impl Component for NavBar {
             a("Kontakt").href("/contact")
         ])]
         .class("test2")
-        .to_element()
     }
 
     fn style(&self) -> Vec<rust_pages::style::Style<Self>> {

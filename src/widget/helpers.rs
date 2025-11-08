@@ -5,7 +5,7 @@ use crate::widget::{ToElement, a::A, details::Details, p::P};
 #[macro_export]
 macro_rules! div {
     () => {
-        $crate::widget::Div::new()
+        $crate::widget::div::Div::new()
     };
     ($($child:expr),*) => {
         $crate::widget::div::Div::with_children([$($crate::widget::ToElement::to_element($child)),+])
