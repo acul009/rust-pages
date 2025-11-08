@@ -1,8 +1,7 @@
-use std::{borrow::Cow, path::PathBuf};
+use std::borrow::Cow;
 
 use crate::{
     style::{Style, Stylesheet},
-    widget::ContextElement,
     widget::ToElement,
 };
 
@@ -16,32 +15,41 @@ pub trait Page {
     fn title<'a>(_data: &'a Self::Data) -> Option<Cow<'a, str>> {
         None
     }
-    fn meta(_data: &Self::Data) -> Meta {
-        Meta::default()
-    }
     fn view(data: &Self::Data) -> impl crate::widget::ToElement<'_, Self>;
     fn style(&self) -> Vec<Style<Self>>;
 }
 
 pub trait PageWrapper {
     fn path(&self) -> std::path::PathBuf;
-
     fn title(&self) -> Option<Cow<'_, str>>;
-    fn meta(&self) -> Meta;
     fn html(&self, f: &mut String) -> std::fmt::Result;
     fn style(&self, stylesheet: &mut Stylesheet);
 }
 
-pub struct PageContainer<P: Page> {
+pub struct PageLoader<P: Page> {
     page: P,
-    data: P::Data,
 }
 
-impl<P: Page> PageContainer<P> {
-    pub fn new(page: P) -> anyhow::Result<Self> {
-        let data = page.load_data()?;
-        Ok(Self { page, data })
+impl<P: Page> PageLoader<P> {
+    pub fn new(page: P) -> Self {
+        Self { page }
     }
+}
+
+pub trait PageLoaderWrapper {
+    fn load(&self) -> anyhow::Result<Box<dyn PageWrapper>>;
+}
+
+impl<P: Page + 'static> PageLoaderWrapper for PageLoader<P> {
+    fn load(&self) -> anyhow::Result<Box<dyn PageWrapper>> {
+        let data = self.page.load_data()?;
+        let container = PageContainer::<P> { data };
+        Ok(Box::new(container))
+    }
+}
+
+pub struct PageContainer<P: Page> {
+    data: P::Data,
 }
 
 impl<P: Page> PageWrapper for PageContainer<P> {
@@ -53,10 +61,6 @@ impl<P: Page> PageWrapper for PageContainer<P> {
         P::title(&self.data)
     }
 
-    fn meta(&self) -> Meta {
-        P::meta(&self.data)
-    }
-
     fn html(&self, f: &mut String) -> std::fmt::Result {
         let view = P::view(&self.data).to_element();
         view.html(f)
@@ -66,9 +70,4 @@ impl<P: Page> PageWrapper for PageContainer<P> {
         let view = P::view(&self.data).to_element();
         view.style(stylesheet);
     }
-}
-
-#[derive(Default)]
-pub struct Meta {
-    pub description: Option<String>,
 }

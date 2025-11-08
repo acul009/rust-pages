@@ -4,13 +4,13 @@ pub mod div;
 mod helpers;
 pub mod nav;
 pub mod p;
+pub mod raw_html;
 pub mod str;
 pub mod ul;
 
 use std::ops::Deref;
 
 pub use helpers::*;
-use itertools::Itertools;
 
 use crate::style::{Style, Stylesheet};
 
@@ -19,7 +19,7 @@ pub trait Component {
     fn style(&self) -> Vec<Style<Self>>;
 }
 
-pub trait Widget<Context> {
+pub(crate) trait Widget<Context> {
     fn html(&self, f: &mut String) -> std::fmt::Result;
     fn style(&self, stylesheet: &mut crate::style::Stylesheet);
 }

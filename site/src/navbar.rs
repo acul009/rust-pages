@@ -2,7 +2,7 @@ use rust_pages::{
     div, nav,
     style::Style,
     ul,
-    widget::{Component, ContextElement, ToElement, a, details},
+    widget::{Component, ToElement, a, details},
 };
 
 pub struct NavBar {}

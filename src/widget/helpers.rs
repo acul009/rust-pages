@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use crate::widget::{ToElement, a::A, details::Details, p::P};
+use crate::widget::{ToElement, a::A, details::Details, p::P, raw_html::RawHtml};
 
 #[macro_export]
 macro_rules! div {
@@ -42,4 +42,8 @@ pub fn a<'a, Context>(content: impl ToElement<'a, Context>) -> A<'a, Context> {
 
 pub fn p<'a>(text: impl Into<Cow<'a, str>>) -> P<'a> {
     P::new(text)
+}
+
+pub fn raw_html<'a>(html: &'a str) -> RawHtml<'a> {
+    RawHtml::new(html)
 }
