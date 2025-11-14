@@ -32,7 +32,7 @@ impl<Context> Widget<Context> for A<'_, Context> {
         write!(f, "</a>")
     }
 
-    fn style(&self, stylesheet: &mut Stylesheet) {
-        self.content.style(stylesheet);
+    fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut Stylesheet) {
+        self.content.style(theme, stylesheet);
     }
 }

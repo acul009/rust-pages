@@ -9,6 +9,7 @@ use rust_pages::{
         Style,
         predone::{animated_details, remove_default_styles},
     },
+    theme::Dark,
     widget::ToElement,
 };
 
@@ -19,11 +20,9 @@ fn main() {
         .title("Rahn-IT")
         .layout(MainLayout)
         .page(Index)
+        .theme(Dark {})
         .styles(remove_default_styles())
-        .styles(animated_details())
-        .styles([Style::new("body")
-            .color("oklch(0.97807 0.029 256.847)")
-            .background("oklch(0.2533 0.016 252.42)")]);
+        .styles(animated_details());
 
     builder.build().unwrap();
 }

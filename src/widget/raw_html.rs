@@ -16,5 +16,5 @@ impl<'a, Context> Widget<Context> for RawHtml<'a> {
         Ok(())
     }
 
-    fn style(&self, _stylesheet: &mut crate::style::Stylesheet) {}
+    fn style(&self, _theme: &dyn crate::theme::Theme, _stylesheet: &mut crate::style::Stylesheet) {}
 }

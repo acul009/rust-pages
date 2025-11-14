@@ -19,5 +19,5 @@ impl<'a, Context> Widget<Context> for P<'a> {
         write!(f, "<p>{}</p>", html_sanitize(self.text.as_ref()))
     }
 
-    fn style(&self, _stylesheet: &mut crate::style::Stylesheet) {}
+    fn style(&self, _theme: &dyn crate::theme::Theme, _stylesheet: &mut crate::style::Stylesheet) {}
 }

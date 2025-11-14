@@ -1,5 +1,6 @@
 use crate::{
     style::{Style, Stylesheet},
+    theme::Theme,
     widget::{ToElement, raw_html},
 };
 
@@ -21,7 +22,7 @@ pub trait Layout {
 pub trait LayoutWrapper {
     fn path(&self) -> std::path::PathBuf;
     fn html(&self, f: &mut String, page: &str) -> std::fmt::Result;
-    fn style(&self, stylesheet: &mut Stylesheet);
+    fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut Stylesheet);
 }
 
 pub struct LayoutLoader<L: Layout> {
@@ -60,8 +61,8 @@ impl<L: Layout> LayoutWrapper for LayoutContainer<L> {
         view.html(f)
     }
 
-    fn style(&self, stylesheet: &mut Stylesheet) {
+    fn style(&self, theme: &dyn Theme, stylesheet: &mut Stylesheet) {
         let view = L::view(&self.data, "").to_element();
-        view.style(stylesheet);
+        view.style(theme, stylesheet);
     }
 }

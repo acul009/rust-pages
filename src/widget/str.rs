@@ -6,5 +6,5 @@ impl<Context> Widget<Context> for &str {
         write!(f, "{}", html_sanitize(self))
     }
 
-    fn style(&self, _stylesheet: &mut crate::style::Stylesheet) {}
+    fn style(&self, _theme: &dyn crate::theme::Theme, _stylesheet: &mut crate::style::Stylesheet) {}
 }

@@ -34,12 +34,12 @@ impl Component for NavBar {
         ]]
     }
 
-    fn style(&self) -> Vec<rust_pages::style::Style<Self>> {
+    fn style(&self, theme: &dyn rust_pages::theme::Theme) -> Vec<rust_pages::style::Style<Self>> {
         vec![
             Style::new("nav")
                 .position_fixed()
                 .width_full()
-                .background("oklch(0.2326 0.014 253.1)")
+                .background(theme.primary_color())
                 .font_size("1.1rem"),
             Style::new("nav > ul")
                 .width_full()
@@ -51,7 +51,12 @@ impl Component for NavBar {
                 .border_radius(".25rem")
                 .cursor_pointer(),
             Style::new("nav > ul > li > a:hover, nav > ul > li > details > summary:hover")
-                .background("oklab(0.97807 -0.00659901 -0.0282392 / 0.1)"),
+                .background(theme.primary_color()),
+            Style::new("nav li").position_relative(),
+            Style::new("nav li > details > ul")
+                .position_absolute()
+                .margin("2rem 0 0 0")
+                .background_inherit(),
         ]
     }
 }

@@ -16,14 +16,14 @@ pub trait Page {
         None
     }
     fn view(data: &Self::Data) -> impl crate::widget::ToElement<'_, Self>;
-    fn style(&self) -> Vec<Style<Self>>;
+    fn style(&self, theme: &dyn crate::theme::Theme) -> Vec<Style<Self>>;
 }
 
 pub trait PageWrapper {
     fn path(&self) -> std::path::PathBuf;
     fn title(&self) -> Option<Cow<'_, str>>;
     fn html(&self, f: &mut String) -> std::fmt::Result;
-    fn style(&self, stylesheet: &mut Stylesheet);
+    fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut Stylesheet);
 }
 
 pub struct PageLoader<P: Page> {
@@ -66,8 +66,8 @@ impl<P: Page> PageWrapper for PageContainer<P> {
         view.html(f)
     }
 
-    fn style(&self, stylesheet: &mut Stylesheet) {
+    fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut Stylesheet) {
         let view = P::view(&self.data).to_element();
-        view.style(stylesheet);
+        view.style(theme, stylesheet);
     }
 }

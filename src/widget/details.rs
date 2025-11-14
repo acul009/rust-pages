@@ -36,10 +36,10 @@ impl<Context> Widget<Context> for Details<'_, Context> {
         write!(f, "</details>")
     }
 
-    fn style(&self, stylesheet: &mut crate::style::Stylesheet) {
+    fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut crate::style::Stylesheet) {
         if let Some(summary) = &self.summary {
-            summary.style(stylesheet);
+            summary.style(theme, stylesheet);
         }
-        self.content.style(stylesheet);
+        self.content.style(theme, stylesheet);
     }
 }

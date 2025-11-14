@@ -15,12 +15,12 @@ use crate::style::{Style, Stylesheet};
 
 pub trait Component {
     fn view(&self) -> impl crate::widget::ToElement<'_, Self>;
-    fn style(&self) -> Vec<Style<Self>>;
+    fn style(&self, theme: &dyn crate::theme::Theme) -> Vec<Style<Self>>;
 }
 
-pub(crate) trait Widget<Context> {
+pub trait Widget<Context> {
     fn html(&self, f: &mut String) -> std::fmt::Result;
-    fn style(&self, stylesheet: &mut crate::style::Stylesheet);
+    fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut crate::style::Stylesheet);
 }
 
 impl<Context, C: Component + 'static> Widget<Context> for C {
@@ -28,12 +28,12 @@ impl<Context, C: Component + 'static> Widget<Context> for C {
         Component::view(self).to_element().html(f)
     }
 
-    fn style(&self, stylesheet: &mut Stylesheet) {
+    fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut crate::style::Stylesheet) {
         if !stylesheet.contains::<C>() {
-            let styles = Component::style(self);
+            let styles = Component::style(self, theme);
             stylesheet.add_styles(&styles);
         }
-        Component::view(self).to_element().style(stylesheet);
+        Component::view(self).to_element().style(theme, stylesheet);
     }
 }
 
@@ -62,8 +62,8 @@ impl<'a, Context> ContextElement<'a, Context> {
         self.widget.html(f)
     }
 
-    pub fn style(&self, stylesheet: &mut Stylesheet) {
-        self.widget.style(stylesheet);
+    pub fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut Stylesheet) {
+        self.widget.style(theme, stylesheet);
     }
 }
 

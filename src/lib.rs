@@ -2,6 +2,7 @@ pub mod builder;
 pub mod layout;
 pub mod page;
 pub mod style;
+pub mod theme;
 pub mod widget;
 
 fn html_sanitize<'a>(input: impl AsRef<str>) -> String {

@@ -1,4 +1,4 @@
-use rust_pages::{div, page::Page, style::Style};
+use rust_pages::{div, page::Page, style::Style, theme::Theme};
 
 pub struct Index;
 
@@ -17,7 +17,7 @@ impl Page for Index {
         div!("Index")
     }
 
-    fn style(&self) -> Vec<Style<Self>> {
+    fn style(&self, _theme: &dyn Theme) -> Vec<Style<Self>> {
         vec![]
     }
 }

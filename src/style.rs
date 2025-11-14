@@ -101,6 +101,14 @@ impl<Context> Style<Context> {
     pub fn background(self, value: &'static str) -> Self {
         self.property("background", value)
     }
+
+    pub fn background_color(self, value: &'static str) -> Self {
+        self.property("background-color", value)
+    }
+
+    pub fn background_inherit(self) -> Self {
+        self.property("background", "inherit")
+    }
 }
 
 impl<Context> Style<Context> {
@@ -247,6 +255,16 @@ impl<Context> Style<Context> {
 
     pub fn position_fixed(mut self) -> Self {
         self.properties.push(("position", "fixed"));
+        self
+    }
+
+    pub fn position_absolute(mut self) -> Self {
+        self.properties.push(("position", "absolute"));
+        self
+    }
+
+    pub fn position_relative(mut self) -> Self {
+        self.properties.push(("position", "relative"));
         self
     }
 }

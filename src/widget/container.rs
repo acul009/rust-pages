@@ -61,9 +61,9 @@ impl<Context> Widget<Context> for Container<'_, Context> {
         Ok(())
     }
 
-    fn style(&self, stylesheet: &mut crate::style::Stylesheet) {
+    fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut crate::style::Stylesheet) {
         for child in &self.children {
-            child.style(stylesheet);
+            child.style(theme, stylesheet);
         }
     }
 }

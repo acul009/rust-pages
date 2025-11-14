@@ -36,9 +36,9 @@ impl<'a, Context> Widget<Context> for Ul<'a, Context> {
         Ok(())
     }
 
-    fn style(&self, stylesheet: &mut crate::style::Stylesheet) {
+    fn style(&self, _theme: &dyn crate::theme::Theme, stylesheet: &mut crate::style::Stylesheet) {
         for child in &self.children {
-            child.style(stylesheet);
+            child.style(_theme, stylesheet);
         }
     }
 }

@@ -8,58 +8,76 @@ use crate::{
     style::{Style, Stylesheet},
 };
 
-pub struct SiteBuilder<Title> {
+pub struct SiteBuilder<Title, Theme> {
     default_title: Title,
     output_dir: PathBuf,
     pages: Vec<Box<dyn PageLoaderWrapper>>,
     layouts: Vec<Box<dyn LayoutLoaderWrapper>>,
     styles: Vec<Style<()>>,
+    theme: Theme,
 }
 
-impl SiteBuilder<()> {
-    pub fn new() -> SiteBuilder<()> {
+impl SiteBuilder<(), ()> {
+    pub fn new() -> SiteBuilder<(), ()> {
         SiteBuilder {
             default_title: (),
             output_dir: "./build".into(),
             pages: Vec::new(),
             layouts: Vec::new(),
             styles: Vec::new(),
+            theme: (),
         }
     }
 }
 
-impl<Title> SiteBuilder<Title> {
-    pub fn title(self, title: impl Display) -> SiteBuilder<String> {
+impl<Title, Theme> SiteBuilder<Title, Theme> {
+    pub fn title(self, title: impl Display) -> SiteBuilder<String, Theme> {
         SiteBuilder {
             default_title: title.to_string(),
             output_dir: self.output_dir,
             pages: self.pages,
             layouts: self.layouts,
             styles: self.styles,
+            theme: self.theme,
         }
     }
 
-    pub fn page<P: Page + 'static>(mut self, page: P) -> SiteBuilder<Title> {
+    pub fn page<P: Page + 'static>(mut self, page: P) -> SiteBuilder<Title, Theme> {
         let loader = PageLoader::new(page);
         self.pages.push(Box::new(loader));
         self
     }
 
-    pub fn layout<L: Layout + 'static>(mut self, layout: L) -> SiteBuilder<Title> {
+    pub fn layout<L: Layout + 'static>(mut self, layout: L) -> SiteBuilder<Title, Theme> {
         let loader = LayoutLoader::new(layout);
         self.layouts.push(Box::new(loader));
         self
     }
 
-    pub fn styles(mut self, styles: impl IntoIterator<Item = Style<()>>) -> SiteBuilder<Title> {
+    pub fn styles(
+        mut self,
+        styles: impl IntoIterator<Item = Style<()>>,
+    ) -> SiteBuilder<Title, Theme> {
         self.styles.extend(styles);
         self
     }
+
+    pub fn theme<T>(self, theme: T) -> SiteBuilder<Title, T> {
+        SiteBuilder {
+            default_title: self.default_title,
+            output_dir: self.output_dir,
+            pages: self.pages,
+            layouts: self.layouts,
+            styles: self.styles,
+            theme,
+        }
+    }
 }
 
-impl SiteBuilder<String> {
+impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
     pub fn build(&self) -> anyhow::Result<()> {
         let mut stylesheet = Stylesheet::new();
+        stylesheet.add_styles(self.theme.css().as_slice());
         let pages = self.load_pages()?;
         let layouts = self.load_layouts()?;
 
@@ -95,12 +113,12 @@ impl SiteBuilder<String> {
 
                 let mut page_html = String::new();
                 page.html(&mut page_html)?;
-                page.style(&mut stylesheet);
+                page.style(&self.theme, &mut stylesheet);
                 for layout in &layouts {
                     if path.starts_with(layout.path()) {
                         let mut new = String::new();
                         layout.html(&mut new, &page_html)?;
-                        layout.style(&mut stylesheet);
+                        layout.style(&self.theme, &mut stylesheet);
                         page_html = new;
                     }
                 }
@@ -108,8 +126,6 @@ impl SiteBuilder<String> {
 
                 finished_html.push_str("</body></html>");
             }
-
-            page.style(&mut stylesheet);
 
             let mut file = File::create(self.output_dir.join(path).join("index.html"))?;
             file.write_all(finished_html.as_bytes())?;
