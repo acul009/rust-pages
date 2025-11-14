@@ -4,13 +4,7 @@ use itertools::Itertools;
 
 use crate::html_sanitize;
 
-pub fn remove_default_styles() -> Vec<Style<()>> {
-    vec![
-        Style::new("body").margin("0"),
-        Style::new("html").property("font-family", "sans-serif"),
-        Style::new("a").text_decoration_none().color_inherit(),
-    ]
-}
+pub mod predone;
 
 fn scope_name<Context>() -> String {
     let mut scope = std::any::type_name::<Context>().replace(':', "_");

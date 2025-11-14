@@ -52,28 +52,6 @@ impl Component for NavBar {
                 .cursor_pointer(),
             Style::new("nav > ul > li > a:hover, nav > ul > li > details > summary:hover")
                 .background("oklab(0.97807 -0.00659901 -0.0282392 / 0.1)"),
-            Style::new("nav details > summary")
-                .flex()
-                .items_center()
-                .gap(".5rem"),
-            Style::new("nav details > summary::-webkit-details-marker").display_none(),
-            Style::new("nav details > summary::marker").content(""),
-            Style::new("nav details > summary::after")
-                .content("")
-                .transform_origin("50%")
-                .pointer_events_none()
-                .justify_self("flex-end")
-                .width(".375rem")
-                .height(".375rem")
-                .transition_property("rotate,translate")
-                .transition_duration(".2s")
-                .block()
-                .translate("0 -1px")
-                .rotate("-135deg")
-                .box_shadow("inset 2px 2px"),
-            Style::new("nav details[open] > summary::after")
-                .translate("0 1px")
-                .rotate("45deg"),
         ]
     }
 }

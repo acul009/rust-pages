@@ -5,7 +5,10 @@ use rust_pages::{
     builder::SiteBuilder,
     div,
     layout::Layout,
-    style::{Style, remove_default_styles},
+    style::{
+        Style,
+        predone::{animated_details, remove_default_styles},
+    },
     widget::ToElement,
 };
 
@@ -17,6 +20,7 @@ fn main() {
         .layout(MainLayout)
         .page(Index)
         .styles(remove_default_styles())
+        .styles(animated_details())
         .styles([Style::new("body")
             .color("oklch(0.97807 0.029 256.847)")
             .background("oklch(0.2533 0.016 252.42)")]);
