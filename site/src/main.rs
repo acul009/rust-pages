@@ -1,7 +1,13 @@
 mod index;
 mod navbar;
 
-use rust_pages::{builder::SiteBuilder, div, layout::Layout, style::Style, widget::ToElement};
+use rust_pages::{
+    builder::SiteBuilder,
+    div,
+    layout::Layout,
+    style::{Style, remove_default_styles},
+    widget::ToElement,
+};
 
 use crate::{index::Index, navbar::NavBar};
 
@@ -9,7 +15,11 @@ fn main() {
     let builder = SiteBuilder::new()
         .title("Rahn-IT")
         .layout(MainLayout)
-        .page(Index);
+        .page(Index)
+        .styles(remove_default_styles())
+        .styles([Style::new("body")
+            .color("oklch(0.97807 0.029 256.847)")
+            .background("oklch(0.2533 0.016 252.42)")]);
 
     builder.build().unwrap();
 }

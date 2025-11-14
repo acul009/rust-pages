@@ -5,7 +5,7 @@ use anyhow::Context;
 use crate::{
     layout::{Layout, LayoutLoader, LayoutLoaderWrapper, LayoutWrapper},
     page::{Page, PageLoader, PageLoaderWrapper, PageWrapper},
-    style::Stylesheet,
+    style::{Style, Stylesheet},
 };
 
 pub struct SiteBuilder<Title> {
@@ -13,6 +13,7 @@ pub struct SiteBuilder<Title> {
     output_dir: PathBuf,
     pages: Vec<Box<dyn PageLoaderWrapper>>,
     layouts: Vec<Box<dyn LayoutLoaderWrapper>>,
+    styles: Vec<Style<()>>,
 }
 
 impl SiteBuilder<()> {
@@ -22,6 +23,7 @@ impl SiteBuilder<()> {
             output_dir: "./build".into(),
             pages: Vec::new(),
             layouts: Vec::new(),
+            styles: Vec::new(),
         }
     }
 }
@@ -33,6 +35,7 @@ impl<Title> SiteBuilder<Title> {
             output_dir: self.output_dir,
             pages: self.pages,
             layouts: self.layouts,
+            styles: self.styles,
         }
     }
 
@@ -47,6 +50,11 @@ impl<Title> SiteBuilder<Title> {
         self.layouts.push(Box::new(loader));
         self
     }
+
+    pub fn styles(mut self, styles: impl IntoIterator<Item = Style<()>>) -> SiteBuilder<Title> {
+        self.styles.extend(styles);
+        self
+    }
 }
 
 impl SiteBuilder<String> {
@@ -54,6 +62,8 @@ impl SiteBuilder<String> {
         let mut stylesheet = Stylesheet::new();
         let pages = self.load_pages()?;
         let layouts = self.load_layouts()?;
+
+        stylesheet.add_styles(self.styles.as_slice());
 
         if std::fs::exists(self.output_dir.as_path()).context("Error checking for output dir")? {
             std::fs::remove_dir_all(self.output_dir.as_path())
@@ -78,7 +88,7 @@ impl SiteBuilder<String> {
                 finished_html.push_str(
                     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
                 );
-                finished_html.push_str("<link rel=\"stylesheet\" href=\"/styles.css\">");
+                finished_html.push_str("<link rel=\"stylesheet\" href=\"./styles.css\">");
 
                 write!(&mut finished_html, "<title>{}</title>", title)?;
                 finished_html.push_str("</head><body>");

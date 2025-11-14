@@ -28,7 +28,9 @@ impl<'a, Context> Widget<Context> for Ul<'a, Context> {
     fn html(&self, f: &mut String) -> std::fmt::Result {
         write!(f, "<ul>")?;
         for element in &self.children {
+            write!(f, "<li>")?;
             element.html(f)?;
+            write!(f, "</li>")?;
         }
         write!(f, "</ul>")?;
         Ok(())
