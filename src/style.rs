@@ -49,7 +49,7 @@ impl<Context> Class<Context> for &str {
     fn resolve(&self) -> String {
         let scope_name = scope_name::<Context>();
         self.split_ascii_whitespace()
-            .map(|class| format!("{}-{}", scope_name, html_sanitize(class)))
+            .map(|class| format!("{}{}", scope_name, html_sanitize(class)))
             .join(" ")
     }
 }
@@ -75,7 +75,10 @@ impl<Context> Style<Context> {
     }
 
     pub fn to_stylesheet(&self) -> String {
-        let selector = self.selector.replace(".", scope_name::<Context>().as_str());
+        let selector = self.selector.replace(
+            ".",
+            format!(".{}", scope_name::<Context>().as_str()).as_str(),
+        );
         format!(
             "{}{{{}}}",
             selector,
@@ -90,6 +93,10 @@ impl<Context> Style<Context> {
 impl<Context> Style<Context> {
     pub fn align_items(self, value: &'static str) -> Self {
         self.property("align-items", value)
+    }
+
+    pub fn align_items_center(self) -> Self {
+        self.align_items("center")
     }
 
     pub fn items_center(self) -> Self {
@@ -124,6 +131,16 @@ impl<Context> Style<Context> {
 impl<Context> Style<Context> {
     pub fn box_shadow(self, value: &'static str) -> Self {
         self.property("box-shadow", value)
+    }
+}
+
+impl<Context> Style<Context> {
+    pub fn box_sizing(self, value: &'static str) -> Self {
+        self.property("box-sizing", value)
+    }
+
+    pub fn border_box(self) -> Self {
+        self.box_sizing("border-box")
     }
 }
 
@@ -184,6 +201,36 @@ impl<Context> Style<Context> {
 }
 
 impl<Context> Style<Context> {
+    pub fn flex_basis(self, value: &'static str) -> Self {
+        self.property("flex-basis", value)
+    }
+
+    pub fn flex_direction(self, value: &'static str) -> Self {
+        self.property("flex-direction", value)
+    }
+
+    pub fn flex_row(self) -> Self {
+        self.flex_direction("row")
+    }
+
+    pub fn flex_column(self) -> Self {
+        self.flex_direction("column")
+    }
+
+    pub fn flex_grow(self, value: &'static str) -> Self {
+        self.property("flex-grow", value)
+    }
+
+    pub fn flex_wrap(self, value: &'static str) -> Self {
+        self.property("flex-wrap", value)
+    }
+
+    pub fn flex_nowrap(self) -> Self {
+        self.flex_wrap("nowrap")
+    }
+}
+
+impl<Context> Style<Context> {
     pub fn font_size(self, value: &'static str) -> Self {
         self.property("font-size", value)
     }
@@ -206,12 +253,22 @@ impl<Context> Style<Context> {
 }
 
 impl<Context> Style<Context> {
+    pub fn justify_content(self, value: &'static str) -> Self {
+        self.property("justify-content", value)
+    }
+
     pub fn justify_items(self, value: &'static str) -> Self {
         self.property("justify-items", value)
     }
 
     pub fn justify_self(self, value: &'static str) -> Self {
         self.property("justify-self", value)
+    }
+}
+
+impl<Context> Style<Context> {
+    pub fn line_height(self, value: &'static str) -> Self {
+        self.property("line-height", value)
     }
 }
 
@@ -228,6 +285,26 @@ impl<Context> Style<Context> {
 impl<Context> Style<Context> {
     pub fn margin(self, value: &'static str) -> Self {
         self.property("margin", value)
+    }
+}
+
+impl<Context> Style<Context> {
+    pub fn max_width(self, value: &'static str) -> Self {
+        self.property("max-width", value)
+    }
+
+    pub fn max_height(self, value: &'static str) -> Self {
+        self.property("max-height", value)
+    }
+}
+
+impl<Context> Style<Context> {
+    pub fn min_width(self, value: &'static str) -> Self {
+        self.property("min-width", value)
+    }
+
+    pub fn min_height(self, value: &'static str) -> Self {
+        self.property("min-height", value)
     }
 }
 
@@ -272,6 +349,25 @@ impl<Context> Style<Context> {
 impl<Context> Style<Context> {
     pub fn rotate(self, value: &'static str) -> Self {
         self.property("rotate", value)
+    }
+}
+
+impl<Context> Style<Context> {
+    pub fn text_align(mut self, value: &'static str) -> Self {
+        self.properties.push(("text-align", value));
+        self
+    }
+
+    pub fn text_align_center(self) -> Self {
+        self.text_align("center")
+    }
+
+    pub fn text_align_left(self) -> Self {
+        self.text_align("left")
+    }
+
+    pub fn text_align_right(self) -> Self {
+        self.text_align("right")
     }
 }
 

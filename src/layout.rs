@@ -16,7 +16,7 @@ pub trait Layout {
         page: impl ToElement<'a, Self>,
     ) -> impl crate::widget::ToElement<'a, Self>;
 
-    fn style(&self) -> Vec<Style<Self>>;
+    fn style() -> Vec<Style<Self>>;
 }
 
 pub trait LayoutWrapper {
@@ -51,7 +51,7 @@ pub struct LayoutContainer<P: Layout> {
     data: P::Data,
 }
 
-impl<L: Layout> LayoutWrapper for LayoutContainer<L> {
+impl<L: Layout + 'static> LayoutWrapper for LayoutContainer<L> {
     fn path(&self) -> std::path::PathBuf {
         L::path(&self.data)
     }
@@ -63,6 +63,8 @@ impl<L: Layout> LayoutWrapper for LayoutContainer<L> {
 
     fn style(&self, theme: &dyn Theme, stylesheet: &mut Stylesheet) {
         let view = L::view(&self.data, "").to_element();
+        let styles = L::style();
+        stylesheet.add_styles(styles.as_slice());
         view.style(theme, stylesheet);
     }
 }

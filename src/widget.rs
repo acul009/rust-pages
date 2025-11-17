@@ -1,8 +1,8 @@
 pub mod a;
+pub mod br;
 pub mod container;
 pub mod details;
 mod helpers;
-pub mod p;
 pub mod raw_html;
 pub mod str;
 pub mod ul;

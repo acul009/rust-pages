@@ -8,3 +8,19 @@ impl<Context> Widget<Context> for &str {
 
     fn style(&self, _theme: &dyn crate::theme::Theme, _stylesheet: &mut crate::style::Stylesheet) {}
 }
+
+impl<Context> Widget<Context> for String {
+    fn html(&self, f: &mut String) -> std::fmt::Result {
+        write!(f, "{}", html_sanitize(self))
+    }
+
+    fn style(&self, _theme: &dyn crate::theme::Theme, _stylesheet: &mut crate::style::Stylesheet) {}
+}
+
+impl<Context> Widget<Context> for u32 {
+    fn html(&self, f: &mut String) -> std::fmt::Result {
+        write!(f, "{}", self)
+    }
+
+    fn style(&self, _theme: &dyn crate::theme::Theme, _stylesheet: &mut crate::style::Stylesheet) {}
+}

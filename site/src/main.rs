@@ -1,19 +1,16 @@
 mod index;
+mod layout;
+pub mod logo;
 mod navbar;
+mod no_cookies;
 
 use rust_pages::{
     builder::SiteBuilder,
-    div,
-    layout::Layout,
-    style::{
-        Style,
-        predone::{animated_details, remove_default_styles},
-    },
+    style::predone::{animated_details, remove_default_styles},
     theme::Dark,
-    widget::ToElement,
 };
 
-use crate::{index::Index, navbar::NavBar};
+use crate::{index::Index, layout::MainLayout};
 
 fn main() {
     let builder = SiteBuilder::new()
@@ -25,29 +22,4 @@ fn main() {
         .styles(animated_details());
 
     builder.build().unwrap();
-}
-
-pub struct MainLayout;
-
-impl Layout for MainLayout {
-    type Data = ();
-
-    fn path(_data: &Self::Data) -> std::path::PathBuf {
-        "".into()
-    }
-
-    fn load_data(&self) -> anyhow::Result<Self::Data> {
-        Ok(())
-    }
-
-    fn view<'a>(
-        _data: &'a Self::Data,
-        page: impl ToElement<'a, Self>,
-    ) -> impl rust_pages::widget::ToElement<'a, Self> {
-        div![NavBar::new(), page]
-    }
-
-    fn style(&self) -> Vec<Style<Self>> {
-        todo!()
-    }
 }

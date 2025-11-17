@@ -1,8 +1,12 @@
 use std::{borrow::Cow, fmt::Display, fs::File, io::Write, path::PathBuf};
 
 use anyhow::Context;
+use clap::Parser;
+
+mod server;
 
 use crate::{
+    builder::server::Server,
     layout::{Layout, LayoutLoader, LayoutLoaderWrapper, LayoutWrapper},
     page::{Page, PageLoader, PageLoaderWrapper, PageWrapper},
     style::{Style, Stylesheet},
@@ -21,7 +25,7 @@ impl SiteBuilder<(), ()> {
     pub fn new() -> SiteBuilder<(), ()> {
         SiteBuilder {
             default_title: (),
-            output_dir: "./build".into(),
+            output_dir: PathBuf::from("./build"),
             pages: Vec::new(),
             layouts: Vec::new(),
             styles: Vec::new(),
@@ -76,6 +80,8 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
 
 impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
     pub fn build(&self) -> anyhow::Result<()> {
+        let args = Args::parse();
+
         let mut stylesheet = Stylesheet::new();
         stylesheet.add_styles(self.theme.css().as_slice());
         let pages = self.load_pages()?;
@@ -106,7 +112,7 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
                 finished_html.push_str(
                     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
                 );
-                finished_html.push_str("<link rel=\"stylesheet\" href=\"./styles.css\">");
+                finished_html.push_str("<link rel=\"stylesheet\" href=\"/styles.css\">");
 
                 write!(&mut finished_html, "<title>{}</title>", title)?;
                 finished_html.push_str("</head><body>");
@@ -137,7 +143,14 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
         file.write_all(stylesheet.to_css().as_bytes())?;
         file.flush()?;
 
-        println!("Done!");
+        match args.command {
+            Command::Build => println!("Done!"),
+            Command::Serve => {
+                let server = Server::new(3971, self.output_dir.as_path())
+                    .context("Failed to create server")?;
+                server.run().context("Error while running server")?;
+            }
+        }
         Ok(())
     }
 
@@ -169,4 +182,16 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
         });
         Ok(loaded_layouts)
     }
+}
+
+#[derive(clap::Parser)]
+pub struct Args {
+    #[command(subcommand)]
+    command: Command,
+}
+
+#[derive(clap::Subcommand)]
+pub enum Command {
+    Build,
+    Serve,
 }

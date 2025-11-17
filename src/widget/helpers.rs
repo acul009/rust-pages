@@ -1,6 +1,4 @@
-use std::borrow::Cow;
-
-use crate::widget::{ToElement, a::A, details::Details, p::P, raw_html::RawHtml};
+use crate::widget::{ToElement, a::A, details::Details, raw_html::RawHtml};
 
 #[macro_export]
 macro_rules! div {
@@ -33,6 +31,16 @@ macro_rules! span {
 }
 
 #[macro_export]
+macro_rules! main {
+    () => {
+        $crate::widget::container::Container::new("main")
+    };
+    ($($child:expr),*) => {
+        $crate::widget::container::Container::with_children("main", [$($crate::widget::ToElement::to_element($child)),+])
+    };
+}
+
+#[macro_export]
 macro_rules! ul {
     () => {
         $crate::widget::Ul::new()
@@ -50,10 +58,90 @@ pub fn a<'a, Context>(content: impl ToElement<'a, Context>) -> A<'a, Context> {
     A::new(content)
 }
 
-pub fn p<'a>(text: impl Into<Cow<'a, str>>) -> P<'a> {
-    P::new(text)
-}
-
 pub fn raw_html<'a>(html: &'a str) -> RawHtml<'a> {
     RawHtml::new(html)
+}
+
+#[macro_export]
+macro_rules! p {
+    () => {
+        $crate::widget::container::Container::new("p")
+    };
+    ($($child:expr),*) => {
+        $crate::widget::container::Container::with_children("p", [$($crate::widget::ToElement::to_element($child)),+])
+    };
+}
+
+#[macro_export]
+macro_rules! h1 {
+    () => {
+        $crate::widget::container::Container::new("h1")
+    };
+    ($($child:expr),*) => {
+        $crate::widget::container::Container::with_children("h1", [$($crate::widget::ToElement::to_element($child)),+])
+    };
+}
+
+#[macro_export]
+macro_rules! h2 {
+    () => {
+        $crate::widget::container::Container::new("h2")
+    };
+    ($($child:expr),*) => {
+        $crate::widget::container::Container::with_children("h2", [$($crate::widget::ToElement::to_element($child)),+])
+    };
+}
+
+#[macro_export]
+macro_rules! h3 {
+    () => {
+        $crate::widget::container::Container::new("h3")
+    };
+    ($($child:expr),*) => {
+        $crate::widget::container::Container::with_children("h3", [$($crate::widget::ToElement::to_element($child)),+])
+    };
+}
+
+#[macro_export]
+macro_rules! h4 {
+    () => {
+        $crate::widget::container::Container::new("h4")
+    };
+    ($($child:expr),*) => {
+        $crate::widget::container::Container::with_children("h4", [$($crate::widget::ToElement::to_element($child)),+])
+    };
+}
+
+#[macro_export]
+macro_rules! h5 {
+    () => {
+        $crate::widget::container::Container::new("h5")
+    };
+    ($($child:expr),*) => {
+        $crate::widget::container::Container::with_children("h5", [$($crate::widget::ToElement::to_element($child)),+])
+    };
+}
+
+#[macro_export]
+macro_rules! h6 {
+    () => {
+        $crate::widget::container::Container::new("h6")
+    };
+    ($($child:expr),*) => {
+        $crate::widget::container::Container::with_children("h6", [$($crate::widget::ToElement::to_element($child)),+])
+    };
+}
+
+#[macro_export]
+macro_rules! b {
+    () => {
+        $crate::widget::container::Container::new("b")
+    };
+    ($($child:expr),*) => {
+        $crate::widget::container::Container::with_children("b", [$($crate::widget::ToElement::to_element($child)),+])
+    };
+}
+
+pub fn br() -> crate::widget::br::Br {
+    crate::widget::br::Br::new()
 }

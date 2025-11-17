@@ -12,7 +12,9 @@ pub fn animated_details() -> Vec<Style<()>> {
     vec![
         Style::new("details > summary")
             .flex()
-            .items_center()
+            .flex_nowrap()
+            .flex_row()
+            .align_items_center()
             .gap(".5rem"),
         Style::new("details > summary::-webkit-details-marker").display_none(),
         Style::new("details > summary::marker").content(""),
@@ -20,7 +22,6 @@ pub fn animated_details() -> Vec<Style<()>> {
             .content("")
             .transform_origin("50%")
             .pointer_events_none()
-            .justify_self("flex-end")
             .width(".375rem")
             .height(".375rem")
             .transition_property("rotate,translate")
