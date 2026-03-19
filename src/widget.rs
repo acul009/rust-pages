@@ -3,6 +3,7 @@ pub mod br;
 pub mod container;
 pub mod details;
 mod helpers;
+pub mod picture;
 pub mod raw_html;
 pub mod str;
 pub mod ul;
