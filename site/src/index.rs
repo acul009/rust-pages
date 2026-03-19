@@ -1,5 +1,12 @@
 use chrono::{NaiveDate, Utc};
-use rust_pages::{b, div, h1, h2, p, page::Page, style::Style, theme::Theme, ul, widget::br};
+use rust_pages::{
+    b, div, h1, h2, p,
+    page::Page,
+    style::Style,
+    theme::Theme,
+    ul,
+    widget::{br, picture},
+};
 
 use crate::no_cookies::NoCookies;
 
@@ -7,6 +14,7 @@ pub struct Index;
 
 pub struct Data {
     age: u32,
+    autowelt: picture::Handle,
 }
 
 impl Page for Index {
@@ -19,7 +27,13 @@ impl Page for Index {
     fn load_data(&self) -> anyhow::Result<Self::Data> {
         let founded = NaiveDate::from_ymd_opt(2004, 4, 1).unwrap();
         let age = Utc::now().date_naive().years_since(founded).unwrap();
-        Ok(Data { age })
+
+        let administration = picture::Handle::create("images/refs/autowelt.png")?;
+
+        Ok(Data {
+            age,
+            autowelt: administration,
+        })
     }
 
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
@@ -47,6 +61,8 @@ impl Page for Index {
                 "Landkreis Rottal-Inn",
                 "Landkreis Traunstein"
             ),
+            h2!("Unsere Kunden"),
+            div![picture(&data.autowelt)],
             h2!("Cookies? Nicht mit uns!"),
             NoCookies,
             p!(

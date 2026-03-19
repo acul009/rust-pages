@@ -1,4 +1,10 @@
-use crate::widget::{ToElement, a::A, details::Details, raw_html::RawHtml};
+use crate::widget::{
+    ToElement,
+    a::A,
+    details::Details,
+    picture::{Handle, Picture},
+    raw_html::RawHtml,
+};
 
 #[macro_export]
 macro_rules! div {
@@ -60,6 +66,10 @@ pub fn a<'a, Context>(content: impl ToElement<'a, Context>) -> A<'a, Context> {
 
 pub fn raw_html<'a>(html: &'a str) -> RawHtml<'a> {
     RawHtml::new(html)
+}
+
+pub fn picture<'a>(handle: &'a Handle) -> Picture<'a> {
+    Picture::new(handle)
 }
 
 #[macro_export]

@@ -9,4 +9,6 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.100"
 clap = { version = "4.5.51", features = ["derive"] }
+image = { version = "0.25.8", default-features = false, features = ["avif", "jpeg", "png", "webp"] }
 itertools = "0.14.0"
+rayon = "1.11.0"

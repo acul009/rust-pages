@@ -3,6 +3,7 @@ mod layout;
 pub mod logo;
 mod navbar;
 mod no_cookies;
+mod services;
 
 use rust_pages::{
     builder::SiteBuilder,

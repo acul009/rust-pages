@@ -10,6 +10,7 @@ use crate::{
     layout::{Layout, LayoutLoader, LayoutLoaderWrapper, LayoutWrapper},
     page::{Page, PageLoader, PageLoaderWrapper, PageWrapper},
     style::{Style, Stylesheet},
+    widget::picture,
 };
 
 pub struct SiteBuilder<Title, Theme> {
@@ -82,18 +83,20 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
     pub fn build(&self) -> anyhow::Result<()> {
         let args = Args::parse();
 
+        if std::fs::exists(self.output_dir.as_path()).context("Error checking for output dir")? {
+            std::fs::remove_dir_all(self.output_dir.as_path())
+                .context("Error deleting output dir")?;
+        }
+        std::fs::create_dir_all(self.output_dir.as_path()).context("Error creating output dir")?;
+
+        let _picture_context = picture::BuildContext::new(self.output_dir.as_path());
+
         let mut stylesheet = Stylesheet::new();
         stylesheet.add_styles(self.theme.css().as_slice());
         let pages = self.load_pages()?;
         let layouts = self.load_layouts()?;
 
         stylesheet.add_styles(self.styles.as_slice());
-
-        if std::fs::exists(self.output_dir.as_path()).context("Error checking for output dir")? {
-            std::fs::remove_dir_all(self.output_dir.as_path())
-                .context("Error deleting output dir")?;
-        }
-        std::fs::create_dir_all(self.output_dir.as_path()).context("Error creating output dir")?;
 
         for page in pages {
             let path = page.path();
