@@ -75,3 +75,19 @@ impl<'a, Context, W: Widget<Context> + 'a> ToElement<'a, Context> for W {
         ContextElement::new(self)
     }
 }
+
+impl<Context, W: Widget<Context>> Widget<Context> for Option<W> {
+    fn html(&self, f: &mut String) -> std::fmt::Result {
+        if let Some(widget) = self {
+            widget.html(f)
+        } else {
+            Ok(())
+        }
+    }
+
+    fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut crate::style::Stylesheet) {
+        if let Some(widget) = self {
+            widget.style(theme, stylesheet)
+        }
+    }
+}

@@ -1,31 +1,38 @@
+use std::task::Context;
+
 use rust_pages::{
     div, h2, picture,
     style::Style,
     theme::Theme,
-    widget::{Component, ToElement, picture as picture_handle},
+    widget::{Component, ContextElement, ToElement, Widget, picture as picture_handle},
 };
 
-pub struct ServiceCard<'a> {
+pub struct ServiceCard<'a, Context> {
     title: &'a str,
     image: &'a picture_handle::Handle,
-    body_html: &'a str,
+    body: Option<ContextElement<'a, Context>>,
 }
 
-impl<'a> ServiceCard<'a> {
-    pub fn new(title: &'a str, image: &'a picture_handle::Handle, body_html: &'a str) -> Self {
+impl<'a, Context> ServiceCard<'a, Context> {
+    pub fn new(title: &'a str, image: &'a picture_handle::Handle) -> Self {
         Self {
             title,
             image,
-            body_html,
+            body: None,
         }
+    }
+
+    pub fn body(mut self, body: impl ToElement<'a, Context>) -> Self {
+        self.body = Some(body.to_element());
+        self
     }
 }
 
-impl Component for ServiceCard<'_> {
+impl<Context> Component for ServiceCard<'_, Context> {
     fn view(&self) -> impl ToElement<'_, Self> {
         div![
             div![picture(self.image).class("service-image")].class("service-figure"),
-            div![h2!(self.title), rust_pages::raw_html(self.body_html)].class("service-body")
+            div![h2!(self.title), &self.body].class("service-body")
         ]
         .class("service-card")
     }

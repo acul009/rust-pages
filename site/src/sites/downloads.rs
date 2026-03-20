@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use rust_pages::{br, div, h1, h2, p, page::Page, raw_html, style::Style, theme::Theme};
+use rust_pages::{br, div, h1, h2, p, page::Page, style::Style, theme::Theme};
 
 use crate::components::link_button::LinkButton;
 
@@ -26,27 +26,18 @@ impl Page for Downloads {
             h1!("Downloads"),
             h2!("Schnelle Fernwartung"),
             p!("Diese Software erlaubt es uns, Ihnen zu helfen, sobald Sie die Software starten."),
-            div![
-                LinkButton::new()
-                    .label("Download")
-                    .href("https://get.teamviewer.com/57y9u6n")
-            ]
-            .class("download-action"),
+            div![LinkButton::new().label("Download").href("https://get.teamviewer.com/57y9u6n")]
+                .class("download-action"),
             h2!("Dauerhafte Fernwartung"),
             p!(
                 "Dieses Installationsprogramm richtet eine dauerhafte Fernwartung ein.",
                 br(),
-                "Dadurch kÃƒÂ¶nnen wir uns auch ohne Ihr Zutun um Ihre GerÃƒÂ¤te kÃƒÂ¼mmern."
+                "Dadurch kÃƒÆ’Ã‚Â¶nnen wir uns auch ohne Ihr Zutun um Ihre GerÃƒÆ’Ã‚Â¤te kÃƒÆ’Ã‚Â¼mmern."
             ),
-            div![
-                LinkButton::new()
-                    .label("Download")
-                    .href("https://get.teamviewer.com/q3zt6wn")
-            ]
-            .class("download-action"),
-            raw_html(
-                r#"<p class="todo">TODO: Guided download / install flow if interactive behavior is desired.</p>"#
-            )
+            div![LinkButton::new().label("Download").href("https://get.teamviewer.com/q3zt6wn")]
+                .class("download-action"),
+            p!("TODO: Guided download / install flow if interactive behavior is desired.")
+                .class("todo")
         ]
     }
 

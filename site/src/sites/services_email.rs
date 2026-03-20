@@ -1,10 +1,8 @@
 use std::borrow::Cow;
 
-use rust_pages::{div, h1, h2, raw_html, page::Page, style::Style, theme::Theme, widget::picture};
+use rust_pages::{div, h1, h2, h3, p, page::Page, style::Style, theme::Theme, widget::picture};
 
-use crate::{
-    components::{service_card::ServiceCard, site_data::asset_path},
-};
+use crate::components::{service_card::ServiceCard, site_data::asset_path};
 
 pub struct ServicesEmail;
 
@@ -36,12 +34,36 @@ impl Page for ServicesEmail {
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
         div![
             h1!("Unsere E-Mail Dienste"),
-            raw_html(r#"<p>E-Mail ist und bleibt der entscheidende Nachrichtenkanal fÃƒÂ¼r geschÃƒÂ¤ftliche Kommunikation. Mit unserer Hilfe kommen Ihre E-Mails zuverlÃƒÂ¤ssig an.</p>"#),
-            ServiceCard::new("Rahn-IT Mail-Gateway", &data.email, r#"<p>Unser E-Mail-Gateway ist die perfekte ErgÃƒÂ¤nzung fÃƒÂ¼r Ihren Mailserver.</p><h3>Spam-Filter und Virenscanner</h3><p>Eingehende Mails werden von unserem leistungsstarken Spam-Filter geprÃƒÂ¼ft und vor Viren und Betrugsversuchen geschÃƒÂ¼tzt.</p><h3>E-Mails wie aus dem Lehrbuch</h3><p>Unser System sorgt dafÃƒÂ¼r, dass Ihre E-Mails den neuesten Standards entsprechen, digital signiert werden und SPF- und DMARC-Vorgaben erfÃƒÂ¼llen.</p><h3>Immer einen Schritt voraus</h3><p>Dank fortlaufender ÃƒÅ“berwachung geht keine E-Mail mehr spurlos verloren.</p>"#),
-            ServiceCard::new("On-Premise Mailserver", &data.mailcow, r#"<p>Wir installieren und verwalten Ihren eigenen E-Mail-Server direkt bei Ihnen im Betrieb.</p><p>Wir nutzen das Mailcow System und kombinieren es bei Bedarf mit unserem Mail-Gateway zu einer leistungsstarken GesamtlÃƒÂ¶sung.</p>"#),
-            ServiceCard::new("DMARC-ÃƒÅ“berwachung", &data.dmarc, r#"<p>Mithilfe von DMARC-Berichten kÃƒÂ¶nnen Sie nachvollziehen, ob Ihre E-Mails ankommen und ob jemand unter Ihrem Namen missbrÃƒÂ¤uchlich handelt.</p><p>Wir ÃƒÂ¼bernehmen Einrichtung und Auswertung eingehender DMARC-Berichte.</p>"#),
+            p!("E-Mail ist und bleibt der entscheidende Nachrichtenkanal fÃƒÆ’Ã‚Â¼r geschÃƒÆ’Ã‚Â¤ftliche Kommunikation. Mit unserer Hilfe kommen Ihre E-Mails zuverlÃƒÆ’Ã‚Â¤ssig an."),
+            ServiceCard::new("Rahn-IT Mail-Gateway", &data.email, div![
+                p!("Unser E-Mail-Gateway ist die perfekte ErgÃƒÆ’Ã‚Â¤nzung fÃƒÆ’Ã‚Â¼r Ihren Mailserver."),
+                h3!("Spam-Filter und Virenscanner"),
+                p!("Eingehende Mails werden von unserem leistungsstarken Spam-Filter geprÃƒÆ’Ã‚Â¼ft und vor Viren und Betrugsversuchen geschÃƒÆ’Ã‚Â¼tzt."),
+                h3!("E-Mails wie aus dem Lehrbuch"),
+                p!("Unser System sorgt dafÃƒÆ’Ã‚Â¼r, dass Ihre E-Mails den neuesten Standards entsprechen, digital signiert werden und SPF- und DMARC-Vorgaben erfÃƒÆ’Ã‚Â¼llen."),
+                h3!("Immer einen Schritt voraus"),
+                p!("Dank fortlaufender ÃƒÆ’Ã…â€œberwachung geht keine E-Mail mehr spurlos verloren.")
+            ]),
+            ServiceCard::new("On-Premise Mailserver", &data.mailcow, div![
+                p!("Wir installieren und verwalten Ihren eigenen E-Mail-Server direkt bei Ihnen im Betrieb."),
+                p!("Wir nutzen das Mailcow System und kombinieren es bei Bedarf mit unserem Mail-Gateway zu einer leistungsstarken GesamtlÃƒÆ’Ã‚Â¶sung.")
+            ]),
+            ServiceCard::new("DMARC-ÃƒÆ’Ã…â€œberwachung", &data.dmarc, div![
+                p!("Mithilfe von DMARC-Berichten kÃƒÆ’Ã‚Â¶nnen Sie nachvollziehen, ob Ihre E-Mails ankommen und ob jemand unter Ihrem Namen missbrÃƒÆ’Ã‚Â¤uchlich handelt."),
+                p!("Wir ÃƒÆ’Ã‚Â¼bernehmen Einrichtung und Auswertung eingehender DMARC-Berichte.")
+            ]),
             h2!("Geht das auch auf Deutsch?"),
-            raw_html(r#"<div class="plain-copy"><h3>SMTP</h3><p>Das Protokoll zum Versand von E-Mails. Einfach, alt und ursprÃƒÂ¼nglich ohne gute AbsenderprÃƒÂ¼fung.</p><h3>SPF</h3><p>Legt fest, welche Server unter Ihrem Domainnamen E-Mails versenden dÃƒÂ¼rfen.</p><h3>DKIM</h3><p>Digitale Signaturen fÃƒÂ¼r ausgehende E-Mails, damit Nachrichten nicht unbemerkt manipuliert oder gefÃƒÂ¤lscht werden.</p><h3>DMARC</h3><p>Legt fest, was bei fehlgeschlagener PrÃƒÂ¼fung passiert und liefert Berichte ÃƒÂ¼ber den Zustand Ihrer Mail-Infrastruktur.</p></div>"#)
+            div![
+                h3!("SMTP"),
+                p!("Das Protokoll zum Versand von E-Mails. Einfach, alt und ursprÃƒÆ’Ã‚Â¼nglich ohne gute AbsenderprÃƒÆ’Ã‚Â¼fung."),
+                h3!("SPF"),
+                p!("Legt fest, welche Server unter Ihrem Domainnamen E-Mails versenden dÃƒÆ’Ã‚Â¼rfen."),
+                h3!("DKIM"),
+                p!("Digitale Signaturen fÃƒÆ’Ã‚Â¼r ausgehende E-Mails, damit Nachrichten nicht unbemerkt manipuliert oder gefÃƒÆ’Ã‚Â¤lscht werden."),
+                h3!("DMARC"),
+                p!("Legt fest, was bei fehlgeschlagener PrÃƒÆ’Ã‚Â¼fung passiert und liefert Berichte ÃƒÆ’Ã‚Â¼ber den Zustand Ihrer Mail-Infrastruktur.")
+            ]
+            .class("plain-copy")
         ]
     }
 

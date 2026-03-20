@@ -1,17 +1,39 @@
 use rust_pages::{
-    div, h2,
-    picture,
-    raw_html,
+    div, h2, picture,
     style::Style,
     theme::Theme,
-    widget::{picture as picture_handle, Component, ToElement},
+    widget::{Component, ToElement, Widget, container::Container, picture as picture_handle},
 };
+
+struct StoredWidget<'a, Context> {
+    inner: Box<dyn Widget<Context> + 'a>,
+}
+
+impl<Context> Widget<Context> for StoredWidget<'_, Context> {
+    fn html(&self, f: &mut String) -> std::fmt::Result {
+        self.inner.html(f)
+    }
+
+    fn style(&self, theme: &dyn rust_pages::theme::Theme, stylesheet: &mut rust_pages::style::Stylesheet) {
+        self.inner.style(theme, stylesheet);
+    }
+}
+
+impl<Context> Widget<Context> for &StoredWidget<'_, Context> {
+    fn html(&self, f: &mut String) -> std::fmt::Result {
+        self.inner.html(f)
+    }
+
+    fn style(&self, theme: &dyn rust_pages::theme::Theme, stylesheet: &mut rust_pages::style::Stylesheet) {
+        self.inner.style(theme, stylesheet);
+    }
+}
 
 pub struct PersonCard<'a> {
     image: &'a picture_handle::Handle,
     name: &'a str,
     caption: &'a str,
-    body_html: &'a str,
+    body: StoredWidget<'a, Self>,
 }
 
 impl<'a> PersonCard<'a> {
@@ -19,13 +41,13 @@ impl<'a> PersonCard<'a> {
         image: &'a picture_handle::Handle,
         name: &'a str,
         caption: &'a str,
-        body_html: &'a str,
+        body: impl Widget<Self> + 'a,
     ) -> Self {
         Self {
             image,
             name,
             caption,
-            body_html,
+            body: StoredWidget { inner: Box::new(body) },
         }
     }
 }
@@ -36,7 +58,10 @@ impl Component for PersonCard<'_> {
             div![picture(self.image).class("person-image")].class("person-figure"),
             div![
                 h2!(self.name),
-                raw_html(format!("<p class=\"caption\"><i>{}</i></p>{}", self.caption, self.body_html).leak())
+                div![Container::new("i").child(self.caption)].class("caption"),
+                StoredWidget {
+                    inner: Box::new(&self.body)
+                }
             ]
             .class("person-body")
         ]

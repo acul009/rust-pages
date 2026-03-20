@@ -1,10 +1,8 @@
 use std::borrow::Cow;
 
-use rust_pages::{div, h1, page::Page, style::Style, theme::Theme, widget::picture};
+use rust_pages::{div, h1, p, page::Page, style::Style, theme::Theme, widget::picture};
 
-use crate::{
-    components::{person_card::PersonCard, site_data::asset_path},
-};
+use crate::components::{person_card::PersonCard, site_data::asset_path};
 
 pub struct Team;
 
@@ -34,8 +32,16 @@ impl Page for Team {
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
         div![
             h1!("Unser Team"),
-            PersonCard::new(&data.heinz, "Heinz Rahn", "Windows-Administrator, IT-Fachmann seit 1983", r#"<p>Mein erster Computer war der Sinclair ZX81, ein 8-Bit Computer, den ich damals noch per Hand lÃƒÂ¶tete.</p><p>WÃƒÂ¤hrend meiner Laufbahn bekam ich den Einzug des Computers in alle Lebensbereiche hautnah mit. Nachdem immer mehr Freunde und Bekannte mit ihren Anliegen zu mir kamen, beschloss ich schlieÃƒÅ¸lich mein Hobby zum Beruf zu machen.</p><p>2004 machte ich mich schlieÃƒÅ¸lich selbststÃƒÂ¤ndig und erÃƒÂ¶ffnete Rahn IT-Systemtechnik.</p>"#),
-            PersonCard::new(&data.luca, "Luca Wlcek", "Linux-Administrator, Webentwickler", r#"<p>Mit Heinz als Vater bin ich von klein auf mit Computern groÃƒÅ¸ geworden.</p><p>In meiner Jugend kam mein Interesse fÃƒÂ¼r Programmierung und die Funktionsweise moderner Computer auf. WÃƒÂ¤hrend meiner Ausbildung entdeckte ich Linux und die Open-Source Welt.</p><p>Inzwischen bin ich langjÃƒÂ¤hriger Linux-Nutzer und kÃƒÂ¼mmere mich im Betrieb um die Linux-Infrastruktur.</p>"#)
+            PersonCard::new(&data.heinz, "Heinz Rahn", "Windows-Administrator, IT-Fachmann seit 1983", div![
+                p!("Mein erster Computer war der Sinclair ZX81, ein 8-Bit Computer, den ich damals noch per Hand lÃƒÆ’Ã‚Â¶tete."),
+                p!("WÃƒÆ’Ã‚Â¤hrend meiner Laufbahn bekam ich den Einzug des Computers in alle Lebensbereiche hautnah mit. Nachdem immer mehr Freunde und Bekannte mit ihren Anliegen zu mir kamen, beschloss ich schlieÃƒÆ’Ã…Â¸lich mein Hobby zum Beruf zu machen."),
+                p!("2004 machte ich mich schlieÃƒÆ’Ã…Â¸lich selbststÃƒÆ’Ã‚Â¤ndig und erÃƒÆ’Ã‚Â¶ffnete Rahn IT-Systemtechnik.")
+            ]),
+            PersonCard::new(&data.luca, "Luca Wlcek", "Linux-Administrator, Webentwickler", div![
+                p!("Mit Heinz als Vater bin ich von klein auf mit Computern groÃƒÆ’Ã…Â¸ geworden."),
+                p!("In meiner Jugend kam mein Interesse fÃƒÆ’Ã‚Â¼r Programmierung und die Funktionsweise moderner Computer auf. WÃƒÆ’Ã‚Â¤hrend meiner Ausbildung entdeckte ich Linux und die Open-Source Welt."),
+                p!("Inzwischen bin ich langjÃƒÆ’Ã‚Â¤hriger Linux-Nutzer und kÃƒÆ’Ã‚Â¼mmere mich im Betrieb um die Linux-Infrastruktur.")
+            ])
         ]
     }
 

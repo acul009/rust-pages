@@ -1,10 +1,8 @@
 use std::borrow::Cow;
 
-use rust_pages::{div, h1, h2, raw_html, page::Page, style::Style, theme::Theme, widget::picture};
+use rust_pages::{div, h1, h2, h3, p, page::Page, style::Style, theme::Theme, widget::picture};
 
-use crate::{
-    components::{service_card::ServiceCard, site_data::asset_path},
-};
+use crate::components::{service_card::ServiceCard, site_data::asset_path};
 
 pub struct ServicesLinux;
 
@@ -34,10 +32,30 @@ impl Page for ServicesLinux {
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
         div![
             h1!("Linux und Proxmox"),
-            ServiceCard::new("Proxmox-VE", &data.proxmox, r#"<p>Mit unserer Expertise ÃƒÂ¼bernehmen wir Einrichtung, Wartung und ÃƒÅ“berwachung Ihrer Proxmox-Infrastruktur.</p><h3>Hohe ZuverlÃƒÂ¤ssigkeit</h3><p>Proxmox basiert auf Debian und KVM und bietet eine robuste Virtualisierungsumgebung.</p><h3>ÃƒÅ“berlegene DatenintegritÃƒÂ¤t</h3><p>Mit ZFS und dem Proxmox Backup Server erhalten Sie hervorragenden Schutz Ihrer Daten.</p>"#),
-            ServiceCard::new("Linux-Server", &data.linux, r#"<p>Sie haben Interesse am Einsatz von Linux oder suchen jemanden, der Ihre vorhandene Infrastruktur betreut? Dann sind Sie bei uns richtig.</p><h3>FlexibilitÃƒÂ¤t</h3><p>Von Datenbanken ÃƒÂ¼ber Webserver bis zur Nextcloud: Linux-Server sind enorm flexibel.</p><h3>Effizienz</h3><p>Linux-Systeme kÃƒÂ¶nnen ÃƒÂ¤uÃƒÅ¸erst ressourcenschonend sein und bestehende Windows-Netzwerke hervorragend ergÃƒÂ¤nzen.</p>"#),
+            ServiceCard::new("Proxmox-VE", &data.proxmox, div![
+                p!("Mit unserer Expertise ÃƒÆ’Ã‚Â¼bernehmen wir Einrichtung, Wartung und ÃƒÆ’Ã…â€œberwachung Ihrer Proxmox-Infrastruktur."),
+                h3!("Hohe ZuverlÃƒÆ’Ã‚Â¤ssigkeit"),
+                p!("Proxmox basiert auf Debian und KVM und bietet eine robuste Virtualisierungsumgebung."),
+                h3!("ÃƒÆ’Ã…â€œberlegene DatenintegritÃƒÆ’Ã‚Â¤t"),
+                p!("Mit ZFS und dem Proxmox Backup Server erhalten Sie hervorragenden Schutz Ihrer Daten.")
+            ]),
+            ServiceCard::new("Linux-Server", &data.linux, div![
+                p!("Sie haben Interesse am Einsatz von Linux oder suchen jemanden, der Ihre vorhandene Infrastruktur betreut? Dann sind Sie bei uns richtig."),
+                h3!("FlexibilitÃƒÆ’Ã‚Â¤t"),
+                p!("Von Datenbanken ÃƒÆ’Ã‚Â¼ber Webserver bis zur Nextcloud: Linux-Server sind enorm flexibel."),
+                h3!("Effizienz"),
+                p!("Linux-Systeme kÃƒÆ’Ã‚Â¶nnen ÃƒÆ’Ã‚Â¤uÃƒÆ’Ã…Â¸erst ressourcenschonend sein und bestehende Windows-Netzwerke hervorragend ergÃƒÆ’Ã‚Â¤nzen.")
+            ]),
             h2!("Warum Linux?"),
-            raw_html(r#"<div class="plain-copy"><h3>Linux ist zuverlÃƒÂ¤ssig</h3><p>Unternehmen aus der ganzen Welt setzen auf Linux, darunter Google, Amazon und Microsoft.</p><h3>Linux ist sicher</h3><p>Linux-Systeme bieten starke Rechtekonzepte, Sandbox-Mechanismen und eine geringe AngriffsflÃƒÂ¤che.</p><h3>Linux ist unabhÃƒÂ¤ngig</h3><p>Linux ist Open Source. Niemand kann Ihnen die Lizenz entziehen, und Ihre Infrastruktur bleibt souverÃƒÂ¤n.</p></div>"#)
+            div![
+                h3!("Linux ist zuverlÃƒÆ’Ã‚Â¤ssig"),
+                p!("Unternehmen aus der ganzen Welt setzen auf Linux, darunter Google, Amazon und Microsoft."),
+                h3!("Linux ist sicher"),
+                p!("Linux-Systeme bieten starke Rechtekonzepte, Sandbox-Mechanismen und eine geringe AngriffsflÃƒÆ’Ã‚Â¤che."),
+                h3!("Linux ist unabhÃƒÆ’Ã‚Â¤ngig"),
+                p!("Linux ist Open Source. Niemand kann Ihnen die Lizenz entziehen, und Ihre Infrastruktur bleibt souverÃƒÆ’Ã‚Â¤n.")
+            ]
+            .class("plain-copy")
         ]
     }
 

@@ -1,8 +1,20 @@
 use std::borrow::Cow;
 
-use rust_pages::{div, h1, raw_html, page::Page, style::Style, theme::Theme};
+use rust_pages::{
+    a, br, div, h1,
+    page::Page,
+    style::Style,
+    theme::Theme,
+    widget::{ToElement, container::Container},
+};
 
 use crate::components::site_data::{CITY, IBAN, MAIL, NAME, PHONE, POSTAL_CODE, STREET, UST_ID, tel_href};
+
+fn row<'a>(label: impl ToElement<'a, Impressum>, value: impl ToElement<'a, Impressum>) -> Container<'a, Impressum> {
+    Container::new("tr")
+        .child(Container::new("td").child(label))
+        .child(Container::new("td").child(value))
+}
 
 pub struct Impressum;
 
@@ -21,10 +33,30 @@ impl Page for Impressum {
         Some("Impressum".into())
     }
 
-    fn view(_: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
+    fn view(_: &Self::Data) -> impl ToElement<'_, Self> {
         div![
             h1!("Impressum"),
-            raw_html(format!(r#"<table class="legal-table"><tr><td>Vertreter</td><td>Heinz Rahn</td></tr><tr><td>Adresse</td><td>{}<br>{}<br>{} {}</td></tr><tr><td>Telefon</td><td><a href="{}">{}</a></td></tr><tr><td>E-Mail</td><td><a href="mailto:{}">{}</a></td></tr><tr><td>USt-ID</td><td>{}</td></tr><tr><td>IBAN</td><td>{}</td></tr><tr><td>Erstellt mit</td><td>Rust Pages<br>TODO: Technologie-Hinweis bei Bedarf ergÃƒÂ¤nzen.</td></tr></table>"#, NAME, STREET, POSTAL_CODE, CITY, tel_href(), PHONE, MAIL, MAIL, UST_ID, IBAN).leak())
+            Container::new("table")
+                .class("legal-table")
+                .child(row("Vertreter", "Heinz Rahn"))
+                .child(row(
+                    "Adresse",
+                    div![NAME, br(), STREET, br(), format!("{} {}", POSTAL_CODE, CITY)]
+                ))
+                .child(row(
+                    "Telefon",
+                    a(PHONE).href(tel_href())
+                ))
+                .child(row(
+                    "E-Mail",
+                    a(MAIL).href(format!("mailto:{}", MAIL))
+                ))
+                .child(row("USt-ID", UST_ID))
+                .child(row("IBAN", IBAN))
+                .child(row(
+                    "Erstellt mit",
+                    div!["Rust Pages", br(), "TODO: Technologie-Hinweis bei Bedarf ergÃ¤nzen."]
+                ))
         ]
     }
 

@@ -1,8 +1,18 @@
 use std::borrow::Cow;
 
-use rust_pages::{div, h1, p, page::Page, raw_html, style::Style, theme::Theme};
+use rust_pages::{
+    div, h1, p,
+    page::Page,
+    style::Style,
+    theme::Theme,
+    widget::{ToElement, container::Container},
+};
 
 use crate::components::{mail::Mail, phone::Phone};
+
+fn strong<'a>(text: &'a str) -> Container<'a, Pricing> {
+    Container::new("strong").child(text)
+}
 
 pub struct Pricing;
 
@@ -21,16 +31,28 @@ impl Page for Pricing {
         Some("Preise".into())
     }
 
-    fn view(_: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
+    fn view(_: &Self::Data) -> impl ToElement<'_, Self> {
         div![
             h1!("Unsere Preise sind kein Geheimnis."),
-            raw_html(
-                r#"<div class="price-list"><div class="price-row"><div><strong>Anfahrt pro KM</strong></div><div class="amount">0,71 Ã¢â€šÂ¬</div></div><div class="price-row"><div><strong>Dienstleistung pro Stunde</strong><p>Bei einer Anfahrt <b>unter 25 km</b> werden mindestens 0,25 Stunden berechnet.</p><p>Bei einer Anfahrt <b>ab 25 km</b> werden mindestens 0,5 Stunden berechnet.</p></div><div class="amount">107,10 Ã¢â€šÂ¬</div></div></div>"#
-            ),
-            p!(
-                "Unsere Preise fÃƒÂ¼r GerÃƒÂ¤te richten sich nach unseren aktuellen Einkaufspreisen."
-            ),
-            p!("FÃƒÂ¼r ein Angebot, rufen Sie uns an oder schreiben Sie uns eine E-Mail."),
+            div![
+                div![
+                    div![strong("Anfahrt pro KM")],
+                    div!["0,71 Ã¢â€šÂ¬"].class("amount")
+                ]
+                .class("price-row"),
+                div![
+                    div![
+                        strong("Dienstleistung pro Stunde"),
+                        p!("Bei einer Anfahrt ", Container::new("b").child("unter 25 km"), " werden mindestens 0,25 Stunden berechnet."),
+                        p!("Bei einer Anfahrt ", Container::new("b").child("ab 25 km"), " werden mindestens 0,5 Stunden berechnet.")
+                    ],
+                    div!["107,10 Ã¢â€šÂ¬"].class("amount")
+                ]
+                .class("price-row")
+            ]
+            .class("price-list"),
+            p!("Unsere Preise fÃƒÆ’Ã‚Â¼r GerÃƒÆ’Ã‚Â¤te richten sich nach unseren aktuellen Einkaufspreisen."),
+            p!("FÃƒÆ’Ã‚Â¼r ein Angebot, rufen Sie uns an oder schreiben Sie uns eine E-Mail."),
             p!(Phone),
             p!(Mail)
         ]

@@ -1,7 +1,11 @@
 use std::borrow::Cow;
 
 use rust_pages::{
-    div, h1, page::Page, raw_html, style::Style, theme::Theme, widget::container::Container,
+    a, br, div, h1, h2, p,
+    page::Page,
+    style::Style,
+    theme::Theme,
+    widget::{ToElement, container::Container},
 };
 
 use crate::{
@@ -26,7 +30,7 @@ impl Page for Contact {
         Some("Kontakt".into())
     }
 
-    fn view(_: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
+    fn view(_: &Self::Data) -> impl ToElement<'_, Self> {
         div![
             h1!("Kontakt"),
             div![
@@ -35,12 +39,21 @@ impl Page for Contact {
                     Container::new("address")
                         .child(div![NAME])
                         .child(div![STREET])
-                        .child(div![POSTAL_CODE])
-                        .child(div![CITY])
-                        .child(div![MAIL])
-                        .child(tel_href())
-                ].class("contact-copy"),
-                raw_html(format!(r#"<div class="contact-copy"><address><div>{}</div><div>{}</div><div>{} {}</div></address><h2>Kontaktinformationen</h2><p><a href="mailto:{}">E-Mail: {}</a></p><p><a href="{}">Tel: {}</a></p><h2>GeschÃƒÂ¤ftszeiten</h2><p>Mo-Do: 09:00 - 16:30<br>Fr: 09:00 - 12:00<br><b>24 Stunden Notdienst</b></p><p class="todo">TODO: vCard-Download wieder ergÃƒÂ¤nzen.</p></div>"#, NAME, STREET, POSTAL_CODE, CITY, MAIL, MAIL, tel_href(), PHONE).leak())
+                        .child(div![format!("{} {}", POSTAL_CODE, CITY)]),
+                    h2!("Kontaktinformationen"),
+                    p![a(format!("E-Mail: {}", MAIL)).href(format!("mailto:{}", MAIL))],
+                    p![a(format!("Tel: {}", PHONE)).href(tel_href())],
+                    h2!("GeschÃ¤ftszeiten"),
+                    p![
+                        "Mo-Do: 09:00 - 16:30",
+                        br(),
+                        "Fr: 09:00 - 12:00",
+                        br(),
+                        Container::new("b").child("24 Stunden Notdienst")
+                    ],
+                    p!("TODO: vCard-Download wieder ergÃ¤nzen.").class("todo")
+                ]
+                .class("contact-copy")
             ]
             .class("contact-card")
         ]
@@ -57,6 +70,8 @@ impl Page for Contact {
             Style::new(".contact-logo").width("22rem").padding("3rem"),
             Style::new(".contact-logo svg").width_full().height("auto"),
             Style::new(".contact-copy").padding("2rem"),
+            Style::new(".contact-copy address")
+                .property("font-style", "normal"),
             Style::new(".contact-copy h2")
                 .padding("1.5rem 0 .25rem 0")
                 .margin("0"),
