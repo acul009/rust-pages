@@ -1,7 +1,4 @@
-use rust_pages::{
-    raw_html,
-    widget::{Component, Widget, raw_html},
-};
+use rust_pages::{raw_html, widget::Component};
 
 pub struct LogoFull;
 
@@ -30,7 +27,7 @@ impl Component for LogoStandalone {
         )
     }
 
-    fn style(&self, theme: &dyn rust_pages::theme::Theme) -> Vec<rust_pages::style::Style<Self>> {
+    fn style(&self, _theme: &dyn rust_pages::theme::Theme) -> Vec<rust_pages::style::Style<Self>> {
         vec![]
     }
 }

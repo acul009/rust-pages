@@ -1,8 +1,4 @@
-use rust_pages::{
-    div, raw_html,
-    style::Style,
-    widget::{Component, raw_html},
-};
+use rust_pages::{div, raw_html, style::Style, widget::Component};
 
 pub struct NoCookies;
 

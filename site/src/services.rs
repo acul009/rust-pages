@@ -2,7 +2,7 @@ use std::borrow::Cow;
 
 use rust_pages::{div, h1, page::Page, style::Style, theme::Theme, widget::picture};
 
-use crate::content::{asset_path, ServiceCard};
+use crate::components::{service_card::ServiceCard, site_data::asset_path};
 
 pub struct Services;
 

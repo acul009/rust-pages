@@ -1,10 +1,8 @@
-mod content;
-mod index;
+pub mod components;
 mod layout;
 pub mod logo;
-mod navbar;
-mod no_cookies;
 mod services;
+mod sites;
 
 use rust_pages::{
     builder::SiteBuilder,
@@ -13,10 +11,20 @@ use rust_pages::{
 };
 
 use crate::{
-    content::{About, Contact, Emergency, Impressum, Pricing, Remote, ServicesEmail, ServicesLinux, Team},
-    index::Index,
     layout::MainLayout,
     services::Services,
+    sites::{
+        about::About,
+        contact::Contact,
+        downloads::Downloads,
+        emergency::Emergency,
+        impressum::Impressum,
+        index::Index,
+        pricing::Pricing,
+        services_email::ServicesEmail,
+        services_linux::ServicesLinux,
+        team::Team,
+    },
 };
 
 fn main() {
@@ -29,7 +37,7 @@ fn main() {
         .page(ServicesEmail)
         .page(ServicesLinux)
         .page(Pricing)
-        .page(Remote)
+        .page(Downloads)
         .page(About)
         .page(Team)
         .page(Contact)

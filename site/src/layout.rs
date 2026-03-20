@@ -1,6 +1,6 @@
 use rust_pages::{div, layout::Layout, main, style::Style, widget::ToElement};
 
-use crate::{content::Footer, navbar::NavBar};
+use crate::components::{footer::Footer, navbar::NavBar};
 
 pub struct MainLayout;
 
@@ -19,7 +19,7 @@ impl Layout for MainLayout {
         _data: &'a Self::Data,
         page: impl ToElement<'a, Self>,
     ) -> impl rust_pages::widget::ToElement<'a, Self> {
-        div![NavBar::new(), main![div![page].class("main-inner")], Footer].class("page")
+        div![NavBar, main![div![page].class("main-inner")], Footer].class("page")
     }
 
     fn style() -> Vec<Style<Self>> {

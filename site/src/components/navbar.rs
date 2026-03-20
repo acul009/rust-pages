@@ -2,18 +2,12 @@ use rust_pages::{
     a, details, div, nav,
     style::Style,
     ul,
-    widget::{Component, ToElement, a, details},
+    widget::{Component, ToElement},
 };
 
 use crate::logo::LogoFull;
 
-pub struct NavBar {}
-
-impl NavBar {
-    pub fn new() -> Self {
-        NavBar {}
-    }
-}
+pub struct NavBar;
 
 impl Component for NavBar {
     fn view(&self) -> impl ToElement<'_, Self> {
@@ -29,15 +23,14 @@ impl Component for NavBar {
                 .name("nav1")
                 .summary("Leistungen"),
                 a("Preise").href("/pricing"),
-                a("Fernwartung").href("/remote"),
+                a("Downloads").href("/downloads"),
                 details(ul![
                     a("Unsere Prinzipien").href("/about-us"),
                     a("Das Team").href("/about-us/people")
                 ])
                 .name("nav1")
                 .summary("Unternehmen"),
-                a("Kontakt").href("/contact"),
-                a("Impressum").href("/impressum")
+                a("Kontakt").href("/contact")
             ],
             div![]
         ]

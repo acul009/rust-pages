@@ -14,7 +14,6 @@ pub struct Company {
 
 #[derive(Clone, Copy)]
 pub enum Background {
-    None,
     White,
     Dark,
 }
@@ -38,7 +37,6 @@ impl Company {
 
     fn background_class(&self) -> &'static str {
         match self.background {
-            Background::None => "",
             Background::White => "bg-white",
             Background::Dark => "bg-dark",
         }
@@ -73,7 +71,7 @@ impl<'a> Component for CompanyReferences<'a> {
             })
     }
 
-    fn style(&self, _theme: &dyn rust_pages::theme::Theme) -> Vec<Style<Self>> {
+    fn style(&self, theme: &dyn rust_pages::theme::Theme) -> Vec<Style<Self>> {
         vec![
             Style::new(".company-grid")
                 .flex()
@@ -86,15 +84,17 @@ impl<'a> Component for CompanyReferences<'a> {
                 .color_inherit()
                 .text_decoration_none(),
             Style::new(".company-card")
+                .border_box()
                 .flex()
                 .flex_column()
                 .align_items_center()
                 .justify_content("flex-start")
                 .gap(".75rem")
+                .padding(".5rem .7rem")
+                .border_radius("1rem")
                 .height("8.75rem")
                 .property("width", "max-content"),
-            Style::new(".company-card:hover")
-                .background_color("color-mix(in oklab, white 6%, transparent)"),
+            Style::new(".company-card:hover").background_color(theme.interactive_hover_color()),
             Style::new(".company-card > div")
                 .border_box()
                 .height("6rem")
