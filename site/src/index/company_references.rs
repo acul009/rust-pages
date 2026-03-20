@@ -1,7 +1,7 @@
 use rust_pages::{
     a, div, picture, span,
     style::Style,
-    widget::{picture, Component, ToElement},
+    widget::{Component, ToElement, picture},
 };
 
 pub struct Company {
@@ -91,19 +91,19 @@ impl<'a> Component for CompanyReferences<'a> {
                 .align_items_center()
                 .justify_content("flex-start")
                 .gap(".75rem")
-                .height("8.75rem"),
+                .height("8.75rem")
+                .property("width", "max-content"),
             Style::new(".company-card:hover")
                 .background_color("color-mix(in oklab, white 6%, transparent)"),
             Style::new(".company-card > div")
                 .border_box()
                 .height("6rem")
+                .min_width("100%")
                 .border_radius(".75rem")
                 .flex()
                 .align_items_center()
                 .justify_content("center"),
-            Style::new(".company-logo")
-                .border_box()
-                .height("4rem"),
+            Style::new(".company-logo").border_box().height("4rem"),
             Style::new(".company-logo img")
                 .height("4rem")
                 .width("auto")
