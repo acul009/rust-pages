@@ -13,7 +13,7 @@ use std::ops::Deref;
 use crate::style::{Style, Stylesheet};
 
 pub trait Component {
-    fn view(&self) -> impl crate::widget::ToElement<'_, Self>;
+    fn view<'a>(&'a self) -> impl crate::widget::ToElement<'a, Self>;
     fn style(&self, theme: &dyn crate::theme::Theme) -> Vec<Style<Self>>;
 }
 
@@ -22,7 +22,7 @@ pub trait Widget<Context> {
     fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut crate::style::Stylesheet);
 }
 
-impl<Context, C: Component + 'static> Widget<Context> for C {
+impl<Context, C: Component> Widget<Context> for C {
     fn html(&self, f: &mut String) -> std::fmt::Result {
         Component::view(self).to_element().html(f)
     }

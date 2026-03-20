@@ -1,4 +1,4 @@
-use std::{collections::HashMap, marker::PhantomData};
+use std::{any::type_name, collections::HashMap, marker::PhantomData};
 
 use itertools::Itertools;
 
@@ -7,7 +7,16 @@ use crate::html_sanitize;
 pub mod predone;
 
 fn scope_name<Context>() -> String {
-    let mut scope = std::any::type_name::<Context>().replace(':', "_");
+    let mut scope = std::any::type_name::<Context>()
+        .chars()
+        .filter_map(|char| {
+            if char.is_alphanumeric() {
+                Some(char.to_ascii_lowercase())
+            } else {
+                None
+            }
+        })
+        .collect::<String>();
     scope.push_str("__");
     scope
 }
@@ -24,12 +33,12 @@ impl Stylesheet {
         }
     }
 
-    pub fn contains<Context: 'static>(&self) -> bool {
-        self.styles.contains_key(&std::any::TypeId::of::<Context>())
+    pub fn contains<Context>(&self) -> bool {
+        self.styles.contains_key(&crate::type_id::<Context>())
     }
 
-    pub fn add_styles<Context: 'static>(&mut self, styles: &[Style<Context>]) {
-        let type_id = std::any::TypeId::of::<Context>();
+    pub fn add_styles<Context>(&mut self, styles: &[Style<Context>]) {
+        let type_id = crate::type_id::<Context>();
         let stylesheet = styles.iter().map(|style| style.to_stylesheet()).join(" ");
 
         self.styles.entry(type_id).or_insert_with(|| stylesheet);

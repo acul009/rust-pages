@@ -155,29 +155,52 @@ impl<'a, Context> Widget<Context> for Picture<'a, Context> {
 }
 
 static BUILD_OUTPUT_DIR: OnceLock<Mutex<Option<PathBuf>>> = OnceLock::new();
+static BUILD_CACHE_DIR: OnceLock<Mutex<Option<PathBuf>>> = OnceLock::new();
 
 fn build_output_dir() -> &'static Mutex<Option<PathBuf>> {
     BUILD_OUTPUT_DIR.get_or_init(|| Mutex::new(None))
+}
+
+fn build_cache_dir() -> &'static Mutex<Option<PathBuf>> {
+    BUILD_CACHE_DIR.get_or_init(|| Mutex::new(None))
 }
 
 pub struct BuildContext;
 
 impl BuildContext {
     pub(crate) fn new(output_dir: &Path) -> Self {
-        let mut guard = build_output_dir()
+        let output_dir = output_dir.to_path_buf();
+        let cache_dir = output_dir
+            .parent()
+            .unwrap_or_else(|| Path::new("."))
+            .join(".cache")
+            .join("pictures");
+
+        let mut output_guard = build_output_dir()
             .lock()
             .expect("picture build context mutex poisoned");
-        *guard = Some(output_dir.to_path_buf());
+        *output_guard = Some(output_dir);
+
+        let mut cache_guard = build_cache_dir()
+            .lock()
+            .expect("picture build context mutex poisoned");
+        *cache_guard = Some(cache_dir);
+
         Self
     }
 }
 
 impl Drop for BuildContext {
     fn drop(&mut self) {
-        let mut guard = build_output_dir()
+        let mut output_guard = build_output_dir()
             .lock()
             .expect("picture build context mutex poisoned");
-        *guard = None;
+        *output_guard = None;
+
+        let mut cache_guard = build_cache_dir()
+            .lock()
+            .expect("picture build context mutex poisoned");
+        *cache_guard = None;
     }
 }
 
@@ -220,24 +243,69 @@ fn generate_variants(source: &Path, versions: &[PictureVersion]) -> Result<(), a
             .clone()
             .context("PictureHandle::create() must be called during a site build")?
     };
+    let cache_dir = {
+        let guard = build_cache_dir()
+            .lock()
+            .expect("picture build context mutex poisoned");
+        guard
+            .clone()
+            .context("PictureHandle::create() must be called during a site build")?
+    };
 
     println!("Building picture: {}", source.display());
 
-    let original = ImageReader::open(source)
-        .with_context(|| format!("Failed to open picture {}", source.display()))?
-        .decode()
-        .with_context(|| format!("Failed to decode picture {}", source.display()))?;
+    let source_metadata = fs::metadata(source)
+        .with_context(|| format!("Failed to read picture metadata for {}", source.display()))?;
+    let source_modified = source_metadata.modified().with_context(|| {
+        format!(
+            "Failed to read picture modification time for {}",
+            source.display()
+        )
+    })?;
 
     let tasks = versions
         .iter()
         .map(|version| {
             let relative = version.location.trim_start_matches('/');
+            let cache_relative = relative
+                .strip_prefix("assets/pictures/")
+                .unwrap_or(relative);
+            let cached = cache_dir.join(cache_relative);
             let destination = output_dir.join(relative);
-            (version.clone(), destination)
+            (version.clone(), cached, destination)
         })
         .collect::<Vec<_>>();
 
-    tasks.par_iter().try_for_each(|(version, destination)| {
+    let missing_or_stale = tasks
+        .iter()
+        .any(|(_, cached, _)| cache_needs_refresh(cached, source_modified).unwrap_or(true));
+
+    if missing_or_stale {
+        let original = ImageReader::open(source)
+            .with_context(|| format!("Failed to open picture {}", source.display()))?
+            .decode()
+            .with_context(|| format!("Failed to decode picture {}", source.display()))?;
+
+        tasks.par_iter().try_for_each(|(version, cached, _)| {
+            if !cache_needs_refresh(cached, source_modified)? {
+                return Ok(());
+            }
+
+            if let Some(parent) = cached.parent() {
+                fs::create_dir_all(parent).with_context(|| {
+                    format!(
+                        "Failed to create picture cache directory {}",
+                        parent.display()
+                    )
+                })?;
+            }
+
+            let resized = resize_to_width(&original, version.resolution.0, version.resolution.1);
+            write_variant(&resized, version.format, cached)
+        })?;
+    }
+
+    tasks.par_iter().try_for_each(|(_, cached, destination)| {
         if let Some(parent) = destination.parent() {
             fs::create_dir_all(parent).with_context(|| {
                 format!(
@@ -247,9 +315,34 @@ fn generate_variants(source: &Path, versions: &[PictureVersion]) -> Result<(), a
             })?;
         }
 
-        let resized = resize_to_width(&original, version.resolution.0, version.resolution.1);
-        write_variant(&resized, version.format, destination)
+        fs::copy(cached, destination).with_context(|| {
+            format!(
+                "Failed to copy picture variant from {} to {}",
+                cached.display(),
+                destination.display()
+            )
+        })?;
+
+        Ok(())
     })
+}
+
+fn cache_needs_refresh(
+    cached: &Path,
+    source_modified: std::time::SystemTime,
+) -> Result<bool, anyhow::Error> {
+    let Ok(metadata) = fs::metadata(cached) else {
+        return Ok(true);
+    };
+
+    let cached_modified = metadata.modified().with_context(|| {
+        format!(
+            "Failed to read cached picture modification time for {}",
+            cached.display()
+        )
+    })?;
+
+    Ok(cached_modified < source_modified)
 }
 
 fn variant_widths(original_width: u32) -> Vec<u32> {
