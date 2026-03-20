@@ -59,8 +59,8 @@ impl<'a> Component for CompanyReferences<'a> {
                 .flex()
                 .flex_wrap("wrap")
                 .justify_content("center")
-                .align_items_center()
-                .gap("1.5rem")
+                .align_items("flex-start")
+                .gap("2rem 1.5rem")
                 .padding("1rem 0 2rem 0"),
             Style::new(".company-grid > a")
                 .color_inherit()
@@ -69,30 +69,30 @@ impl<'a> Component for CompanyReferences<'a> {
                 .flex()
                 .flex_column()
                 .align_items_center()
-                .justify_content("space-between")
+                .justify_content("flex-start")
                 .gap(".75rem")
-                .width("16rem")
-                .min_height("11rem")
-                .padding("1rem")
-                .border_radius("1rem"),
+                .height("8.75rem"),
             Style::new(".company-card:hover")
                 .background_color("color-mix(in oklab, white 6%, transparent)"),
             Style::new(".company-card > div")
-                .width_full()
-                .min_height("7rem")
+                .border_box()
+                .height("6rem")
                 .border_radius(".75rem")
                 .flex()
                 .align_items_center()
                 .justify_content("center"),
-            Style::new(".company-logo, .company-logo img")
-                .width_full()
-                .height("auto"),
+            Style::new(".company-logo")
+                .border_box()
+                .height("4rem"),
             Style::new(".company-logo img")
-                .property("max-height", "4.5rem")
+                .height("4rem")
+                .width("auto")
                 .property("object-fit", "contain"),
             Style::new(".company-name")
+                .height("1.5rem")
                 .text_align_center()
-                .line_height("1.4rem"),
+                .line_height("1.5rem")
+                .property("white-space", "nowrap"),
             Style::new(".bg-neutral").background_color("rgba(255,255,255,0.08)"),
             Style::new(".bg-neutral-50").background_color("rgba(255,255,255,0.04)"),
             Style::new(".bg-neutral-100").background_color("rgba(255,255,255,0.12)"),
