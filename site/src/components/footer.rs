@@ -6,7 +6,7 @@ use rust_pages::{
 };
 
 use crate::{
-    components::site_data::{PHONE, NAME, tel_href},
+    components::{phone::Phone, site_data::NAME},
     logo::LogoStandalone,
 };
 
@@ -19,7 +19,7 @@ impl Component for Footer {
                 div![
                     a(LogoStandalone).href("/").class("footer-logo"),
                     p!(NAME),
-                    a(format!("Tel: {}", PHONE)).href(tel_href())
+                    Phone
                 ]
                 .class("footer-brand footer-group"),
                 div![
@@ -72,7 +72,9 @@ impl Component for Footer {
                 .min_width("14rem")
                 .gap(".15rem")
                 .line_height("1.05"),
-            Style::new(".footer-group a").color_inherit().text_decoration_none(),
+            Style::new(".footer-group a")
+                .color_inherit()
+                .text_decoration_none(),
             Style::new(".footer-group a:hover").text_decoration_underline(),
             Style::new(".footer-group p").margin("0"),
             Style::new(".footer-brand p, .footer-brand a").line_height("1.05"),
@@ -81,8 +83,7 @@ impl Component for Footer {
                 .padding(".25rem")
                 .border_radius(".5rem")
                 .block(),
-            Style::new(".footer-logo:hover")
-                .background_color(theme.interactive_hover_color()),
+            Style::new(".footer-logo:hover").background_color(theme.interactive_hover_color()),
             Style::new(".footer-logo svg").width("auto").height_full(),
         ]
     }

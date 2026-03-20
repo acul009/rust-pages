@@ -152,6 +152,16 @@ macro_rules! b {
     };
 }
 
+#[macro_export]
+macro_rules! i {
+    () => {
+        $crate::widget::container::Container::new("i")
+    };
+    ($($child:expr),*) => {
+        $crate::widget::container::Container::with_children("i", [$($crate::widget::ToElement::to_element($child)),+])
+    };
+}
+
 pub fn br() -> crate::widget::br::Br {
     crate::widget::br::Br::new()
 }
