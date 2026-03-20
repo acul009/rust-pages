@@ -15,7 +15,7 @@ pub trait Page {
     fn title<'a>(_data: &'a Self::Data) -> Option<Cow<'a, str>> {
         None
     }
-    fn view(data: &Self::Data) -> impl crate::widget::ToElement<'_, Self>;
+    fn view<'a>(data: &'a Self::Data) -> impl crate::widget::ToElement<'a, Self>;
     fn style(&self, theme: &dyn crate::theme::Theme) -> Vec<Style<Self>>;
 }
 

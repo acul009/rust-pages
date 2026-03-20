@@ -1,20 +1,18 @@
 use chrono::{NaiveDate, Utc};
 use rust_pages::{
-    b, div, h1, h2, p,
-    page::Page,
-    style::Style,
-    theme::Theme,
-    ul,
-    widget::{br, picture},
+    b, br, div, h1, h2, p, page::Page, style::Style, theme::Theme, ul, widget::picture,
 };
 
-use crate::no_cookies::NoCookies;
+use crate::{
+    company_references::{Company, CompanyReferences},
+    no_cookies::NoCookies,
+};
 
 pub struct Index;
 
 pub struct Data {
     age: u32,
-    autowelt: picture::Handle,
+    company_references: Vec<Company>,
 }
 
 impl Page for Index {
@@ -28,26 +26,97 @@ impl Page for Index {
         let founded = NaiveDate::from_ymd_opt(2004, 4, 1).unwrap();
         let age = Utc::now().date_naive().years_since(founded).unwrap();
 
-        let administration = picture::Handle::create("images/refs/autowelt.png")?;
-
         Ok(Data {
             age,
-            autowelt: administration,
+            company_references: vec![
+                Company::new(
+                    "Fischer",
+                    "https://spenglerei-fischer.de",
+                    "bg-neutral p-10",
+                    picture::Handle::create("images/refs/fischer.png")?,
+                ),
+                Company::new(
+                    "Autowelt Ostermaier",
+                    "https://autowelt-ostermaier.de",
+                    "",
+                    picture::Handle::create("images/refs/autowelt.png")?,
+                ),
+                Company::new(
+                    "Erbenermittlung Mayer",
+                    "https://erben-mayer.de/",
+                    "",
+                    picture::Handle::create("images/refs/mayer.jpg")?,
+                ),
+                Company::new(
+                    "Danzl Gartentechnik",
+                    "https://www.danzl-gartentechnik.de/",
+                    "",
+                    picture::Handle::create("images/refs/danzl.jpg")?,
+                ),
+                Company::new(
+                    "Langlechner",
+                    "https://langlechner-haustechnik.de/",
+                    "bg-neutral-50 px-8",
+                    picture::Handle::create("images/refs/langlechner.png")?,
+                ),
+                Company::new(
+                    "Fitworld",
+                    "https://www.fitworldts.de/",
+                    "bg-neutral p-8",
+                    picture::Handle::create("images/refs/fitworld.png")?,
+                ),
+                Company::new(
+                    "Rechtsanwälte Heiß",
+                    "https://www.rechtsanwaelte-heiss.de/",
+                    "",
+                    picture::Handle::create("images/refs/heiss.png")?,
+                ),
+                Company::new(
+                    "Biostein",
+                    "https://www.biostein.com/",
+                    "p-8",
+                    picture::Handle::create("images/refs/biostein.png")?,
+                ),
+                Company::new(
+                    "Mauerberger",
+                    "https://www.mauerberger-tore.de/",
+                    "bg-neutral-100 px-8",
+                    picture::Handle::create("images/refs/mauerberger.png")?,
+                ),
+                Company::new(
+                    "Solarbau Chiemgau",
+                    "https://solarbau-chiemgau.de/",
+                    "p-8",
+                    picture::Handle::create("images/refs/solarbau-chiemgau.png")?,
+                ),
+                Company::new(
+                    "Zimmermann Transporte",
+                    "https://www.zimmermann-transporte.com/",
+                    "bg-neutral p-8",
+                    picture::Handle::create("images/refs/zimmermann.png")?,
+                ),
+                Company::new(
+                    "Schlosserei-Brand",
+                    "https://www.schlosserei-brand.de/",
+                    "bg-neutral-50 p-8",
+                    picture::Handle::create("images/refs/brand.jpg")?,
+                ),
+            ],
         })
     }
 
-    fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
+    fn view<'a>(data: &'a Self::Data) -> impl rust_pages::widget::ToElement<'a, Self> {
         div![
             h1!("Willkommen bei Rahn IT-Systemtechnik"),
             p!(
-                "Wir betreuen Seit ",
+                "Wir betreuen seit ",
                 b!(data.age),
                 " Jahren professionell und zuverlässig die IT unserer Kunden.",
                 br(),
-                "Profitieren auch Sie von unserem umfangreichen Wissen, und unserer langjährige Erfahrung."
+                "Profitieren auch Sie von unserem umfangreichen Wissen und unserer langjährigen Erfahrung."
             ),
             p!(
-                "Unser Kundenstamm ist dabei so vielseitig wie unsere Leistungen,",
+                "Unser Kundenstamm ist so vielseitig wie unsere Leistungen.",
                 br(),
                 "In welcher Branche Sie auch tätig sind, zögern Sie nicht uns zu kontaktieren."
             ),
@@ -62,11 +131,11 @@ impl Page for Index {
                 "Landkreis Traunstein"
             ),
             h2!("Unsere Kunden"),
-            div![picture(&data.autowelt)],
+            CompanyReferences::new(&data.company_references),
             h2!("Cookies? Nicht mit uns!"),
             NoCookies,
             p!(
-                "Cookie-Banner sind nicht nur nervig, oft werden Marketing- und Tracking-Cookies installiert, welche die Privatsphäre beeinträchtigen.",
+                "Cookie-Banner sind nicht nur nervig. Oft werden Marketing- und Tracking-Cookies installiert, welche die Privatsphäre beeinträchtigen.",
                 br(),
                 "Wir stellen uns gegen diesen Trend: Unsere Webseite funktioniert ",
                 b!("komplett ohne Cookies!")

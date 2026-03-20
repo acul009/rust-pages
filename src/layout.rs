@@ -1,7 +1,8 @@
 use crate::{
+    raw_html,
     style::{Style, Stylesheet},
     theme::Theme,
-    widget::{ToElement, raw_html},
+    widget::ToElement,
 };
 
 pub trait Layout {

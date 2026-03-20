@@ -1,4 +1,7 @@
-use rust_pages::widget::{Component, raw_html};
+use rust_pages::{
+    raw_html,
+    widget::{Component, raw_html},
+};
 
 pub struct LogoFull;
 

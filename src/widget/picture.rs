@@ -7,6 +7,7 @@ use std::{
     fmt::{Display, Write},
     fs::{self, File},
     hash::{Hash, Hasher},
+    marker::PhantomData,
     path::{Path, PathBuf},
     sync::{Mutex, OnceLock},
 };
@@ -92,26 +93,28 @@ impl ImageFormat {
     }
 }
 
-pub struct Picture<'a> {
+pub struct Picture<'a, Context> {
     handle: &'a Handle,
     class: Option<String>,
+    context: PhantomData<Context>,
 }
 
-impl<'a> Picture<'a> {
+impl<'a, Context> Picture<'a, Context> {
     pub fn new(handle: &'a Handle) -> Self {
         Self {
             handle,
             class: None,
+            context: PhantomData,
         }
     }
 
-    pub fn class<Context>(mut self, class: impl Class<Context>) -> Self {
+    pub fn class(mut self, class: impl Class<Context>) -> Self {
         self.class = Some(class.resolve());
         self
     }
 }
 
-impl<'a, Context> Widget<Context> for Picture<'a> {
+impl<'a, Context> Widget<Context> for Picture<'a, Context> {
     fn html(&self, f: &mut String) -> std::fmt::Result {
         write!(f, "<picture")?;
         if let Some(class) = &self.class {

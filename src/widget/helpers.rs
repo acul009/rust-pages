@@ -68,7 +68,7 @@ pub fn raw_html<'a>(html: &'a str) -> RawHtml<'a> {
     RawHtml::new(html)
 }
 
-pub fn picture<'a>(handle: &'a Handle) -> Picture<'a> {
+pub fn picture<'a, Context>(handle: &'a Handle) -> Picture<'a, Context> {
     Picture::new(handle)
 }
 

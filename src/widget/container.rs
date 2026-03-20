@@ -2,7 +2,7 @@ use std::borrow::Cow;
 
 use crate::{
     style::Class,
-    widget::{ContextElement, Widget},
+    widget::{ContextElement, ToElement, Widget},
 };
 
 pub struct Container<'a, Context> {
@@ -31,8 +31,8 @@ impl<'a, Context> Container<'a, Context> {
         }
     }
 
-    pub fn child(mut self, child: impl Into<ContextElement<'a, Context>>) -> Self {
-        self.children.push(child.into());
+    pub fn child(mut self, child: impl ToElement<'a, Context>) -> Self {
+        self.children.push(child.to_element());
         self
     }
 

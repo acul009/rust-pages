@@ -2,15 +2,13 @@ pub mod a;
 pub mod br;
 pub mod container;
 pub mod details;
-mod helpers;
+pub(crate) mod helpers;
 pub mod picture;
 pub mod raw_html;
 pub mod str;
 pub mod ul;
 
 use std::ops::Deref;
-
-pub use helpers::*;
 
 use crate::style::{Style, Stylesheet};
 

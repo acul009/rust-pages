@@ -1,5 +1,5 @@
 use rust_pages::{
-    div, nav,
+    a, details, div, nav,
     style::Style,
     ul,
     widget::{Component, ToElement, a, details},

@@ -1,5 +1,5 @@
 use rust_pages::{
-    div,
+    div, raw_html,
     style::Style,
     widget::{Component, raw_html},
 };

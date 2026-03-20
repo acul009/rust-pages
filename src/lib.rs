@@ -4,6 +4,7 @@ pub mod page;
 pub mod style;
 pub mod theme;
 pub mod widget;
+pub use widget::helpers::*;
 
 fn html_sanitize<'a>(input: impl AsRef<str>) -> String {
     let input = input.as_ref();
