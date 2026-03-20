@@ -3,10 +3,10 @@ use rust_pages::{
     b, br, div, h1, h2, p, page::Page, style::Style, theme::Theme, ul, widget::picture,
 };
 
-use crate::{
-    company_references::{Company, CompanyReferences},
-    no_cookies::NoCookies,
-};
+use crate::no_cookies::NoCookies;
+use company_references::{Background, Company, CompanyReferences};
+
+mod company_references;
 
 pub struct Index;
 
@@ -32,73 +32,85 @@ impl Page for Index {
                 Company::new(
                     "Fischer",
                     "https://spenglerei-fischer.de",
-                    "bg-neutral p-10",
+                    Background::Dark,
+                    "p-10",
                     picture::Handle::create("images/refs/fischer.png")?,
                 ),
                 Company::new(
                     "Autowelt Ostermaier",
                     "https://autowelt-ostermaier.de",
+                    Background::White,
                     "",
                     picture::Handle::create("images/refs/autowelt.png")?,
                 ),
                 Company::new(
                     "Erbenermittlung Mayer",
                     "https://erben-mayer.de/",
+                    Background::White,
                     "",
                     picture::Handle::create("images/refs/mayer.jpg")?,
                 ),
                 Company::new(
                     "Danzl Gartentechnik",
                     "https://www.danzl-gartentechnik.de/",
+                    Background::White,
                     "",
                     picture::Handle::create("images/refs/danzl.jpg")?,
                 ),
                 Company::new(
                     "Langlechner",
                     "https://langlechner-haustechnik.de/",
-                    "bg-neutral-50 px-8",
+                    Background::White,
+                    "px-8",
                     picture::Handle::create("images/refs/langlechner.png")?,
                 ),
                 Company::new(
                     "Fitworld",
                     "https://www.fitworldts.de/",
-                    "bg-neutral p-8",
+                    Background::Dark,
+                    "p-8",
                     picture::Handle::create("images/refs/fitworld.png")?,
                 ),
                 Company::new(
                     "Rechtsanwälte Heiß",
                     "https://www.rechtsanwaelte-heiss.de/",
+                    Background::White,
                     "",
                     picture::Handle::create("images/refs/heiss.png")?,
                 ),
                 Company::new(
                     "Biostein",
                     "https://www.biostein.com/",
+                    Background::Dark,
                     "p-8",
                     picture::Handle::create("images/refs/biostein.png")?,
                 ),
                 Company::new(
                     "Mauerberger",
                     "https://www.mauerberger-tore.de/",
-                    "bg-neutral-100 px-8",
+                    Background::White,
+                    "px-8",
                     picture::Handle::create("images/refs/mauerberger.png")?,
                 ),
                 Company::new(
                     "Solarbau Chiemgau",
                     "https://solarbau-chiemgau.de/",
+                    Background::Dark,
                     "p-8",
                     picture::Handle::create("images/refs/solarbau-chiemgau.png")?,
                 ),
                 Company::new(
                     "Zimmermann Transporte",
                     "https://www.zimmermann-transporte.com/",
-                    "bg-neutral p-8",
+                    Background::Dark,
+                    "p-8",
                     picture::Handle::create("images/refs/zimmermann.png")?,
                 ),
                 Company::new(
                     "Schlosserei-Brand",
                     "https://www.schlosserei-brand.de/",
-                    "bg-neutral-50 p-8",
+                    Background::White,
+                    "p-8",
                     picture::Handle::create("images/refs/brand.jpg")?,
                 ),
             ],

@@ -37,7 +37,19 @@ impl<'a, Context> Container<'a, Context> {
     }
 
     pub fn class(mut self, class: impl Class<Context>) -> Self {
-        self.class = Some(class.resolve());
+        let resolved = class.resolve();
+        if resolved.is_empty() {
+            return self;
+        }
+
+        match &mut self.class {
+            Some(existing) if !existing.is_empty() => {
+                existing.push(' ');
+                existing.push_str(&resolved);
+            }
+            Some(existing) => *existing = resolved,
+            None => self.class = Some(resolved),
+        }
         self
     }
 }

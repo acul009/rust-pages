@@ -1,28 +1,46 @@
 use rust_pages::{
     a, div, picture, span,
     style::Style,
-    widget::{Component, ToElement, picture},
+    widget::{picture, Component, ToElement},
 };
 
 pub struct Company {
     name: &'static str,
     href: &'static str,
+    background: Background,
     class: &'static str,
     image: picture::Handle,
+}
+
+#[derive(Clone, Copy)]
+pub enum Background {
+    None,
+    White,
+    Dark,
 }
 
 impl Company {
     pub fn new(
         name: &'static str,
         href: &'static str,
+        background: Background,
         class: &'static str,
         image: picture::Handle,
     ) -> Self {
         Self {
             name,
             href,
+            background,
             class,
             image,
+        }
+    }
+
+    fn background_class(&self) -> &'static str {
+        match self.background {
+            Background::None => "",
+            Background::White => "bg-white",
+            Background::Dark => "bg-dark",
         }
     }
 }
@@ -44,7 +62,9 @@ impl<'a> Component for CompanyReferences<'a> {
             .fold(div!().class("company-grid"), |grid, company| {
                 grid.child(
                     a(div![
-                        div![picture(&company.image).class("company-logo")].class(company.class),
+                        div![picture(&company.image).class("company-logo")]
+                            .class(company.background_class())
+                            .class(company.class),
                         span!(company.name).class("company-name")
                     ]
                     .class("company-card"))
@@ -93,9 +113,8 @@ impl<'a> Component for CompanyReferences<'a> {
                 .text_align_center()
                 .line_height("1.5rem")
                 .property("white-space", "nowrap"),
-            Style::new(".bg-neutral").background_color("rgba(255,255,255,0.08)"),
-            Style::new(".bg-neutral-50").background_color("rgba(255,255,255,0.04)"),
-            Style::new(".bg-neutral-100").background_color("rgba(255,255,255,0.12)"),
+            Style::new(".bg-white").background_color("white"),
+            Style::new(".bg-dark").background_color("rgba(255,255,255,0.08)"),
             Style::new(".p-8").padding("2rem"),
             Style::new(".p-10").padding("2.5rem"),
             Style::new(".px-8").padding("1rem 2rem"),

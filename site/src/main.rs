@@ -1,4 +1,3 @@
-mod company_references;
 mod index;
 mod layout;
 pub mod logo;
