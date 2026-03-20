@@ -31,12 +31,13 @@ impl Component for NavBar {
                 a("Preise").href("/pricing"),
                 a("Fernwartung").href("/remote"),
                 details(ul![
-                    a("Unsere Prinzipien").href("/about_us"),
-                    a("Das Team").href("/about_us/people")
+                    a("Unsere Prinzipien").href("/about-us"),
+                    a("Das Team").href("/about-us/people")
                 ])
                 .name("nav1")
                 .summary("Unternehmen"),
-                a("Kontakt").href("/contact")
+                a("Kontakt").href("/contact"),
+                a("Impressum").href("/impressum")
             ],
             div![]
         ]
@@ -53,6 +54,9 @@ impl Component for NavBar {
                 .justify_content("center")
                 .align_items("center")
                 .position_fixed()
+                .property("top", "0")
+                .property("left", "0")
+                .property("z-index", "1000")
                 .width_full()
                 .font_size("1.1rem"),
             Style::new("nav > div")
@@ -75,8 +79,8 @@ impl Component for NavBar {
                 .cursor_pointer()
                 .padding(".5rem 1rem")
                 .border_radius(".25rem"),
-            Style::new("nav a:hover, nav summary:hover")
-                .background_color(theme.primary_active_color()),
+            Style::new("nav > div a:hover, nav > ul a:hover, nav summary:hover")
+                .background_color(theme.interactive_hover_color()),
             Style::new("nav li").position_relative(),
             Style::new("nav li::marker").content(""),
             Style::new("nav li > details > ul")

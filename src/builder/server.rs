@@ -99,8 +99,8 @@ impl Server {
         }
 
         // Read and serve file
-        match fs::read(&canon) {
-            Ok(contents) => {
+        match get_path_contents(&canon) {
+            Some(contents) => {
                 let header = format!(
                     "HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n",
                     contents.len()
@@ -108,7 +108,7 @@ impl Server {
                 let _ = stream.write_all(header.as_bytes());
                 let _ = stream.write_all(&contents);
             }
-            Err(_) => {
+            None => {
                 let body = "404 Not Found";
                 let response = format!(
                     "HTTP/1.1 404 NOT FOUND\r\nContent-Length: {}\r\n\r\n{}",
@@ -118,6 +118,20 @@ impl Server {
                 let _ = stream.write_all(response.as_bytes());
             }
         }
+
         Ok(())
     }
+}
+
+fn get_path_contents(path: &Path) -> Option<Vec<u8>> {
+    if let Ok(contents) = fs::read(path) {
+        return Some(contents);
+    }
+
+    let index_file = path.join("index.html");
+    if let Ok(contents) = fs::read(&index_file) {
+        return Some(contents);
+    }
+
+    None
 }

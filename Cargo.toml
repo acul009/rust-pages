@@ -12,3 +12,13 @@ clap = { version = "4.5.51", features = ["derive"] }
 image = { version = "0.25.8", default-features = false, features = ["avif", "jpeg", "png", "webp"] }
 itertools = "0.14.0"
 rayon = "1.11.0"
+
+
+[profile.dev]
+opt-level = 0
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.dev.build-override]
+opt-level = 3

@@ -8,6 +8,9 @@ pub trait Theme {
     fn primary_color(&self) -> &'static str;
     fn primary_text_color(&self) -> &'static str;
     fn primary_active_color(&self) -> &'static str;
+    fn interactive_hover_color(&self) -> &'static str {
+        self.primary_active_color()
+    }
     fn css(&self) -> Vec<Style<ThemeStyle>>;
 }
 

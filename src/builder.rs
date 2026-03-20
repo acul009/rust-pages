@@ -1,4 +1,10 @@
-use std::{borrow::Cow, fmt::Display, fs::File, io::Write, path::PathBuf};
+use std::{
+    borrow::Cow,
+    fmt::Display,
+    fs::{self, File},
+    io::Write,
+    path::PathBuf,
+};
 
 use anyhow::Context;
 use clap::Parser;
@@ -93,8 +99,8 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
 
         let mut stylesheet = Stylesheet::new();
         stylesheet.add_styles(self.theme.css().as_slice());
-        let pages = self.load_pages()?;
-        let layouts = self.load_layouts()?;
+        let pages = self.load_pages().context("error during page load")?;
+        let layouts = self.load_layouts().context("error loading layouts")?;
 
         stylesheet.add_styles(self.styles.as_slice());
 
@@ -121,12 +127,15 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
                 finished_html.push_str("</head><body>");
 
                 let mut page_html = String::new();
-                page.html(&mut page_html)?;
+                page.html(&mut page_html)
+                    .context("error building page html")?;
                 page.style(&self.theme, &mut stylesheet);
                 for layout in &layouts {
                     if path.starts_with(layout.path()) {
                         let mut new = String::new();
-                        layout.html(&mut new, &page_html)?;
+                        layout
+                            .html(&mut new, &page_html)
+                            .context("error building layout html")?;
                         layout.style(&self.theme, &mut stylesheet);
                         page_html = new;
                     }
@@ -136,15 +145,21 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
                 finished_html.push_str("</body></html>");
             }
 
-            let mut file = File::create(self.output_dir.join(path).join("index.html"))?;
-            file.write_all(finished_html.as_bytes())?;
-            file.flush()?;
+            let folder_path = self.output_dir.join(path);
+            fs::create_dir_all(folder_path.as_path()).context("error creating page dir")?;
+            let mut file =
+                File::create(folder_path.join("index.html")).context("error creating page file")?;
+            file.write_all(finished_html.as_bytes())
+                .context("error writing page")?;
+            file.flush().context("error during flush")?;
         }
 
         println!("Building stylesheet");
-        let mut file = File::create(self.output_dir.join("styles.css"))?;
-        file.write_all(stylesheet.to_css().as_bytes())?;
-        file.flush()?;
+        let mut file = File::create(self.output_dir.join("styles.css"))
+            .context("error creating stylesheet file")?;
+        file.write_all(stylesheet.to_css().as_bytes())
+            .context("error writing stylesheet")?;
+        file.flush().context("error flushing stylesheet")?;
 
         match args.command {
             Command::Build => println!("Done!"),

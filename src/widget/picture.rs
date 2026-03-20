@@ -7,6 +7,7 @@ use std::{
     fmt::{Display, Write},
     fs::{self, File},
     hash::{Hash, Hasher},
+    io::Cursor,
     marker::PhantomData,
     path::{Path, PathBuf},
     sync::{Mutex, OnceLock},
@@ -33,8 +34,8 @@ impl Handle {
             anyhow::bail!("Picture source is not a file: {}", canonical.display());
         }
 
-        let (width, height) = image_dimensions(&canonical)?;
-        let variants = build_variants(&canonical, width, height);
+        let source_image = SourceImage::load(&canonical)?;
+        let variants = build_variants(&canonical, &source_image);
         let fallback = variants
             .iter()
             .rev()
@@ -42,7 +43,7 @@ impl Handle {
             .cloned()
             .context("No JPEG fallback generated for picture")?;
 
-        generate_variants(&canonical, &variants)?;
+        generate_variants(&source_image, &variants)?;
 
         Ok(Self {
             versions: variants,
@@ -204,14 +205,44 @@ impl Drop for BuildContext {
     }
 }
 
-fn image_dimensions(path: &Path) -> Result<(u32, u32), anyhow::Error> {
-    image::image_dimensions(path)
-        .with_context(|| format!("Failed to read dimensions for {}", path.display()))
+struct SourceImage {
+    path: PathBuf,
+    bytes: Vec<u8>,
+    image: DynamicImage,
 }
 
-fn build_variants(source: &Path, width: u32, height: u32) -> Vec<PictureVersion> {
+impl SourceImage {
+    fn load(path: &Path) -> Result<Self, anyhow::Error> {
+        let bytes = fs::read(path)
+            .with_context(|| format!("Failed to read picture {}", path.display()))?;
+        let image = ImageReader::new(Cursor::new(bytes.as_slice()))
+            .with_guessed_format()
+            .with_context(|| format!("Failed to detect picture format {}", path.display()))?
+            .decode()
+            .with_context(|| format!("Failed to decode picture {}", path.display()))?;
+
+        Ok(Self {
+            path: path.to_path_buf(),
+            bytes,
+            image,
+        })
+    }
+
+    fn checksum(&self) -> String {
+        let mut hasher = DefaultHasher::new();
+        self.bytes.hash(&mut hasher);
+        format!("{:016x}", hasher.finish())
+    }
+
+    fn dimensions(&self) -> (u32, u32) {
+        (self.image.width(), self.image.height())
+    }
+}
+
+fn build_variants(source: &Path, source_image: &SourceImage) -> Vec<PictureVersion> {
+    let (width, height) = source_image.dimensions();
     let widths = variant_widths(width);
-    let slug = picture_slug(source);
+    let slug = source_image.checksum();
     let mut versions = Vec::new();
 
     for format in [ImageFormat::Avif, ImageFormat::WebP, ImageFormat::Jpeg] {
@@ -234,7 +265,10 @@ fn build_variants(source: &Path, width: u32, height: u32) -> Vec<PictureVersion>
     versions
 }
 
-fn generate_variants(source: &Path, versions: &[PictureVersion]) -> Result<(), anyhow::Error> {
+fn generate_variants(
+    source_image: &SourceImage,
+    versions: &[PictureVersion],
+) -> Result<(), anyhow::Error> {
     let output_dir = {
         let guard = build_output_dir()
             .lock()
@@ -252,97 +286,52 @@ fn generate_variants(source: &Path, versions: &[PictureVersion]) -> Result<(), a
             .context("PictureHandle::create() must be called during a site build")?
     };
 
-    println!("Building picture: {}", source.display());
+    println!("Building picture: {}", source_image.path.display());
 
-    let source_metadata = fs::metadata(source)
-        .with_context(|| format!("Failed to read picture metadata for {}", source.display()))?;
-    let source_modified = source_metadata.modified().with_context(|| {
+    let cache_folder = cache_dir.join(source_image.checksum());
+    fs::create_dir_all(&cache_folder).with_context(|| {
         format!(
-            "Failed to read picture modification time for {}",
-            source.display()
+            "Failed to create picture cache directory {}",
+            cache_folder.display()
         )
     })?;
 
-    let tasks = versions
-        .iter()
-        .map(|version| {
-            let relative = version.location.trim_start_matches('/');
-            let cache_relative = relative
-                .strip_prefix("assets/pictures/")
-                .unwrap_or(relative);
-            let cached = cache_dir.join(cache_relative);
-            let destination = output_dir.join(relative);
-            (version.clone(), cached, destination)
-        })
-        .collect::<Vec<_>>();
-
-    let missing_or_stale = tasks
-        .iter()
-        .any(|(_, cached, _)| cache_needs_refresh(cached, source_modified).unwrap_or(true));
-
-    if missing_or_stale {
-        let original = ImageReader::open(source)
-            .with_context(|| format!("Failed to open picture {}", source.display()))?
-            .decode()
-            .with_context(|| format!("Failed to decode picture {}", source.display()))?;
-
-        tasks.par_iter().try_for_each(|(version, cached, _)| {
-            if !cache_needs_refresh(cached, source_modified)? {
-                return Ok(());
-            }
-
-            if let Some(parent) = cached.parent() {
-                fs::create_dir_all(parent).with_context(|| {
-                    format!(
-                        "Failed to create picture cache directory {}",
-                        parent.display()
-                    )
-                })?;
-            }
-
-            let resized = resize_to_width(&original, version.resolution.0, version.resolution.1);
-            write_variant(&resized, version.format, cached)
-        })?;
-    }
-
-    tasks.par_iter().try_for_each(|(_, cached, destination)| {
-        if let Some(parent) = destination.parent() {
-            fs::create_dir_all(parent).with_context(|| {
-                format!(
-                    "Failed to create picture output directory {}",
-                    parent.display()
-                )
-            })?;
-        }
-
-        fs::copy(cached, destination).with_context(|| {
-            format!(
-                "Failed to copy picture variant from {} to {}",
-                cached.display(),
-                destination.display()
-            )
-        })?;
-
-        Ok(())
+    versions.par_iter().try_for_each(|version| {
+        ensure_picture_version(source_image, version, &cache_folder, &output_dir)
     })
 }
 
-fn cache_needs_refresh(
-    cached: &Path,
-    source_modified: std::time::SystemTime,
-) -> Result<bool, anyhow::Error> {
-    let Ok(metadata) = fs::metadata(cached) else {
-        return Ok(true);
-    };
+fn ensure_picture_version(
+    source_image: &SourceImage,
+    version: &PictureVersion,
+    cache_folder: &Path,
+    output_dir: &Path,
+) -> Result<(), anyhow::Error> {
+    let cached = cache_path(cache_folder, source_image.path.as_path(), version);
+    if !cached.exists() {
+        let resized = resize_to_width(&source_image.image, version.resolution.0, version.resolution.1);
+        write_variant(&resized, version.format, &cached)?;
+    }
 
-    let cached_modified = metadata.modified().with_context(|| {
+    let destination = output_path(output_dir, version);
+    if let Some(parent) = destination.parent() {
+        fs::create_dir_all(parent).with_context(|| {
+            format!(
+                "Failed to create picture output directory {}",
+                parent.display()
+            )
+        })?;
+    }
+
+    fs::copy(&cached, &destination).with_context(|| {
         format!(
-            "Failed to read cached picture modification time for {}",
-            cached.display()
+            "Failed to copy picture variant from {} to {}",
+            cached.display(),
+            destination.display()
         )
     })?;
 
-    Ok(cached_modified < source_modified)
+    Ok(())
 }
 
 fn variant_widths(original_width: u32) -> Vec<u32> {
@@ -359,10 +348,17 @@ fn scaled_height(original_width: u32, original_height: u32, target_width: u32) -
         .unwrap_or(original_height)
 }
 
-fn picture_slug(source: &Path) -> String {
-    let mut hasher = DefaultHasher::new();
-    source.hash(&mut hasher);
-    format!("{:016x}", hasher.finish())
+fn cache_path(cache_folder: &Path, source: &Path, version: &PictureVersion) -> PathBuf {
+    cache_folder.join(format!(
+        "{}-{}w.{}",
+        file_stem(source),
+        version.resolution.0,
+        version.format.extension()
+    ))
+}
+
+fn output_path(output_dir: &Path, version: &PictureVersion) -> PathBuf {
+    output_dir.join(version.location.trim_start_matches('/'))
 }
 
 fn file_stem(source: &Path) -> String {
