@@ -35,7 +35,7 @@ impl Page for ServicesEmail {
         div![
             h1!("Unsere E-Mail Dienste"),
             p!("E-Mail ist und bleibt der entscheidende Nachrichtenkanal fÃƒÆ’Ã‚Â¼r geschÃƒÆ’Ã‚Â¤ftliche Kommunikation. Mit unserer Hilfe kommen Ihre E-Mails zuverlÃƒÆ’Ã‚Â¤ssig an."),
-            ServiceCard::new("Rahn-IT Mail-Gateway", &data.email, div![
+            ServiceCard::<Self>::new("Rahn-IT Mail-Gateway", &data.email).body( div![
                 p!("Unser E-Mail-Gateway ist die perfekte ErgÃƒÆ’Ã‚Â¤nzung fÃƒÆ’Ã‚Â¼r Ihren Mailserver."),
                 h3!("Spam-Filter und Virenscanner"),
                 p!("Eingehende Mails werden von unserem leistungsstarken Spam-Filter geprÃƒÆ’Ã‚Â¼ft und vor Viren und Betrugsversuchen geschÃƒÆ’Ã‚Â¼tzt."),
@@ -44,11 +44,11 @@ impl Page for ServicesEmail {
                 h3!("Immer einen Schritt voraus"),
                 p!("Dank fortlaufender ÃƒÆ’Ã…â€œberwachung geht keine E-Mail mehr spurlos verloren.")
             ]),
-            ServiceCard::new("On-Premise Mailserver", &data.mailcow, div![
+            ServiceCard::<Self>::new("On-Premise Mailserver", &data.mailcow).body( div![
                 p!("Wir installieren und verwalten Ihren eigenen E-Mail-Server direkt bei Ihnen im Betrieb."),
                 p!("Wir nutzen das Mailcow System und kombinieren es bei Bedarf mit unserem Mail-Gateway zu einer leistungsstarken GesamtlÃƒÆ’Ã‚Â¶sung.")
             ]),
-            ServiceCard::new("DMARC-ÃƒÆ’Ã…â€œberwachung", &data.dmarc, div![
+            ServiceCard::<Self>::new("DMARC-ÃƒÆ’Ã…â€œberwachung", &data.dmarc).body( div![
                 p!("Mithilfe von DMARC-Berichten kÃƒÆ’Ã‚Â¶nnen Sie nachvollziehen, ob Ihre E-Mails ankommen und ob jemand unter Ihrem Namen missbrÃƒÆ’Ã‚Â¤uchlich handelt."),
                 p!("Wir ÃƒÆ’Ã‚Â¼bernehmen Einrichtung und Auswertung eingehender DMARC-Berichte.")
             ]),
@@ -68,6 +68,10 @@ impl Page for ServicesEmail {
     }
 
     fn style(&self, _theme: &dyn Theme) -> Vec<Style<Self>> {
-        vec![Style::new(".plain-copy h3").padding("1.5rem 0 .25rem 0").margin("0")]
+        vec![
+            Style::new(".plain-copy h3")
+                .padding("1.5rem 0 .25rem 0")
+                .margin("0"),
+        ]
     }
 }

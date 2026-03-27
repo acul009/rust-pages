@@ -32,14 +32,14 @@ impl Page for ServicesLinux {
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
         div![
             h1!("Linux und Proxmox"),
-            ServiceCard::new("Proxmox-VE", &data.proxmox, div![
+            ServiceCard::<Self>::new("Proxmox-VE", &data.proxmox).body( div![
                 p!("Mit unserer Expertise ÃƒÆ’Ã‚Â¼bernehmen wir Einrichtung, Wartung und ÃƒÆ’Ã…â€œberwachung Ihrer Proxmox-Infrastruktur."),
                 h3!("Hohe ZuverlÃƒÆ’Ã‚Â¤ssigkeit"),
                 p!("Proxmox basiert auf Debian und KVM und bietet eine robuste Virtualisierungsumgebung."),
                 h3!("ÃƒÆ’Ã…â€œberlegene DatenintegritÃƒÆ’Ã‚Â¤t"),
                 p!("Mit ZFS und dem Proxmox Backup Server erhalten Sie hervorragenden Schutz Ihrer Daten.")
             ]),
-            ServiceCard::new("Linux-Server", &data.linux, div![
+            ServiceCard::<Self>::new("Linux-Server", &data.linux).body( div![
                 p!("Sie haben Interesse am Einsatz von Linux oder suchen jemanden, der Ihre vorhandene Infrastruktur betreut? Dann sind Sie bei uns richtig."),
                 h3!("FlexibilitÃƒÆ’Ã‚Â¤t"),
                 p!("Von Datenbanken ÃƒÆ’Ã‚Â¼ber Webserver bis zur Nextcloud: Linux-Server sind enorm flexibel."),
@@ -60,6 +60,10 @@ impl Page for ServicesLinux {
     }
 
     fn style(&self, _theme: &dyn Theme) -> Vec<Style<Self>> {
-        vec![Style::new(".plain-copy h3").padding("1.5rem 0 .25rem 0").margin("0")]
+        vec![
+            Style::new(".plain-copy h3")
+                .padding("1.5rem 0 .25rem 0")
+                .margin("0"),
+        ]
     }
 }

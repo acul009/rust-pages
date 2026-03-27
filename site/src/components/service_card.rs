@@ -1,20 +1,18 @@
-use std::task::Context;
-
 use rust_pages::{
     div, h2, picture,
     style::Style,
     theme::Theme,
-    widget::{Component, ContextElement, ToElement, Widget, picture as picture_handle},
+    widget::{Component, ContextElement, ToElement, picture},
 };
 
 pub struct ServiceCard<'a, Context> {
     title: &'a str,
-    image: &'a picture_handle::Handle,
+    image: &'a picture::Handle,
     body: Option<ContextElement<'a, Context>>,
 }
 
 impl<'a, Context> ServiceCard<'a, Context> {
-    pub fn new(title: &'a str, image: &'a picture_handle::Handle) -> Self {
+    pub fn new(title: &'a str, image: &'a picture::Handle) -> ServiceCard<'a, Context> {
         Self {
             title,
             image,
@@ -32,7 +30,7 @@ impl<Context> Component for ServiceCard<'_, Context> {
     fn view(&self) -> impl ToElement<'_, Self> {
         div![
             div![picture(self.image).class("service-image")].class("service-figure"),
-            div![h2!(self.title), &self.body].class("service-body")
+            div![h2!(self.title), self.body.as_ref()].class("service-body")
         ]
         .class("service-card")
     }

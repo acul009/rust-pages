@@ -8,7 +8,7 @@ pub mod raw_html;
 pub mod str;
 pub mod ul;
 
-use std::ops::Deref;
+use std::{borrow::Cow, ops::Deref};
 
 use crate::style::{Style, Stylesheet};
 
@@ -33,16 +33,6 @@ impl<Context, C: Component> Widget<Context> for C {
             stylesheet.add_styles(&styles);
         }
         Component::view(self).to_element().style(theme, stylesheet);
-    }
-}
-
-pub trait WidgetWrapper {
-    fn html(&self, f: &mut String) -> std::fmt::Result;
-}
-
-impl<'a, Context> WidgetWrapper for Box<dyn Widget<Context> + 'a> {
-    fn html(&self, f: &mut String) -> std::fmt::Result {
-        Widget::html(self.deref(), f)
     }
 }
 
@@ -76,7 +66,33 @@ impl<'a, Context, W: Widget<Context> + 'a> ToElement<'a, Context> for W {
     }
 }
 
-impl<Context, W: Widget<Context>> Widget<Context> for Option<W> {
+impl<'a, Context> Widget<Context> for ContextElement<'a, Context> {
+    fn html(&self, f: &mut String) -> std::fmt::Result {
+        self.widget.html(f)
+    }
+
+    fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut crate::style::Stylesheet) {
+        self.widget.style(theme, stylesheet)
+    }
+}
+
+impl<'a, Context, InnerContext> Widget<Context> for Option<ContextElement<'a, InnerContext>> {
+    fn html(&self, f: &mut String) -> std::fmt::Result {
+        if let Some(widget) = self {
+            widget.html(f)
+        } else {
+            Ok(())
+        }
+    }
+
+    fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut crate::style::Stylesheet) {
+        if let Some(widget) = self {
+            widget.style(theme, stylesheet)
+        }
+    }
+}
+
+impl<'a, Context, InnerContext> Widget<Context> for Option<&'a ContextElement<'a, InnerContext>> {
     fn html(&self, f: &mut String) -> std::fmt::Result {
         if let Some(widget) = self {
             widget.html(f)
