@@ -1,6 +1,9 @@
 use rust_pages::{a, br, div, h1, p, page::Page, style::Style, theme::Theme};
 
-use crate::components::site_data::{PHONE, tel_href};
+use crate::components::{
+    browser_content::BrowserContent,
+    site_data::{PHONE, tel_href},
+};
 
 pub struct Emergency;
 
@@ -39,7 +42,9 @@ impl Page for Emergency {
                 br(),
                 "Auch an Sonn- und Feiertagen"
             ),
-            a(format!("Tel: {}", PHONE)).href(tel_href()).class("cta")
+            BrowserContent::new(
+                a(format!("Tel: {}", PHONE)).href(tel_href()).class("cta")
+            )
         ]
     }
 

@@ -7,7 +7,10 @@ use rust_pages::{
 };
 
 use crate::{
-    components::site_data::{CITY, MAIL, NAME, PHONE, POSTAL_CODE, STREET, tel_href},
+    components::{
+        browser_content::BrowserContent,
+        site_data::{CITY, MAIL, NAME, PHONE, POSTAL_CODE, STREET, tel_href},
+    },
     logo::LogoFull,
 };
 
@@ -39,8 +42,12 @@ impl Page for Contact {
                         .child(div![STREET])
                         .child(div![format!("{} {}", POSTAL_CODE, CITY)]),
                     h2!("Kontaktinformationen"),
-                    p![a(format!("E-Mail: {}", MAIL)).href(format!("mailto:{}", MAIL))],
-                    p![a(format!("Tel: {}", PHONE)).href(tel_href())],
+                    p![BrowserContent::new(
+                        a(format!("E-Mail: {}", MAIL)).href(format!("mailto:{}", MAIL))
+                    )],
+                    p![BrowserContent::new(
+                        a(format!("Tel: {}", PHONE)).href(tel_href())
+                    )],
                     h2!("Geschäftszeiten"),
                     p![
                         "Mo-Do: 09:00 - 16:30",

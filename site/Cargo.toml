@@ -5,5 +5,7 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1.0.104"
+base64 = "0.22.1"
 chrono = "0.4.45"
+rand = "0.9.2"
 rust-pages = { path = ".." }

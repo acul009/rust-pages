@@ -24,6 +24,8 @@ fn main() {
     let builder = SiteBuilder::new()
         .title("Rahn-IT")
         .base_url("https://it-rahn.de")
+        .script(components::site_data::asset_path("scripts/navigation.js"))
+        .script(components::site_data::asset_path("scripts/browser-content.js"))
         .layout(MainLayout)
         .page(Index)
         .page(Emergency)

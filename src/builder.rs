@@ -26,6 +26,7 @@ pub struct SiteBuilder<Title, Theme> {
     pages: Vec<Box<dyn PageLoaderWrapper>>,
     layouts: Vec<Box<dyn LayoutLoaderWrapper>>,
     styles: Vec<Style<()>>,
+    scripts: Vec<PathBuf>,
     theme: Theme,
 }
 
@@ -38,6 +39,7 @@ impl SiteBuilder<(), ()> {
             pages: Vec::new(),
             layouts: Vec::new(),
             styles: Vec::new(),
+            scripts: Vec::new(),
             theme: (),
         }
     }
@@ -52,6 +54,7 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
             pages: self.pages,
             layouts: self.layouts,
             styles: self.styles,
+            scripts: self.scripts,
             theme: self.theme,
         }
     }
@@ -81,6 +84,11 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
         self
     }
 
+    pub fn script(mut self, path: impl Into<PathBuf>) -> Self {
+        self.scripts.push(path.into());
+        self
+    }
+
     pub fn theme<T>(self, theme: T) -> SiteBuilder<Title, T> {
         SiteBuilder {
             default_title: self.default_title,
@@ -89,6 +97,7 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
             pages: self.pages,
             layouts: self.layouts,
             styles: self.styles,
+            scripts: self.scripts,
             theme,
         }
     }
@@ -113,6 +122,7 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
         }
         std::fs::create_dir_all(self.output_dir.as_path()).context("Error creating output dir")?;
 
+        let script_urls = self.copy_scripts().context("error copying scripts")?;
         let _picture_context = picture::BuildContext::new(self.output_dir.as_path());
 
         let mut stylesheet = Stylesheet::new();
@@ -147,6 +157,13 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
                     finished_html.push_str(&header);
                 }
                 finished_html.push_str("<link rel=\"stylesheet\" href=\"/styles.css\">");
+                for script_url in &script_urls {
+                    write!(
+                        &mut finished_html,
+                        "<script src=\"{}\" defer></script>",
+                        html_sanitize(script_url)
+                    )?;
+                }
 
                 write!(
                     &mut finished_html,
@@ -227,6 +244,33 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
             }
         }
         Ok(())
+    }
+
+    fn copy_scripts(&self) -> anyhow::Result<Vec<String>> {
+        if self.scripts.is_empty() {
+            return Ok(Vec::new());
+        }
+
+        let destination_dir = self.output_dir.join("assets/scripts");
+        fs::create_dir_all(&destination_dir)
+            .context("error creating scripts output directory")?;
+
+        self.scripts
+            .iter()
+            .map(|source| {
+                let file_name = source
+                    .file_name()
+                    .context("script path has no file name")?;
+                let destination = destination_dir.join(file_name);
+                fs::copy(source, &destination).with_context(|| {
+                    format!("error copying script {}", source.display())
+                })?;
+                Ok(format!(
+                    "/assets/scripts/{}",
+                    file_name.to_string_lossy()
+                ))
+            })
+            .collect()
     }
 
     fn load_pages(&self) -> anyhow::Result<Vec<Box<dyn PageWrapper>>> {

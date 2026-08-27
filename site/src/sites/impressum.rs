@@ -6,7 +6,10 @@ use rust_pages::{
     widget::{ToElement, container::Container},
 };
 
-use crate::components::site_data::{CITY, IBAN, MAIL, NAME, PHONE, POSTAL_CODE, STREET, UST_ID, tel_href};
+use crate::components::{
+    browser_content::BrowserContent,
+    site_data::{CITY, IBAN, MAIL, NAME, PHONE, POSTAL_CODE, STREET, UST_ID, tel_href},
+};
 
 fn row<'a>(label: impl ToElement<'a, Impressum>, value: impl ToElement<'a, Impressum>) -> Container<'a, Impressum> {
     Container::new("tr")
@@ -43,11 +46,11 @@ impl Page for Impressum {
                 ))
                 .child(row(
                     "Telefon",
-                    a(PHONE).href(tel_href())
+                    BrowserContent::new(a(PHONE).href(tel_href()))
                 ))
                 .child(row(
                     "E-Mail",
-                    a(MAIL).href(format!("mailto:{}", MAIL))
+                    BrowserContent::new(a(MAIL).href(format!("mailto:{}", MAIL)))
                 ))
                 .child(row("USt-ID", UST_ID))
                 .child(row("IBAN", IBAN))

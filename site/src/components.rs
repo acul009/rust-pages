@@ -1,3 +1,4 @@
+pub mod browser_content;
 pub mod footer;
 pub mod link_button;
 pub mod navbar;
