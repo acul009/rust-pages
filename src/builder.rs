@@ -21,6 +21,7 @@ use crate::{
 
 pub struct SiteBuilder<Title, Theme> {
     default_title: Title,
+    base_url: Option<String>,
     output_dir: PathBuf,
     pages: Vec<Box<dyn PageLoaderWrapper>>,
     layouts: Vec<Box<dyn LayoutLoaderWrapper>>,
@@ -32,6 +33,7 @@ impl SiteBuilder<(), ()> {
     pub fn new() -> SiteBuilder<(), ()> {
         SiteBuilder {
             default_title: (),
+            base_url: None,
             output_dir: PathBuf::from("./build"),
             pages: Vec::new(),
             layouts: Vec::new(),
@@ -45,12 +47,18 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
     pub fn title(self, title: impl Display) -> SiteBuilder<String, Theme> {
         SiteBuilder {
             default_title: title.to_string(),
+            base_url: self.base_url,
             output_dir: self.output_dir,
             pages: self.pages,
             layouts: self.layouts,
             styles: self.styles,
             theme: self.theme,
         }
+    }
+
+    pub fn base_url(mut self, base_url: impl Into<String>) -> Self {
+        self.base_url = Some(base_url.into());
+        self
     }
 
     pub fn page<P: Page + 'static>(mut self, page: P) -> SiteBuilder<Title, Theme> {
@@ -76,6 +84,7 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
     pub fn theme<T>(self, theme: T) -> SiteBuilder<Title, T> {
         SiteBuilder {
             default_title: self.default_title,
+            base_url: self.base_url,
             output_dir: self.output_dir,
             pages: self.pages,
             layouts: self.layouts,
@@ -83,6 +92,15 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
             theme,
         }
     }
+}
+
+fn xml_escape(value: &str) -> String {
+    value
+        .replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
+        .replace('\'', "&apos;")
 }
 
 impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
@@ -104,11 +122,16 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
 
         stylesheet.add_styles(self.styles.as_slice());
 
+        let mut sitemap_paths = Vec::new();
         for page in pages {
             let path = page.path();
             println!("Building: /{}", path.display());
             let mut settings = PageSettings::new(self.default_title.clone());
             page.settings(&mut settings);
+
+            if settings.show_in_sitemap {
+                sitemap_paths.push(path.clone());
+            }
 
             let mut finished_html = String::new();
 
@@ -158,6 +181,34 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
             file.write_all(finished_html.as_bytes())
                 .context("error writing page")?;
             file.flush().context("error during flush")?;
+        }
+
+        if let Some(base_url) = &self.base_url {
+            println!("Building sitemap");
+            let base_url = base_url.trim_end_matches('/');
+            let mut sitemap = String::from(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n",
+            );
+            for path in sitemap_paths {
+                let path = path.to_string_lossy().replace('\\', "/");
+                let location = if path.trim_matches('/').is_empty() {
+                    format!("{base_url}/")
+                } else {
+                    format!("{base_url}/{}/", path.trim_matches('/'))
+                };
+                sitemap.push_str("  <url><loc>");
+                sitemap.push_str(&xml_escape(&location));
+                sitemap.push_str("</loc></url>\n");
+            }
+            sitemap.push_str("</urlset>\n");
+
+            let mut file = File::create(self.output_dir.join("sitemap.xml"))
+                .context("error creating sitemap file")?;
+            file.write_all(sitemap.as_bytes())
+                .context("error writing sitemap file")?;
+            file.flush().context("error flushing sitemap file")?;
+        } else {
+            println!("[ERROR] Cannot generate sitemap without a base_url")
         }
 
         println!("Building stylesheet");

@@ -23,6 +23,7 @@ use crate::{
 fn main() {
     let builder = SiteBuilder::new()
         .title("Rahn-IT")
+        .base_url("https://it-rahn.de")
         .layout(MainLayout)
         .page(Index)
         .page(Emergency)
