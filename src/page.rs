@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use crate::{
     style::{Style, Stylesheet},
     widget::ToElement,
@@ -12,22 +10,52 @@ pub trait Page {
 
     fn load_data(&self) -> anyhow::Result<Self::Data>;
 
-    fn title<'a>(_data: &'a Self::Data) -> Option<Cow<'a, str>> {
-        None
-    }
-    fn custom_header<'a>(_data: &'a Self::Data) -> Option<Cow<'a, str>> {
-        None
-    }
+    fn settings<'a>(_data: &'a Self::Data, _settings: &mut PageSettings) {}
     fn view<'a>(data: &'a Self::Data) -> impl crate::widget::ToElement<'a, Self>;
     fn style(&self, theme: &dyn crate::theme::Theme) -> Vec<Style<Self>>;
 }
 
 pub trait PageWrapper {
     fn path(&self) -> std::path::PathBuf;
-    fn title(&self) -> Option<Cow<'_, str>>;
-    fn custom_header(&self) -> Option<Cow<'_, str>>;
+    fn settings(&self, settings: &mut PageSettings);
     fn html(&self, f: &mut String) -> std::fmt::Result;
     fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut Stylesheet);
+}
+
+pub struct PageSettings {
+    pub(crate) title: String,
+    pub(crate) custom_header: Option<String>,
+    pub(crate) show_in_sitemap: bool,
+}
+
+impl PageSettings {
+    pub fn new(title: impl Into<String>) -> Self {
+        Self {
+            title: title.into(),
+            custom_header: None,
+            show_in_sitemap: true,
+        }
+    }
+
+    pub fn title(&mut self, title: impl Into<String>) -> &mut Self {
+        self.title = title.into();
+        self
+    }
+
+    pub fn custom_header(&mut self, custom_header: impl Into<String>) -> &mut Self {
+        self.custom_header = Some(custom_header.into());
+        self
+    }
+
+    pub fn show_in_sitemap(&mut self) -> &mut Self {
+        self.show_in_sitemap = true;
+        self
+    }
+
+    pub fn hide_in_sitemap(&mut self) -> &mut Self {
+        self.show_in_sitemap = false;
+        self
+    }
 }
 
 pub struct PageLoader<P: Page> {
@@ -61,12 +89,8 @@ impl<P: Page> PageWrapper for PageContainer<P> {
         P::path(&self.data)
     }
 
-    fn title(&self) -> Option<Cow<'_, str>> {
-        P::title(&self.data)
-    }
-
-    fn custom_header(&self) -> Option<Cow<'_, str>> {
-        P::custom_header(&self.data)
+    fn settings(&self, settings: &mut PageSettings) {
+        P::settings(&self.data, settings);
     }
 
     fn html(&self, f: &mut String) -> std::fmt::Result {

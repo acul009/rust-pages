@@ -7,11 +7,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-anyhow = "1.0.100"
-clap = { version = "4.5.51", features = ["derive"] }
-image = { version = "0.25.8", default-features = false, features = ["avif", "jpeg", "png", "webp"] }
+anyhow = "1.0.104"
+clap = { version = "4.6.6", features = ["derive"] }
+image = { version = "0.25.10", default-features = false, features = ["avif", "jpeg", "png", "webp"] }
 itertools = "0.14.0"
-rayon = "1.11.0"
+rayon = "1.12.0"
 
 
 [profile.dev]

@@ -1,5 +1,4 @@
 use std::{
-    borrow::Cow,
     fmt::Display,
     fs::{self, File},
     io::Write,
@@ -13,8 +12,9 @@ mod server;
 
 use crate::{
     builder::server::Server,
+    html_sanitize,
     layout::{Layout, LayoutLoader, LayoutLoaderWrapper, LayoutWrapper},
-    page::{Page, PageLoader, PageLoaderWrapper, PageWrapper},
+    page::{Page, PageLoader, PageLoaderWrapper, PageSettings, PageWrapper},
     style::{Style, Stylesheet},
     widget::picture,
 };
@@ -107,9 +107,8 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
         for page in pages {
             let path = page.path();
             println!("Building: /{}", path.display());
-            let title = page
-                .title()
-                .unwrap_or_else(|| Cow::Borrowed(&self.default_title));
+            let mut settings = PageSettings::new(self.default_title.clone());
+            page.settings(&mut settings);
 
             let mut finished_html = String::new();
 
@@ -121,12 +120,16 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
                 finished_html.push_str(
                     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
                 );
-                if let Some(header) = page.custom_header() {
+                if let Some(header) = &settings.custom_header {
                     finished_html.push_str(&header);
                 }
                 finished_html.push_str("<link rel=\"stylesheet\" href=\"/styles.css\">");
 
-                write!(&mut finished_html, "<title>{}</title>", title)?;
+                write!(
+                    &mut finished_html,
+                    "<title>{}</title>",
+                    html_sanitize(&settings.title)
+                )?;
                 finished_html.push_str("</head><body>");
 
                 let mut page_html = String::new();
