@@ -30,7 +30,7 @@ impl Page for Index {
             age,
             company_references: vec![
                 Company::new(
-                    "Fischer",
+                    "Spenglerei Fischer",
                     "https://spenglerei-fischer.de",
                     Background::Dark,
                     "p-10",
@@ -58,14 +58,14 @@ impl Page for Index {
                     picture::Handle::create(&asset_path("images/refs/danzl.jpg"))?,
                 ),
                 Company::new(
-                    "Langlechner",
+                    "Langlechner Haustechnik",
                     "https://langlechner-haustechnik.de/",
                     Background::White,
                     "px-8",
                     picture::Handle::create(&asset_path("images/refs/langlechner.png"))?,
                 ),
                 Company::new(
-                    "Fitworld",
+                    "Fitworld TS",
                     "https://www.fitworldts.de/",
                     Background::Dark,
                     "p-8",

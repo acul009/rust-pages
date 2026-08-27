@@ -81,6 +81,8 @@ impl<'a> Component for CompanyReferences<'a> {
                 .gap("2rem 1.5rem")
                 .padding("1rem 0 2rem 0"),
             Style::new(".company-grid > a")
+                .display("flex")
+                .height("8.75rem")
                 .color_inherit()
                 .text_decoration_none(),
             Style::new(".company-card")
@@ -92,7 +94,7 @@ impl<'a> Component for CompanyReferences<'a> {
                 .gap(".75rem")
                 .padding(".5rem .7rem")
                 .border_radius("1rem")
-                .height("8.75rem")
+                .height_full()
                 .property("width", "max-content"),
             Style::new(".company-card:hover").background_color(theme.interactive_hover_color()),
             Style::new(".company-card > div")
