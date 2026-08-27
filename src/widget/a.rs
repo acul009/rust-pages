@@ -10,6 +10,7 @@ pub struct A<'a, Context> {
     href: Cow<'a, str>,
     content: ContextElement<'a, Context>,
     class: Option<String>,
+    download: Option<Cow<'a, str>>,
 }
 
 impl<'a, Context> A<'a, Context> {
@@ -18,6 +19,7 @@ impl<'a, Context> A<'a, Context> {
             href: Cow::Borrowed(""),
             content: content.to_element(),
             class: None,
+            download: None,
         }
     }
 
@@ -30,6 +32,11 @@ impl<'a, Context> A<'a, Context> {
         self.class = Some(class.resolve());
         self
     }
+
+    pub fn download(mut self, file_name: impl Into<Cow<'a, str>>) -> Self {
+        self.download = Some(file_name.into());
+        self
+    }
 }
 
 impl<Context> Widget<Context> for A<'_, Context> {
@@ -37,6 +44,9 @@ impl<Context> Widget<Context> for A<'_, Context> {
         write!(f, "<a href=\"{}\"", html_sanitize(&self.href))?;
         if let Some(class) = &self.class {
             write!(f, " class=\"{}\"", class)?;
+        }
+        if let Some(file_name) = &self.download {
+            write!(f, " download=\"{}\"", html_sanitize(file_name))?;
         }
         write!(f, ">")?;
         self.content.html(f)?;

@@ -56,7 +56,7 @@ impl Page for Impressum {
                 .child(row("IBAN", IBAN))
                 .child(row(
                     "Erstellt mit",
-                    div!["Rust Pages", br(), "TODO: Technologie-Hinweis bei Bedarf ergänzen."]
+                    a("Rust Pages").href("https://github.com/acul009/rust-pages")
                 ))
         ]
     }

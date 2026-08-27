@@ -26,6 +26,7 @@ pub struct SiteBuilder<Title, Theme> {
     pages: Vec<Box<dyn PageLoaderWrapper>>,
     layouts: Vec<Box<dyn LayoutLoaderWrapper>>,
     styles: Vec<Style<()>>,
+    assets: Vec<PathBuf>,
     scripts: Vec<PathBuf>,
     theme: Theme,
 }
@@ -39,6 +40,7 @@ impl SiteBuilder<(), ()> {
             pages: Vec::new(),
             layouts: Vec::new(),
             styles: Vec::new(),
+            assets: Vec::new(),
             scripts: Vec::new(),
             theme: (),
         }
@@ -54,6 +56,7 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
             pages: self.pages,
             layouts: self.layouts,
             styles: self.styles,
+            assets: self.assets,
             scripts: self.scripts,
             theme: self.theme,
         }
@@ -84,6 +87,11 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
         self
     }
 
+    pub fn asset(mut self, path: impl Into<PathBuf>) -> Self {
+        self.assets.push(path.into());
+        self
+    }
+
     pub fn script(mut self, path: impl Into<PathBuf>) -> Self {
         self.scripts.push(path.into());
         self
@@ -97,6 +105,7 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
             pages: self.pages,
             layouts: self.layouts,
             styles: self.styles,
+            assets: self.assets,
             scripts: self.scripts,
             theme,
         }
@@ -122,6 +131,7 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
         }
         std::fs::create_dir_all(self.output_dir.as_path()).context("Error creating output dir")?;
 
+        self.copy_assets().context("error copying assets")?;
         let script_urls = self.copy_scripts().context("error copying scripts")?;
         let _picture_context = picture::BuildContext::new(self.output_dir.as_path());
 
@@ -242,6 +252,17 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
                     .context("Failed to create server")?;
                 server.run().context("Error while running server")?;
             }
+        }
+        Ok(())
+    }
+
+    fn copy_assets(&self) -> anyhow::Result<()> {
+        for source in &self.assets {
+            let file_name = source
+                .file_name()
+                .context("asset path has no file name")?;
+            fs::copy(source, self.output_dir.join(file_name))
+                .with_context(|| format!("error copying asset {}", source.display()))?;
         }
         Ok(())
     }

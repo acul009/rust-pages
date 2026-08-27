@@ -9,6 +9,7 @@ use rust_pages::{
 use crate::{
     components::{
         browser_content::BrowserContent,
+        link_button::LinkButton,
         site_data::{CITY, MAIL, NAME, PHONE, POSTAL_CODE, STREET, tel_href},
     },
     logo::LogoFull,
@@ -56,7 +57,13 @@ impl Page for Contact {
                         br(),
                         Container::new("b").child("24 Stunden Notdienst")
                     ],
-                    p!("TODO: vCard-Download wieder ergänzen.").class("todo")
+                    div![BrowserContent::new(
+                        LinkButton::new()
+                            .label("Zu Kontakten hinzufügen")
+                            .href("/Rahn-IT.vcf")
+                            .download("Rahn-IT.vcf")
+                    )]
+                    .class("contact-actions")
                 ]
                 .class("contact-copy")
             ]
@@ -80,10 +87,12 @@ impl Page for Contact {
             Style::new(".contact-copy h2")
                 .padding("1.5rem 0 .25rem 0")
                 .margin("0"),
-            Style::new(".contact-copy a")
-                .color_inherit()
-                .text_decoration_underline(),
-            Style::new(".todo").property("opacity", ".75"),
+            Style::new(
+                ".contact-copy a[href^=\"mailto:\"], .contact-copy a[href^=\"tel:\"]",
+            )
+            .color_inherit()
+            .text_decoration_underline(),
+            Style::new(".contact-actions").margin("2rem 0 0 0"),
         ]
     }
 }

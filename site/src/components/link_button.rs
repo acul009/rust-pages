@@ -10,6 +10,7 @@ use rust_pages::{
 pub struct LinkButton<'a> {
     href: Cow<'a, str>,
     label: Cow<'a, str>,
+    download: Option<Cow<'a, str>>,
 }
 
 impl<'a> LinkButton<'a> {
@@ -17,6 +18,7 @@ impl<'a> LinkButton<'a> {
         Self {
             href: Cow::Borrowed(""),
             label: Cow::Borrowed(""),
+            download: None,
         }
     }
 
@@ -29,13 +31,24 @@ impl<'a> LinkButton<'a> {
         self.label = label.into();
         self
     }
+
+    pub fn download(mut self, file_name: impl Into<Cow<'a, str>>) -> Self {
+        self.download = Some(file_name.into());
+        self
+    }
 }
 
 impl Component for LinkButton<'_> {
     fn view(&self) -> impl ToElement<'_, Self> {
-        a(self.label.as_ref())
+        let link = a(self.label.as_ref())
             .href(self.href.as_ref())
-            .class("link-button")
+            .class("link-button");
+
+        if let Some(file_name) = &self.download {
+            link.download(file_name.as_ref())
+        } else {
+            link
+        }
     }
 
     fn style(&self, theme: &dyn Theme) -> Vec<Style<Self>> {
