@@ -5,6 +5,7 @@ pub mod emergency;
 pub mod impressum;
 pub mod index;
 pub mod pricing;
+pub mod redirect;
 pub mod services_email;
 pub mod services_linux;
 pub mod team;

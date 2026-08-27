@@ -30,7 +30,7 @@ impl Page for Emergency {
                 "Wir bieten schnelle und professionelle Hilfe bei dringenden Problemen."
             ),
             p!(
-                "Falls es sich nicht um einen dringenden Notfall handelt, nutzen Sie bitte unsere regulÃƒÂ¤ren GeschÃƒÂ¤ftszeiten."
+                "Falls es sich nicht um einen dringenden Notfall handelt, nutzen Sie bitte unsere regulären Geschäftszeiten."
             ),
             p!(
                 "Mo-Do: 09:00 - 16:30",

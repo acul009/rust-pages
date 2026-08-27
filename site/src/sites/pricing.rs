@@ -37,7 +37,7 @@ impl Page for Pricing {
             div![
                 div![
                     div![strong("Anfahrt pro KM")],
-                    div!["0,71 Ã¢â€šÂ¬"].class("amount")
+                    div!["0,71 €"].class("amount")
                 ]
                 .class("price-row"),
                 div![
@@ -46,13 +46,13 @@ impl Page for Pricing {
                         p!("Bei einer Anfahrt ", Container::new("b").child("unter 25 km"), " werden mindestens 0,25 Stunden berechnet."),
                         p!("Bei einer Anfahrt ", Container::new("b").child("ab 25 km"), " werden mindestens 0,5 Stunden berechnet.")
                     ],
-                    div!["107,10 Ã¢â€šÂ¬"].class("amount")
+                    div!["107,10 €"].class("amount")
                 ]
                 .class("price-row")
             ]
             .class("price-list"),
-            p!("Unsere Preise fÃƒÆ’Ã‚Â¼r GerÃƒÆ’Ã‚Â¤te richten sich nach unseren aktuellen Einkaufspreisen."),
-            p!("FÃƒÆ’Ã‚Â¼r ein Angebot, rufen Sie uns an oder schreiben Sie uns eine E-Mail."),
+            p!("Unsere Preise für Geräte richten sich nach unseren aktuellen Einkaufspreisen."),
+            p!("Für ein Angebot, rufen Sie uns an oder schreiben Sie uns eine E-Mail."),
             p!(Phone),
             p!(Mail)
         ]

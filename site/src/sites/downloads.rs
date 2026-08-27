@@ -44,8 +44,7 @@ impl Page for Downloads {
                     .href("https://get.teamviewer.com/q3zt6wn")
             ]
             .class("download-action"),
-            p!("TODO: Guided download / install flow if interactive behavior is desired.")
-                .class("todo")
+            p!("Hier finden Sie unsere Fernwartungs-Software zum Download.")
         ]
     }
 

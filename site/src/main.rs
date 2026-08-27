@@ -14,16 +14,9 @@ use crate::{
     layout::MainLayout,
     services::Services,
     sites::{
-        about::About,
-        contact::Contact,
-        downloads::Downloads,
-        emergency::Emergency,
-        impressum::Impressum,
-        index::Index,
-        pricing::Pricing,
-        services_email::ServicesEmail,
-        services_linux::ServicesLinux,
-        team::Team,
+        about::About, contact::Contact, downloads::Downloads, emergency::Emergency,
+        impressum::Impressum, index::Index, pricing::Pricing, redirect::Redirect,
+        services_email::ServicesEmail, services_linux::ServicesLinux, team::Team,
     },
 };
 
@@ -42,6 +35,7 @@ fn main() {
         .page(Team)
         .page(Contact)
         .page(Impressum)
+        .page(Redirect::new("remote", "/downloads"))
         .theme(Dark {})
         .styles(remove_default_styles())
         .styles(animated_details());

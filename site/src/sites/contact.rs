@@ -43,7 +43,7 @@ impl Page for Contact {
                     h2!("Kontaktinformationen"),
                     p![a(format!("E-Mail: {}", MAIL)).href(format!("mailto:{}", MAIL))],
                     p![a(format!("Tel: {}", PHONE)).href(tel_href())],
-                    h2!("GeschÃ¤ftszeiten"),
+                    h2!("Geschäftszeiten"),
                     p![
                         "Mo-Do: 09:00 - 16:30",
                         br(),
@@ -51,7 +51,7 @@ impl Page for Contact {
                         br(),
                         Container::new("b").child("24 Stunden Notdienst")
                     ],
-                    p!("TODO: vCard-Download wieder ergÃ¤nzen.").class("todo")
+                    p!("TODO: vCard-Download wieder ergänzen.").class("todo")
                 ]
                 .class("contact-copy")
             ]

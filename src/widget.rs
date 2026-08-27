@@ -8,8 +8,6 @@ pub mod raw_html;
 pub mod str;
 pub mod ul;
 
-use std::{borrow::Cow, ops::Deref};
-
 use crate::style::{Style, Stylesheet};
 
 pub trait Component {

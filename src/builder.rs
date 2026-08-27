@@ -121,6 +121,9 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
                 finished_html.push_str(
                     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
                 );
+                if let Some(header) = page.custom_header() {
+                    finished_html.push_str(&header);
+                }
                 finished_html.push_str("<link rel=\"stylesheet\" href=\"/styles.css\">");
 
                 write!(&mut finished_html, "<title>{}</title>", title)?;

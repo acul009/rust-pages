@@ -3,7 +3,7 @@ use std::path::Path;
 pub const NAME: &str = "Rahn IT-Systemtechnik";
 pub const STREET: &str = "Alte Bahn 9";
 pub const POSTAL_CODE: &str = "84577";
-pub const CITY: &str = "TÃ¼ÃŸling";
+pub const CITY: &str = "Tüßling";
 pub const PHONE: &str = "08633 / 977969 - 0";
 pub const MAIL: &str = "info@it-rahn.de";
 pub const UST_ID: &str = "DE206337243";

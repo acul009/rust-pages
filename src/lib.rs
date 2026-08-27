@@ -8,7 +8,7 @@ use std::{any::TypeId, marker::PhantomData};
 
 pub use widget::helpers::*;
 
-fn html_sanitize<'a>(input: impl AsRef<str>) -> String {
+pub fn html_sanitize<'a>(input: impl AsRef<str>) -> String {
     let input = input.as_ref();
     let mut sanitized = String::with_capacity(input.len());
 

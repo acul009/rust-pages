@@ -15,6 +15,9 @@ pub trait Page {
     fn title<'a>(_data: &'a Self::Data) -> Option<Cow<'a, str>> {
         None
     }
+    fn custom_header<'a>(_data: &'a Self::Data) -> Option<Cow<'a, str>> {
+        None
+    }
     fn view<'a>(data: &'a Self::Data) -> impl crate::widget::ToElement<'a, Self>;
     fn style(&self, theme: &dyn crate::theme::Theme) -> Vec<Style<Self>>;
 }
@@ -22,6 +25,7 @@ pub trait Page {
 pub trait PageWrapper {
     fn path(&self) -> std::path::PathBuf;
     fn title(&self) -> Option<Cow<'_, str>>;
+    fn custom_header(&self) -> Option<Cow<'_, str>>;
     fn html(&self, f: &mut String) -> std::fmt::Result;
     fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut Stylesheet);
 }
@@ -59,6 +63,10 @@ impl<P: Page> PageWrapper for PageContainer<P> {
 
     fn title(&self) -> Option<Cow<'_, str>> {
         P::title(&self.data)
+    }
+
+    fn custom_header(&self) -> Option<Cow<'_, str>> {
+        P::custom_header(&self.data)
     }
 
     fn html(&self, f: &mut String) -> std::fmt::Result {
