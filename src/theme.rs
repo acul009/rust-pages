@@ -1,7 +1,5 @@
 use crate::style::Style;
 
-pub struct ThemeStyle {}
-
 pub trait Theme {
     fn background_color(&self) -> &'static str;
     fn text_color(&self) -> &'static str;
@@ -11,10 +9,10 @@ pub trait Theme {
     fn interactive_hover_color(&self) -> &'static str {
         self.primary_active_color()
     }
-    fn css(&self) -> Vec<Style<ThemeStyle>>;
+    fn css(&self) -> Vec<Style<()>>;
 }
 
-pub struct Dark {}
+pub struct Dark;
 
 impl Theme for Dark {
     fn background_color(&self) -> &'static str {
@@ -37,7 +35,7 @@ impl Theme for Dark {
         "color-mix(in oklab,var(--tc)10%,transparent)"
     }
 
-    fn css(&self) -> Vec<Style<ThemeStyle>> {
+    fn css(&self) -> Vec<Style<()>> {
         vec![
             Style::new(":root")
                 .property("--bc", "oklch(0.2533 0.016 252.42)")
@@ -53,6 +51,15 @@ impl Theme for Dark {
                 .margin("0"),
             Style::new("h2").padding("2rem 0 0 0").margin("0"),
             Style::new("p").padding(".5rem 0").margin("0"),
+            Style::new(r#"a.link"#)
+                .color("#66e0e0")
+                .text_decoration_underline()
+                .property("text-underline-offset", ".2em")
+                .transition_property("color,text-decoration-thickness")
+                .transition_duration(".2s"),
+            Style::new(r#"a.link:hover"#)
+                .color("#b3ffff")
+                .property("text-decoration-thickness", ".15em"),
         ]
     }
 }

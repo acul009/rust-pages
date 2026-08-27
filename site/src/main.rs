@@ -37,7 +37,7 @@ fn main() {
         .page(Contact)
         .page(Impressum)
         .page(Redirect::new("remote", "/downloads"))
-        .theme(Dark {})
+        .theme(Dark)
         .styles(remove_default_styles())
         .styles(animated_details());
 

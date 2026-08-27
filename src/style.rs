@@ -17,7 +17,10 @@ fn scope_name<Context>() -> String {
             }
         })
         .collect::<String>();
-    scope.push_str("__");
+    // No prefix for global styles with type ()
+    if !scope.is_empty() {
+        scope.push_str("__");
+    }
     scope
 }
 
@@ -41,7 +44,16 @@ impl Stylesheet {
         let type_id = crate::type_id::<Context>();
         let stylesheet = styles.iter().map(|style| style.to_stylesheet()).join(" ");
 
-        self.styles.entry(type_id).or_insert_with(|| stylesheet);
+        // No dedup for global styles
+        if type_id == crate::type_id::<()>() {
+            self.styles
+                .entry(type_id)
+                .or_insert_with(|| String::new())
+                .push_str(&stylesheet);
+        } else {
+            // deduplication for normal components
+            self.styles.entry(type_id).or_insert_with(|| stylesheet);
+        }
     }
 
     pub fn to_css(&self) -> String {
@@ -58,7 +70,10 @@ impl<Context> Class<Context> for &str {
     fn resolve(&self) -> String {
         let scope_name = scope_name::<Context>();
         self.split_ascii_whitespace()
-            .map(|class| format!("{}{}", scope_name, html_sanitize(class)))
+            .map(|class| {
+                let class = html_sanitize(class);
+                format!("{}{} {}", scope_name, class, class)
+            })
             .join(" ")
     }
 }

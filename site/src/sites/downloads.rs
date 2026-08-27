@@ -1,4 +1,6 @@
-use rust_pages::{br, div, h1, h2, p, page::Page, style::Style, theme::Theme};
+use rust_pages::{
+    a, br, div, h1, h2, p, page::Page, style::Style, theme::Theme, ul, widget::ToElement,
+};
 
 use crate::components::link_button::LinkButton;
 
@@ -20,36 +22,59 @@ impl Page for Downloads {
     }
 
     fn view(_: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
+        //
         div![
             h1!("Downloads"),
-            h2!("Schnelle Fernwartung"),
-            p!("Diese Software erlaubt es uns, Ihnen zu helfen, sobald Sie die Software starten."),
-            div![
-                LinkButton::new()
-                    .label("Download")
-                    .href("https://get.teamviewer.com/57y9u6n")
-            ]
-            .class("download-action"),
-            h2!("Dauerhafte Fernwartung"),
-            p!(
-                "Dieses Installationsprogramm richtet eine dauerhafte Fernwartung ein.",
-                br(),
-                "Dadurch können wir uns auch ohne Ihr Zutun um Ihre Geräte kümmern."
+            download_item(
+                "Schnelle Fernwartung",
+                p!(
+                    "Diese Software erlaubt es uns, Ihnen zu helfen, sobald Sie die Software starten."
+                ),
+                "https://get.teamviewer.com/57y9u6n"
             ),
-            div![
-                LinkButton::new()
-                    .label("Download")
-                    .href("https://get.teamviewer.com/q3zt6wn")
-            ]
-            .class("download-action"),
-            p!("Hier finden Sie unsere Fernwartungs-Software zum Download.")
+            download_item(
+                "Dauerhafte Fernwartung",
+                p!(
+                    "Dieses Installationsprogramm richtet eine dauerhafte Fernwartung ein.",
+                    br(),
+                    "Dadurch können wir uns auch ohne Ihr Zutun um Ihre Geräte kümmern."
+                ),
+                "https://get.teamviewer.com/57y9u6n"
+            ),
+            download_item(
+                "Rahn-IT Toolbox",
+                p!(
+                    "Unsere Open-Source toolbox mit diversen Werkzeugen für underen IT-Alltag",
+                    br(),
+                    "Darunter auch:",
+                    ul![
+                        "Schnellinstallation für ausgewählte Programme",
+                        "Pfadlängenprüfer für überlange Windows-Pfade",
+                        "Decoder für einige Encodierungen"
+                    ],
+                    "Den Quellcode finden Sie unter: ",
+                    a("https://github.com/Rahn-IT/toolbox")
+                        .href("https://github.com/Rahn-IT/toolbox")
+                        .class("link"),
+                ),
+                "https://github.com/Rahn-IT/toolbox/releases/latest/download/toolbox.exe"
+            ),
         ]
     }
 
-    fn style(&self, _theme: &dyn Theme) -> Vec<Style<Self>> {
-        vec![
-            Style::new(".download-action").margin("1rem 0 2rem 0"),
-            Style::new(".todo").property("opacity", ".75"),
-        ]
+    fn style(_theme: &dyn Theme) -> Vec<Style<Self>> {
+        vec![Style::new(".download-action").margin("1rem 0 3rem 0")]
     }
+}
+
+fn download_item<'a, E: 'a>(
+    title: &'a str,
+    description: impl ToElement<'a, E>,
+    link: &'a str,
+) -> impl ToElement<'a, E> {
+    div![
+        h2!(title),
+        description,
+        div![LinkButton::new().label("Download").href(link)].class("download-action")
+    ]
 }
