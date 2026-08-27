@@ -51,7 +51,8 @@ impl Component for Footer {
                 .width_full()
                 .margin("2rem 0 0 0")
                 .padding("2.5rem 2rem")
-                .background_color(theme.primary_color()),
+                .background_color(theme.primary_color())
+                .border_box(),
             Style::new(".footer-inner")
                 .flex()
                 .flex_column()
@@ -87,13 +88,11 @@ impl Component for Footer {
             Style::new(".footer-logo svg").width("auto").height_full(),
             Style::media_query(
                 "(min-width: 64rem)",
-                [
-                    Style::new(".footer-inner")
-                        .flex_row()
-                        .flex_wrap("nowrap")
-                        .gap("2rem 12rem")
-                        .font_size("1rem"),
-                ],
+                [Style::new(".footer-inner")
+                    .flex_row()
+                    .flex_wrap("nowrap")
+                    .gap("2rem 12rem")
+                    .font_size("1rem")],
             ),
         ]
     }

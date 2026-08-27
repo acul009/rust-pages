@@ -33,6 +33,7 @@ impl Layout for MainLayout {
                 .font_size("1.1rem"),
             Style::new("main")
                 .width_full()
+                .border_box()
                 .padding("6rem 2rem 0 2rem")
                 .flex_grow("1"),
             Style::new(".main-inner")
