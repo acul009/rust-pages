@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use rust_pages::{a, br, div, h1, p, page::Page, style::Style, theme::Theme};
 
 use crate::components::site_data::{PHONE, tel_href};
@@ -17,8 +15,8 @@ impl Page for Emergency {
         Ok(())
     }
 
-    fn title<'a>(_: &'a Self::Data) -> Option<Cow<'a, str>> {
-        Some("24 Stunden Notdienst".into())
+    fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
+        settings.title("24 Stunden Notdienst");
     }
 
     fn view(_: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {

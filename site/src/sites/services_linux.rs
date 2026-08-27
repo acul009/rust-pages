@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use rust_pages::{div, h1, h2, h3, p, page::Page, style::Style, theme::Theme, widget::picture};
 
 use crate::components::{phone::Phone, service_card::ServiceCard, site_data::asset_path};
@@ -23,7 +21,9 @@ impl Page for ServicesLinux {
         })
     }
 
-    fn title<'a>(_: &'a Self::Data) -> Option<Cow<'a, str>> { Some("Linux und Proxmox".into()) }
+    fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
+        settings.title("Linux und Proxmox");
+    }
 
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
         div![

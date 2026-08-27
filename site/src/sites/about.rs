@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use rust_pages::{a, div, h1, h3, p, page::Page, style::Style, theme::Theme, widget::picture};
 
 use crate::components::{service_card::ServiceCard, site_data::asset_path};
@@ -25,7 +23,9 @@ impl Page for About {
         })
     }
 
-    fn title<'a>(_: &'a Self::Data) -> Option<Cow<'a, str>> { Some("Unsere Prinzipien".into()) }
+    fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
+        settings.title("Unsere Prinzipien");
+    }
 
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
         div![

@@ -26,18 +26,14 @@ impl Page for Redirect {
         Ok(self.clone())
     }
 
-    fn title<'a>(_data: &'a Self::Data) -> Option<std::borrow::Cow<'a, str>> {
-        Some("Seite umgezogen".into())
-    }
-
-    fn custom_header<'a>(data: &'a Self::Data) -> Option<std::borrow::Cow<'a, str>> {
-        Some(
-            format!(
+    fn settings(data: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
+        settings
+            .title("Seite umgezogen")
+            .custom_header(format!(
                 r#"<meta http-equiv="refresh" content="0; url={}" />"#,
                 html_sanitize(&data.to)
-            )
-            .into(),
-        )
+            ))
+            .hide_in_sitemap();
     }
 
     fn view<'a>(data: &'a Self::Data) -> impl rust_pages::widget::ToElement<'a, Self> {

@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use rust_pages::{
     a, br, div, h1,
     page::Page,
@@ -29,8 +27,8 @@ impl Page for Impressum {
         Ok(())
     }
 
-    fn title<'a>(_: &'a Self::Data) -> Option<Cow<'a, str>> {
-        Some("Impressum".into())
+    fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
+        settings.title("Impressum");
     }
 
     fn view(_: &Self::Data) -> impl ToElement<'_, Self> {

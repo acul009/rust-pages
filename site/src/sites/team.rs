@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use rust_pages::{div, h1, p, page::Page, style::Style, theme::Theme, widget::picture};
 
 use crate::components::{person_card::PersonCard, site_data::asset_path};
@@ -23,7 +21,9 @@ impl Page for Team {
         })
     }
 
-    fn title<'a>(_: &'a Self::Data) -> Option<Cow<'a, str>> { Some("Unser Team".into()) }
+    fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
+        settings.title("Unser Team");
+    }
 
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
         div![

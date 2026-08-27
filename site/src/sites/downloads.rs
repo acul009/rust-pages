@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use rust_pages::{br, div, h1, h2, p, page::Page, style::Style, theme::Theme};
 
 use crate::components::link_button::LinkButton;
@@ -17,8 +15,8 @@ impl Page for Downloads {
         Ok(())
     }
 
-    fn title<'a>(_: &'a Self::Data) -> Option<Cow<'a, str>> {
-        Some("Downloads".into())
+    fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
+        settings.title("Downloads");
     }
 
     fn view(_: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {

@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use rust_pages::{a, div, h1, p, page::Page, style::Style, theme::Theme, widget::picture};
 
 use crate::{
@@ -37,7 +35,9 @@ impl Page for Services {
         })
     }
 
-    fn title<'a>(_: &'a Self::Data) -> Option<Cow<'a, str>> { Some("Leistungen".into()) }
+    fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
+        settings.title("Leistungen");
+    }
 
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
         div![

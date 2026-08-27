@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use rust_pages::{
     a, br, div, h1, h2, p,
     page::Page,
@@ -26,8 +24,8 @@ impl Page for Contact {
         Ok(())
     }
 
-    fn title<'a>(_: &'a Self::Data) -> Option<Cow<'a, str>> {
-        Some("Kontakt".into())
+    fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
+        settings.title("Kontakt");
     }
 
     fn view(_: &Self::Data) -> impl ToElement<'_, Self> {
