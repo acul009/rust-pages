@@ -1,0 +1,8 @@
+.git
+.gitignore
+.gitattributes
+target
+build
+site/build
+**/.cache
+old
