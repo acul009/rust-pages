@@ -23,10 +23,24 @@ impl Page for Emergency {
 
     fn view(_: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
         div![
-            h1!("Im Notfall immer fÃƒÂ¼r Sie da"),
-            p!("Steht Ihr Betrieb still weil Ihre IT streikt?", br(), "Wir bieten schnelle und professionelle Hilfe bei dringenden Problemen."),
-            p!("Falls es sich nicht um einen dringenden Notfall handelt, nutzen Sie bitte unsere regulÃƒÂ¤ren GeschÃƒÂ¤ftszeiten."),
-            p!("Mo-Do: 09:00 - 16:30", br(), "Fr: 09:00 - 12:00", br(), "24 Stunden Notdienst", br(), "Auch an Sonn- und Feiertagen"),
+            h1!("Im Notfall immer für Sie da"),
+            p!(
+                "Steht Ihr Betrieb still weil Ihre IT streikt?",
+                br(),
+                "Wir bieten schnelle und professionelle Hilfe bei dringenden Problemen."
+            ),
+            p!(
+                "Falls es sich nicht um einen dringenden Notfall handelt, nutzen Sie bitte unsere regulÃƒÂ¤ren GeschÃƒÂ¤ftszeiten."
+            ),
+            p!(
+                "Mo-Do: 09:00 - 16:30",
+                br(),
+                "Fr: 09:00 - 12:00",
+                br(),
+                "24 Stunden Notdienst",
+                br(),
+                "Auch an Sonn- und Feiertagen"
+            ),
             a(format!("Tel: {}", PHONE)).href(tel_href()).class("cta")
         ]
     }

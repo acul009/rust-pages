@@ -33,27 +33,27 @@ impl Page for ServicesLinux {
         div![
             h1!("Linux und Proxmox"),
             ServiceCard::<Self>::new("Proxmox-VE", &data.proxmox).body( div![
-                p!("Mit unserer Expertise ÃƒÆ’Ã‚Â¼bernehmen wir Einrichtung, Wartung und ÃƒÆ’Ã…â€œberwachung Ihrer Proxmox-Infrastruktur."),
-                h3!("Hohe ZuverlÃƒÆ’Ã‚Â¤ssigkeit"),
+                p!("Mit unserer Expertise übernehmen wir Einrichtung, Wartung und Überwachung Ihrer Proxmox-Infrastruktur."),
+                h3!("Hohe Zuverlässigkeit"),
                 p!("Proxmox basiert auf Debian und KVM und bietet eine robuste Virtualisierungsumgebung."),
-                h3!("ÃƒÆ’Ã…â€œberlegene DatenintegritÃƒÆ’Ã‚Â¤t"),
+                h3!("Überlegene Datenintegrität"),
                 p!("Mit ZFS und dem Proxmox Backup Server erhalten Sie hervorragenden Schutz Ihrer Daten.")
             ]),
             ServiceCard::<Self>::new("Linux-Server", &data.linux).body( div![
                 p!("Sie haben Interesse am Einsatz von Linux oder suchen jemanden, der Ihre vorhandene Infrastruktur betreut? Dann sind Sie bei uns richtig."),
-                h3!("FlexibilitÃƒÆ’Ã‚Â¤t"),
-                p!("Von Datenbanken ÃƒÆ’Ã‚Â¼ber Webserver bis zur Nextcloud: Linux-Server sind enorm flexibel."),
+                h3!("Flexibilität"),
+                p!("Von Datenbanken über Webserver bis zur Nextcloud: Linux-Server sind enorm flexibel."),
                 h3!("Effizienz"),
-                p!("Linux-Systeme kÃƒÆ’Ã‚Â¶nnen ÃƒÆ’Ã‚Â¤uÃƒÆ’Ã…Â¸erst ressourcenschonend sein und bestehende Windows-Netzwerke hervorragend ergÃƒÆ’Ã‚Â¤nzen.")
+                p!("Linux-Systeme können äußerst ressourcenschonend sein und bestehende Windows-Netzwerke hervorragend ergänzen.")
             ]),
             h2!("Warum Linux?"),
             div![
-                h3!("Linux ist zuverlÃƒÆ’Ã‚Â¤ssig"),
+                h3!("Linux ist zuverlässig"),
                 p!("Unternehmen aus der ganzen Welt setzen auf Linux, darunter Google, Amazon und Microsoft."),
                 h3!("Linux ist sicher"),
-                p!("Linux-Systeme bieten starke Rechtekonzepte, Sandbox-Mechanismen und eine geringe AngriffsflÃƒÆ’Ã‚Â¤che."),
-                h3!("Linux ist unabhÃƒÆ’Ã‚Â¤ngig"),
-                p!("Linux ist Open Source. Niemand kann Ihnen die Lizenz entziehen, und Ihre Infrastruktur bleibt souverÃƒÆ’Ã‚Â¤n.")
+                p!("Linux-Systeme bieten starke Rechtekonzepte, Sandbox-Mechanismen und eine geringe Angriffsfläche."),
+                h3!("Linux ist unabhängig"),
+                p!("Linux ist Open Source. Niemand kann Ihnen die Lizenz entziehen, und Ihre Infrastruktur bleibt souverän.")
             ]
             .class("plain-copy")
         ]

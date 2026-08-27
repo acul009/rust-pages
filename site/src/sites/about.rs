@@ -35,21 +35,21 @@ impl Page for About {
         div![
             h1!("Unsere Prinzipien"),
             ServiceCard::<Self>::new("Pragmatische Arbeitsweise", &data.gears).body( div![
-                p!("In der IT fÃƒÆ’Ã‚Â¼hren oftmals viele Wege zum Ziel. Selten gibt es die eine LÃƒÆ’Ã‚Â¶sung."),
-                p!("Unsere AnsÃƒÆ’Ã‚Â¤tze und LÃƒÆ’Ã‚Â¶sungen richten sich nach den BedÃƒÆ’Ã‚Â¼rfnissen unserer Kunden. Dabei bemÃƒÆ’Ã‚Â¼hen wir uns um eine gesunde Balance aus erprobten Techniken und modernen Standards."),
-                p!("Sollte keine unserer etablierten LÃƒÆ’Ã‚Â¶sungen passen, finden wir eine neue. Denn IT soll funktionieren und SpaÃƒÆ’Ã…Â¸ machen.")
+                p!("In der IT führen oftmals viele Wege zum Ziel. Selten gibt es die eine Lösung."),
+                p!("Unsere Ansätze und Lösungen richten sich nach den Bedürfnissen unserer Kunden. Dabei bemühen wir uns um eine gesunde Balance aus erprobten Techniken und modernen Standards."),
+                p!("Sollte keine unserer etablierten Lösungen passen, finden wir eine neue. Denn IT soll funktionieren und Spaß machen.")
             ]),
             ServiceCard::<Self>::new("Ehrlichkeit und Transparenz", &data.transparency).body( div![
                 p!("Eine erfolgreiche Zusammenarbeit braucht Vertrauen. Aus diesem Grund setzen wir bei unserer Arbeit auf Ehrlichkeit und Offenheit."),
-                p!("Wir kennen nicht nur die Vorteile, sondern auch die Nachteile unserer LÃƒÆ’Ã‚Â¶sungen. Auch unsere Kunden haben ein Recht zu wissen, wo die Schwachstellen ihrer IT liegen."),
+                p!("Wir kennen nicht nur die Vorteile, sondern auch die Nachteile unserer Lösungen. Auch unsere Kunden haben ein Recht zu wissen, wo die Schwachstellen ihrer IT liegen."),
                 p!("Wenn es um die Sicherheit und den Fortbestand Ihres Unternehmens geht, nehmen wir kein Blatt vor den Mund.")
             ]),
             ServiceCard::<Self>::new("Verantwortungsvoller Cloud-Umgang", &data.cloud).body( div![
-                p!("Cloud-Dienste kÃƒÆ’Ã‚Â¶nnen sinnvoll sein, aber sie sind kein Allheilmittel. FÃƒÆ’Ã‚Â¼r uns zÃƒÆ’Ã‚Â¤hlt eine saubere AbwÃƒÆ’Ã‚Â¤gung von Chancen, Risiken und AbhÃƒÆ’Ã‚Â¤ngigkeiten."),
+                p!("Cloud-Dienste können sinnvoll sein, aber sie sind kein Allheilmittel. Für uns zählt eine saubere Abwägung von Chancen, Risiken und Abhängigkeiten."),
                 h3!("Sicherheitsrisiken"),
-                p!("Cloud-Plattformen sind beliebte Angriffsziele. Betreiber und Angreifer kÃƒÆ’Ã‚Â¶nnen im Ernstfall Zugang zu sensiblen Daten erlangen."),
+                p!("Cloud-Plattformen sind beliebte Angriffsziele. Betreiber und Angreifer können im Ernstfall Zugang zu sensiblen Daten erlangen."),
                 h3!("Sollten wir also auf Cloud verzichten?"),
-                p!("Nein. Einige Cloud-Dienste bieten echte Vorteile. Wichtig ist, nicht blind auf Schlagworte zu vertrauen, sondern jede LÃƒÆ’Ã‚Â¶sung verantwortungsvoll zu bewerten.")
+                p!("Nein. Einige Cloud-Dienste bieten echte Vorteile. Wichtig ist, nicht blind auf Schlagworte zu vertrauen, sondern jede Lösung verantwortungsvoll zu bewerten.")
             ])
         ]
     }

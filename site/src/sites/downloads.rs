@@ -26,16 +26,24 @@ impl Page for Downloads {
             h1!("Downloads"),
             h2!("Schnelle Fernwartung"),
             p!("Diese Software erlaubt es uns, Ihnen zu helfen, sobald Sie die Software starten."),
-            div![LinkButton::new().label("Download").href("https://get.teamviewer.com/57y9u6n")]
-                .class("download-action"),
+            div![
+                LinkButton::new()
+                    .label("Download")
+                    .href("https://get.teamviewer.com/57y9u6n")
+            ]
+            .class("download-action"),
             h2!("Dauerhafte Fernwartung"),
             p!(
                 "Dieses Installationsprogramm richtet eine dauerhafte Fernwartung ein.",
                 br(),
-                "Dadurch kÃƒÆ’Ã‚Â¶nnen wir uns auch ohne Ihr Zutun um Ihre GerÃƒÆ’Ã‚Â¤te kÃƒÆ’Ã‚Â¼mmern."
+                "Dadurch können wir uns auch ohne Ihr Zutun um Ihre Geräte kümmern."
             ),
-            div![LinkButton::new().label("Download").href("https://get.teamviewer.com/q3zt6wn")]
-                .class("download-action"),
+            div![
+                LinkButton::new()
+                    .label("Download")
+                    .href("https://get.teamviewer.com/q3zt6wn")
+            ]
+            .class("download-action"),
             p!("TODO: Guided download / install flow if interactive behavior is desired.")
                 .class("todo")
         ]
