@@ -65,22 +65,38 @@ impl Component for NavBar {
             Style::new("nav svg").height("3.75rem").width("auto"),
             Style::new("nav > ul")
                 .padding("0")
+                .margin("0")
                 .flex()
                 .items_center()
+                .list_style_none(),
+            Style::new("nav ul")
+                .padding("0")
+                .margin("0")
                 .list_style_none(),
             Style::new("nav > ul a, nav summary")
                 .cursor_pointer()
                 .padding(".5rem 1rem")
-                .border_radius(".25rem"),
+                .border_radius(".25rem")
+                .text_decoration_none(),
             Style::new("nav > div a:hover, nav > ul a:hover, nav summary:hover")
                 .background_color(theme.interactive_hover_color()),
-            Style::new("nav li").position_relative(),
-            Style::new("nav li::marker").content(""),
-            Style::new("nav li > details > ul")
+            Style::new("nav > ul > li").position_relative(),
+            Style::new("nav > ul > li > details > ul")
                 .padding(".5rem")
                 .position_absolute()
-                .margin("2rem 0 0 0")
+                .property("left", "0")
+                .property("top", "100%")
+                .margin("0")
+                .min_width("13rem")
+                .box_sizing("border-box")
                 .border_radius(".5rem"),
+            Style::new("nav > ul > li > details > ul > li").width_full(),
+            Style::new("nav > ul > li > details > ul a")
+                .display("block")
+                .width_full()
+                .box_sizing("border-box")
+                .property("white-space", "nowrap")
+                .text_decoration_none(),
         ]
     }
 }
