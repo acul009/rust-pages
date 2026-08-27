@@ -11,7 +11,7 @@ macro_rules! div {
     () => {
         $crate::widget::container::Container::new("div")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("div", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -21,7 +21,7 @@ macro_rules! nav {
     () => {
         $crate::widget::container::Container::new("nav")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("nav", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -31,7 +31,7 @@ macro_rules! span {
     () => {
         $crate::widget::container::Container::new("span")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("span", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -41,7 +41,7 @@ macro_rules! main {
     () => {
         $crate::widget::container::Container::new("main")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("main", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -51,7 +51,7 @@ macro_rules! ul {
     () => {
         $crate::widget::Ul::new()
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::ul::Ul::with_children([$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -77,7 +77,7 @@ macro_rules! p {
     () => {
         $crate::widget::container::Container::new("p")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("p", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -87,7 +87,7 @@ macro_rules! h1 {
     () => {
         $crate::widget::container::Container::new("h1")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("h1", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -97,7 +97,7 @@ macro_rules! h2 {
     () => {
         $crate::widget::container::Container::new("h2")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("h2", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -107,7 +107,7 @@ macro_rules! h3 {
     () => {
         $crate::widget::container::Container::new("h3")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("h3", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -117,7 +117,7 @@ macro_rules! h4 {
     () => {
         $crate::widget::container::Container::new("h4")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("h4", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -127,7 +127,7 @@ macro_rules! h5 {
     () => {
         $crate::widget::container::Container::new("h5")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("h5", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -137,7 +137,7 @@ macro_rules! h6 {
     () => {
         $crate::widget::container::Container::new("h6")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("h6", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -147,7 +147,7 @@ macro_rules! b {
     () => {
         $crate::widget::container::Container::new("b")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("b", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
@@ -157,7 +157,7 @@ macro_rules! i {
     () => {
         $crate::widget::container::Container::new("i")
     };
-    ($($child:expr),*) => {
+    ($($child:expr),* $(,)?) => {
         $crate::widget::container::Container::with_children("i", [$($crate::widget::ToElement::to_element($child)),+])
     };
 }
