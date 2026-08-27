@@ -87,16 +87,13 @@ impl Page for Contact {
                 .box_sizing("border-box"),
             Style::new(".contact-logo svg").width_full().height("auto"),
             Style::new(".contact-copy").padding("2rem"),
-            Style::new(".contact-copy address")
-                .property("font-style", "normal"),
+            Style::new(".contact-copy address").property("font-style", "normal"),
             Style::new(".contact-copy h2")
                 .padding("1.5rem 0 .25rem 0")
                 .margin("0"),
-            Style::new(
-                ".contact-copy a[href^=\"mailto:\"], .contact-copy a[href^=\"tel:\"]",
-            )
-            .color_inherit()
-            .text_decoration_underline(),
+            Style::new(".contact-copy a[href^=\"mailto:\"], .contact-copy a[href^=\"tel:\"]")
+                .color_inherit()
+                .text_decoration_underline(),
             Style::new(".contact-actions")
                 .margin("2rem 0 0 0")
                 .text_align_right(),
@@ -104,9 +101,7 @@ impl Page for Contact {
                 "(max-width: 47.999rem)",
                 [
                     Style::new(".contact-card").flex_column(),
-                    Style::new(".contact-logo")
-                        .width_full()
-                        .padding("2rem"),
+                    Style::new(".contact-logo").width_full().padding("2rem"),
                     Style::new(".contact-logo svg")
                         .max_width("16rem")
                         .margin("0 auto")

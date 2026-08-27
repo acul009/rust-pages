@@ -222,8 +222,8 @@ struct SourceImage {
 
 impl SourceImage {
     fn load(path: &Path) -> Result<Self, anyhow::Error> {
-        let bytes = fs::read(path)
-            .with_context(|| format!("Failed to read picture {}", path.display()))?;
+        let bytes =
+            fs::read(path).with_context(|| format!("Failed to read picture {}", path.display()))?;
         let image = ImageReader::new(Cursor::new(bytes.as_slice()))
             .with_guessed_format()
             .with_context(|| format!("Failed to detect picture format {}", path.display()))?
@@ -318,7 +318,11 @@ fn ensure_picture_version(
 ) -> Result<(), anyhow::Error> {
     let cached = cache_path(cache_folder, source_image.path.as_path(), version);
     if !cached.exists() {
-        let resized = resize_to_width(&source_image.image, version.resolution.0, version.resolution.1);
+        let resized = resize_to_width(
+            &source_image.image,
+            version.resolution.0,
+            version.resolution.1,
+        );
         write_variant(&resized, version.format, &cached)?;
     }
 

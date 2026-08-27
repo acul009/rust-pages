@@ -19,9 +19,9 @@ impl Page for Emergency {
     }
 
     fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
-        settings
-            .title("24 Stunden Notdienst")
-            .description("Im Notfall sind wir nur einen Anruf entfernt. 24 Stunden am Tag, 365 Tage im Jahr.");
+        settings.title("24 Stunden Notdienst").description(
+            "Im Notfall sind wir nur einen Anruf entfernt. 24 Stunden am Tag, 365 Tage im Jahr.",
+        );
     }
 
     fn view(_: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
@@ -44,9 +44,7 @@ impl Page for Emergency {
                 br(),
                 "Auch an Sonn- und Feiertagen"
             ),
-            BrowserContent::new(
-                a(format!("Tel: {}", PHONE)).href(tel_href()).class("cta")
-            )
+            BrowserContent::new(a(format!("Tel: {}", PHONE)).href(tel_href()).class("cta"))
         ]
     }
 

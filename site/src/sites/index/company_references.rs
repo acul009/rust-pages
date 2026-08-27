@@ -60,9 +60,13 @@ impl<'a> Component for CompanyReferences<'a> {
             .fold(div!().class("company-grid"), |grid, company| {
                 grid.child(
                     a(div![
-                        div![picture(&company.image).alt(company.name).class("company-logo")]
-                            .class(company.background_class())
-                            .class(company.class),
+                        div![
+                            picture(&company.image)
+                                .alt(company.name)
+                                .class("company-logo")
+                        ]
+                        .class(company.background_class())
+                        .class(company.class),
                         span!(company.name).class("company-name")
                     ]
                     .class("company-card"))

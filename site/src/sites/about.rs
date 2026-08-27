@@ -13,7 +13,9 @@ pub struct Data {
 impl Page for About {
     type Data = Data;
 
-    fn path(_: &Self::Data) -> std::path::PathBuf { "about-us".into() }
+    fn path(_: &Self::Data) -> std::path::PathBuf {
+        "about-us".into()
+    }
 
     fn load_data(&self) -> anyhow::Result<Self::Data> {
         Ok(Data {
@@ -65,5 +67,7 @@ impl Page for About {
         ]
     }
 
-    fn style(_theme: &dyn Theme) -> Vec<Style<Self>> { vec![] }
+    fn style(_theme: &dyn Theme) -> Vec<Style<Self>> {
+        vec![]
+    }
 }

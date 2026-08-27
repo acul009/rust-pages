@@ -11,7 +11,10 @@ use crate::components::{
     site_data::{CITY, IBAN, MAIL, NAME, PHONE, POSTAL_CODE, STREET, UST_ID, tel_href},
 };
 
-fn row<'a>(label: impl ToElement<'a, Impressum>, value: impl ToElement<'a, Impressum>) -> Container<'a, Impressum> {
+fn row<'a>(
+    label: impl ToElement<'a, Impressum>,
+    value: impl ToElement<'a, Impressum>,
+) -> Container<'a, Impressum> {
     Container::new("tr")
         .child(Container::new("td").child(label))
         .child(Container::new("td").child(value))
@@ -44,7 +47,13 @@ impl Page for Impressum {
                 .child(row("Vertreter", "Heinz Rahn"))
                 .child(row(
                     "Adresse",
-                    div![NAME, br(), STREET, br(), format!("{} {}", POSTAL_CODE, CITY)]
+                    div![
+                        NAME,
+                        br(),
+                        STREET,
+                        br(),
+                        format!("{} {}", POSTAL_CODE, CITY)
+                    ]
                 ))
                 .child(row(
                     "Telefon",
@@ -65,10 +74,19 @@ impl Page for Impressum {
 
     fn style(_theme: &dyn Theme) -> Vec<Style<Self>> {
         vec![
-            Style::new(".legal-table").width_full().property("border-collapse", "collapse").margin("2rem 0"),
-            Style::new(".legal-table td").padding("1rem 0").property("vertical-align", "top").property("border-top", "1px solid rgba(255,255,255,0.15)"),
-            Style::new(".legal-table tr:last-child td").property("border-bottom", "1px solid rgba(255,255,255,0.15)"),
-            Style::new(".legal-table td:first-child").width("12rem").font_size("1rem"),
+            Style::new(".legal-table")
+                .width_full()
+                .property("border-collapse", "collapse")
+                .margin("2rem 0"),
+            Style::new(".legal-table td")
+                .padding("1rem 0")
+                .property("vertical-align", "top")
+                .property("border-top", "1px solid rgba(255,255,255,0.15)"),
+            Style::new(".legal-table tr:last-child td")
+                .property("border-bottom", "1px solid rgba(255,255,255,0.15)"),
+            Style::new(".legal-table td:first-child")
+                .width("12rem")
+                .font_size("1rem"),
         ]
     }
 }

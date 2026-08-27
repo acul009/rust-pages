@@ -1,10 +1,10 @@
 pub mod browser_content;
 pub mod footer;
 pub mod link_button;
+pub mod mail;
 pub mod navbar;
 pub mod no_cookies;
 pub mod person_card;
 pub mod phone;
 pub mod service_card;
 pub mod site_data;
-pub mod mail;

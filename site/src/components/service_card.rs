@@ -29,7 +29,8 @@ impl<'a, Context> ServiceCard<'a, Context> {
 impl<Context> Component for ServiceCard<'_, Context> {
     fn view(&self) -> impl ToElement<'_, Self> {
         div![
-            div![picture(self.image).alt(self.title).class("service-image")].class("service-figure"),
+            div![picture(self.image).alt(self.title).class("service-image")]
+                .class("service-figure"),
             div![h2!(self.title), self.body.as_ref()].class("service-body")
         ]
         .class("service-card")

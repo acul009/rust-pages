@@ -14,7 +14,11 @@ impl<Context> Widget<Context> for StoredWidget<'_, Context> {
         self.inner.html(f)
     }
 
-    fn style(&self, theme: &dyn rust_pages::theme::Theme, stylesheet: &mut rust_pages::style::Stylesheet) {
+    fn style(
+        &self,
+        theme: &dyn rust_pages::theme::Theme,
+        stylesheet: &mut rust_pages::style::Stylesheet,
+    ) {
         self.inner.style(theme, stylesheet);
     }
 }
@@ -24,7 +28,11 @@ impl<Context> Widget<Context> for &StoredWidget<'_, Context> {
         self.inner.html(f)
     }
 
-    fn style(&self, theme: &dyn rust_pages::theme::Theme, stylesheet: &mut rust_pages::style::Stylesheet) {
+    fn style(
+        &self,
+        theme: &dyn rust_pages::theme::Theme,
+        stylesheet: &mut rust_pages::style::Stylesheet,
+    ) {
         self.inner.style(theme, stylesheet);
     }
 }
@@ -47,7 +55,9 @@ impl<'a> PersonCard<'a> {
             image,
             name,
             caption,
-            body: StoredWidget { inner: Box::new(body) },
+            body: StoredWidget {
+                inner: Box::new(body),
+            },
         }
     }
 }
@@ -83,7 +93,9 @@ impl Component for PersonCard<'_> {
                 .background_color("rgba(255,255,255,0.06)")
                 .property("overflow", "hidden")
                 .box_shadow("0 1rem 3rem rgba(0,0,0,0.2)"),
-            Style::new(".person-figure").width("22rem").flex_basis("22rem"),
+            Style::new(".person-figure")
+                .width("22rem")
+                .flex_basis("22rem"),
             Style::new(".person-image, .person-image picture, .person-image img")
                 .width_full()
                 .height_full(),
@@ -93,15 +105,15 @@ impl Component for PersonCard<'_> {
                 .padding("0")
                 .margin("0")
                 .text_align_left(),
-            Style::new(".person-body .caption").padding(".5rem 0 1rem 0").margin("0"),
+            Style::new(".person-body .caption")
+                .padding(".5rem 0 1rem 0")
+                .margin("0"),
             Style::new(".person-body p").padding(".35rem 0").margin("0"),
             Style::media_query(
                 "(max-width: 63.999rem)",
                 [
                     Style::new(".person-card").flex_column(),
-                    Style::new(".person-figure")
-                        .width_full()
-                        .flex_basis("auto"),
+                    Style::new(".person-figure").width_full().flex_basis("auto"),
                     Style::new(".person-image, .person-image picture, .person-image img")
                         .height("auto"),
                     Style::new(".person-image img")

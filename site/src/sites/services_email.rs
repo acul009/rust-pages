@@ -13,7 +13,9 @@ pub struct Data {
 impl Page for ServicesEmail {
     type Data = Data;
 
-    fn path(_: &Self::Data) -> std::path::PathBuf { "services/email".into() }
+    fn path(_: &Self::Data) -> std::path::PathBuf {
+        "services/email".into()
+    }
 
     fn load_data(&self) -> anyhow::Result<Self::Data> {
         Ok(Data {
@@ -80,6 +82,10 @@ impl Page for ServicesEmail {
     }
 
     fn style(_theme: &dyn Theme) -> Vec<Style<Self>> {
-        vec![Style::new(".plain-copy h3").padding("1.5rem 0 .25rem 0").margin("0")]
+        vec![
+            Style::new(".plain-copy h3")
+                .padding("1.5rem 0 .25rem 0")
+                .margin("0"),
+        ]
     }
 }

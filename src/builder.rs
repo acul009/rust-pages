@@ -169,11 +169,7 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
 
                 finished_html.push_str("<!DOCTYPE html><html");
                 if let Some(language) = &self.language {
-                    write!(
-                        &mut finished_html,
-                        " lang=\"{}\"",
-                        html_sanitize(language)
-                    )?;
+                    write!(&mut finished_html, " lang=\"{}\"", html_sanitize(language))?;
                 }
                 finished_html.push_str("><head>");
                 finished_html.push_str("<meta charset=\"utf-8\">");
@@ -301,9 +297,7 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
 
     fn copy_assets(&self) -> anyhow::Result<()> {
         for source in &self.assets {
-            let file_name = source
-                .file_name()
-                .context("asset path has no file name")?;
+            let file_name = source.file_name().context("asset path has no file name")?;
             fs::copy(source, self.output_dir.join(file_name))
                 .with_context(|| format!("error copying asset {}", source.display()))?;
         }
@@ -316,23 +310,16 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
         }
 
         let destination_dir = self.output_dir.join("assets/scripts");
-        fs::create_dir_all(&destination_dir)
-            .context("error creating scripts output directory")?;
+        fs::create_dir_all(&destination_dir).context("error creating scripts output directory")?;
 
         self.scripts
             .iter()
             .map(|source| {
-                let file_name = source
-                    .file_name()
-                    .context("script path has no file name")?;
+                let file_name = source.file_name().context("script path has no file name")?;
                 let destination = destination_dir.join(file_name);
-                fs::copy(source, &destination).with_context(|| {
-                    format!("error copying script {}", source.display())
-                })?;
-                Ok(format!(
-                    "/assets/scripts/{}",
-                    file_name.to_string_lossy()
-                ))
+                fs::copy(source, &destination)
+                    .with_context(|| format!("error copying script {}", source.display()))?;
+                Ok(format!("/assets/scripts/{}", file_name.to_string_lossy()))
             })
             .collect()
     }

@@ -1,8 +1,6 @@
 use rust_pages::{a, div, h1, p, page::Page, style::Style, theme::Theme, widget::picture};
 
-use crate::{
-    components::{phone::Phone, service_card::ServiceCard, site_data::asset_path},
-};
+use crate::components::{phone::Phone, service_card::ServiceCard, site_data::asset_path};
 
 pub struct Services;
 
@@ -20,18 +18,26 @@ pub struct Data {
 impl Page for Services {
     type Data = Data;
 
-    fn path(_: &Self::Data) -> std::path::PathBuf { "services".into() }
+    fn path(_: &Self::Data) -> std::path::PathBuf {
+        "services".into()
+    }
 
     fn load_data(&self) -> anyhow::Result<Self::Data> {
         Ok(Data {
             beratung: picture::Handle::create(&asset_path("images/services/beratung.jpg"))?,
-            administration: picture::Handle::create(&asset_path("images/services/administration.jpg"))?,
+            administration: picture::Handle::create(&asset_path(
+                "images/services/administration.jpg",
+            ))?,
             netzwerk: picture::Handle::create(&asset_path("images/services/netzwerk.jpg"))?,
             backup: picture::Handle::create(&asset_path("images/services/festplatte.jpg"))?,
             security: picture::Handle::create(&asset_path("images/services/security.jpg"))?,
             telefonie: picture::Handle::create(&asset_path("images/services/telefonie.jpg"))?,
-            videoueberwachung: picture::Handle::create(&asset_path("images/services/videoueberwachung.jpg"))?,
-            programmierung: picture::Handle::create(&asset_path("images/services/programmierung.jpg"))?,
+            videoueberwachung: picture::Handle::create(&asset_path(
+                "images/services/videoueberwachung.jpg",
+            ))?,
+            programmierung: picture::Handle::create(&asset_path(
+                "images/services/programmierung.jpg",
+            ))?,
         })
     }
 
@@ -103,5 +109,7 @@ impl Page for Services {
         ]
     }
 
-    fn style(_theme: &dyn Theme) -> Vec<Style<Self>> { vec![] }
+    fn style(_theme: &dyn Theme) -> Vec<Style<Self>> {
+        vec![]
+    }
 }

@@ -43,8 +43,16 @@ impl Page for Pricing {
                 div![
                     div![
                         strong("Dienstleistung pro Stunde"),
-                        p!("Bei einer Anfahrt ", Container::new("b").child("unter 25 km"), " werden mindestens 0,25 Stunden berechnet."),
-                        p!("Bei einer Anfahrt ", Container::new("b").child("ab 25 km"), " werden mindestens 0,5 Stunden berechnet.")
+                        p!(
+                            "Bei einer Anfahrt ",
+                            Container::new("b").child("unter 25 km"),
+                            " werden mindestens 0,25 Stunden berechnet."
+                        ),
+                        p!(
+                            "Bei einer Anfahrt ",
+                            Container::new("b").child("ab 25 km"),
+                            " werden mindestens 0,5 Stunden berechnet."
+                        )
                     ],
                     div!["107,10 €"].class("amount")
                 ]
