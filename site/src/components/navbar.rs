@@ -1,5 +1,5 @@
 use rust_pages::{
-    a, details, div, nav,
+    a, details, div, nav, raw_html,
     style::Style,
     ul,
     widget::{Component, ToElement},
@@ -32,7 +32,31 @@ impl Component for NavBar {
                 .summary("Unternehmen"),
                 a("Kontakt").href("/contact")
             ],
-            div![]
+            div![
+                details(ul![
+                    a("Home").href("/"),
+                    a("Notdienst").href("/emergency"),
+                    details(ul![
+                        a("Dienste").href("/services"),
+                        a("E-Mail").href("/services/email"),
+                        a("Linux & Proxmox").href("/services/linux")
+                    ])
+                    .name("mobile-nav")
+                    .summary("Leistungen"),
+                    a("Preise").href("/pricing"),
+                    a("Downloads").href("/downloads"),
+                    details(ul![
+                        a("Unsere Prinzipien").href("/about-us"),
+                        a("Das Team").href("/about-us/people")
+                    ])
+                    .name("mobile-nav")
+                    .summary("Unternehmen"),
+                    a("Kontakt").href("/contact")
+                ])
+                .summary(raw_html(
+                    r#"<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/></svg>"#
+                ))
+            ]
         ]
     }
 
@@ -97,6 +121,65 @@ impl Component for NavBar {
                 .box_sizing("border-box")
                 .property("white-space", "nowrap")
                 .text_decoration_none(),
+            Style::new("nav > div:last-child > details").display_none(),
+            Style::media_query(
+                "(max-width: 79.999rem)",
+                [
+                    Style::new("nav").justify_content("space-between"),
+                    Style::new("nav > ul").display_none(),
+                    Style::new("nav > div:first-child")
+                        .flex_grow("1")
+                        .flex_basis("auto")
+                        .padding(".5rem"),
+                    Style::new("nav > div:first-child a").padding(".2rem .25rem 0 .25rem"),
+                    Style::new("nav > div:first-child svg").height("2.75rem"),
+                    Style::new("nav > div:last-child")
+                        .flex_grow("0")
+                        .flex_basis("auto")
+                        .position_relative(),
+                    Style::new("nav > div:last-child > details")
+                        .display("block")
+                        .position_relative(),
+                    Style::new("nav > div:last-child > details > summary")
+                        .padding(".5rem")
+                        .height("3rem")
+                        .width("3rem")
+                        .box_sizing("border-box")
+                        .border_radius(".5rem"),
+                    Style::new("nav > div:last-child > details > summary::after").display_none(),
+                    Style::new("nav > div:last-child > details > summary svg")
+                        .height_full()
+                        .width_full(),
+                    Style::new("nav > div:last-child > details > ul")
+                        .position_absolute()
+                        .property("right", "0")
+                        .property("top", "calc(100% + .5rem)")
+                        .width("20rem")
+                        .max_width("calc(100vw - 2rem)")
+                        .property("max-height", "calc(100vh - 6rem)")
+                        .property("overflow-y", "auto")
+                        .padding("1rem")
+                        .box_sizing("border-box")
+                        .border_radius(".75rem"),
+                    Style::new("nav > div:last-child > details > ul > li")
+                        .width_full()
+                        .position_relative(),
+                    Style::new("nav > div:last-child > details > ul a, nav > div:last-child > details > ul summary")
+                        .display("block")
+                        .width_full()
+                        .box_sizing("border-box")
+                        .padding(".65rem 1rem")
+                        .text_decoration_none(),
+                    Style::new("nav > div:last-child > details > ul details > summary")
+                        .display("flex"),
+                    Style::new("nav > div:last-child > details > ul details > ul")
+                        .position("static")
+                        .width_full()
+                        .padding("0 0 0 1rem")
+                        .box_sizing("border-box")
+                        .box_shadow("none"),
+                ],
+            ),
         ]
     }
 }

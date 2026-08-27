@@ -81,7 +81,10 @@ impl Page for Contact {
                 .border_radius("1.75rem")
                 .background_color("rgba(255,255,255,0.06)")
                 .property("overflow", "hidden"),
-            Style::new(".contact-logo").width("22rem").padding("3rem"),
+            Style::new(".contact-logo")
+                .width("22rem")
+                .padding("3rem")
+                .box_sizing("border-box"),
             Style::new(".contact-logo svg").width_full().height("auto"),
             Style::new(".contact-copy").padding("2rem"),
             Style::new(".contact-copy address")
@@ -94,7 +97,24 @@ impl Page for Contact {
             )
             .color_inherit()
             .text_decoration_underline(),
-            Style::new(".contact-actions").margin("2rem 0 0 0"),
+            Style::new(".contact-actions")
+                .margin("2rem 0 0 0")
+                .text_align_right(),
+            Style::media_query(
+                "(max-width: 47.999rem)",
+                [
+                    Style::new(".contact-card").flex_column(),
+                    Style::new(".contact-logo")
+                        .width_full()
+                        .padding("2rem"),
+                    Style::new(".contact-logo svg")
+                        .max_width("16rem")
+                        .margin("0 auto")
+                        .display("block"),
+                    Style::new(".contact-copy").padding("1.25rem"),
+                    Style::new(".contact-actions").text_align_center(),
+                ],
+            ),
         ]
     }
 }

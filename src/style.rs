@@ -78,39 +78,73 @@ impl<Context> Class<Context> for &str {
     }
 }
 
-pub struct Style<Context: ?Sized> {
-    selector: &'static str,
-    properties: Vec<(&'static str, &'static str)>,
-    context: PhantomData<Context>,
+pub enum Style<Context: ?Sized> {
+    Rule {
+        selector: &'static str,
+        properties: Vec<(&'static str, &'static str)>,
+        context: PhantomData<Context>,
+    },
+    MediaQuery {
+        query: &'static str,
+        styles: Vec<Style<Context>>,
+    },
 }
 
 impl<Context> Style<Context> {
     pub fn new(selector: &'static str) -> Self {
-        Style {
+        Style::Rule {
             selector,
             properties: Vec::new(),
             context: PhantomData,
         }
     }
 
+    pub fn media_query(
+        query: &'static str,
+        styles: impl IntoIterator<Item = Style<Context>>,
+    ) -> Self {
+        Style::MediaQuery {
+            query,
+            styles: styles.into_iter().collect(),
+        }
+    }
+
     pub fn property(mut self, name: &'static str, value: &'static str) -> Self {
-        self.properties.push((name, value));
+        match &mut self {
+            Style::Rule { properties, .. } => properties.push((name, value)),
+            Style::MediaQuery { .. } => {
+                panic!("properties cannot be added directly to a media query")
+            }
+        }
         self
     }
 
     pub fn to_stylesheet(&self) -> String {
-        let selector = self.selector.replace(
-            ".",
-            format!(".{}", scope_name::<Context>().as_str()).as_str(),
-        );
-        format!(
-            "{}{{{}}}",
-            selector,
-            self.properties
-                .iter()
-                .map(|(name, value)| format!("{}:{}", name, value))
-                .join(";")
-        )
+        match self {
+            Style::Rule {
+                selector,
+                properties,
+                ..
+            } => {
+                let selector = selector.replace(
+                    ".",
+                    format!(".{}", scope_name::<Context>().as_str()).as_str(),
+                );
+                format!(
+                    "{}{{{}}}",
+                    selector,
+                    properties
+                        .iter()
+                        .map(|(name, value)| format!("{}:{}", name, value))
+                        .join(";")
+                )
+            }
+            Style::MediaQuery { query, styles } => format!(
+                "@media {}{{{}}}",
+                query,
+                styles.iter().map(Style::to_stylesheet).join(" ")
+            ),
+        }
     }
 }
 
@@ -192,9 +226,8 @@ impl<Context> Style<Context> {
 }
 
 impl<Context> Style<Context> {
-    pub fn cursor(mut self, value: &'static str) -> Self {
-        self.properties.push(("cursor", value));
-        self
+    pub fn cursor(self, value: &'static str) -> Self {
+        self.property("cursor", value)
     }
 
     pub fn cursor_pointer(self) -> Self {
@@ -349,24 +382,20 @@ impl<Context> Style<Context> {
 }
 
 impl<Context> Style<Context> {
-    pub fn position(mut self, value: &'static str) -> Self {
-        self.properties.push(("position", value));
-        self
+    pub fn position(self, value: &'static str) -> Self {
+        self.property("position", value)
     }
 
-    pub fn position_fixed(mut self) -> Self {
-        self.properties.push(("position", "fixed"));
-        self
+    pub fn position_fixed(self) -> Self {
+        self.position("fixed")
     }
 
-    pub fn position_absolute(mut self) -> Self {
-        self.properties.push(("position", "absolute"));
-        self
+    pub fn position_absolute(self) -> Self {
+        self.position("absolute")
     }
 
-    pub fn position_relative(mut self) -> Self {
-        self.properties.push(("position", "relative"));
-        self
+    pub fn position_relative(self) -> Self {
+        self.position("relative")
     }
 }
 
@@ -377,9 +406,8 @@ impl<Context> Style<Context> {
 }
 
 impl<Context> Style<Context> {
-    pub fn text_align(mut self, value: &'static str) -> Self {
-        self.properties.push(("text-align", value));
-        self
+    pub fn text_align(self, value: &'static str) -> Self {
+        self.property("text-align", value)
     }
 
     pub fn text_align_center(self) -> Self {
@@ -396,9 +424,8 @@ impl<Context> Style<Context> {
 }
 
 impl<Context> Style<Context> {
-    pub fn text_decoration(mut self, value: &'static str) -> Self {
-        self.properties.push(("text-decoration", value));
-        self
+    pub fn text_decoration(self, value: &'static str) -> Self {
+        self.property("text-decoration", value)
     }
 
     pub fn text_decoration_underline(self) -> Self {
@@ -439,5 +466,26 @@ impl<Context> Style<Context> {
 
     pub fn width_full(self) -> Self {
         self.width("100%")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Style;
+
+    #[test]
+    fn renders_media_queries_with_nested_styles() {
+        let style = Style::<()>::media_query(
+            "(max-width: 48rem)",
+            [
+                Style::new(".card").width_full(),
+                Style::new(".copy").property("padding", "1rem"),
+            ],
+        );
+
+        assert_eq!(
+            style.to_stylesheet(),
+            "@media (max-width: 48rem){.card{width:100%} .copy{padding:1rem}}"
+        );
     }
 }

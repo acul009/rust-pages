@@ -54,14 +54,14 @@ impl Component for Footer {
                 .background_color(theme.primary_color()),
             Style::new(".footer-inner")
                 .flex()
-                .flex_wrap("wrap")
+                .flex_column()
                 .justify_content("flex-start")
                 .align_items("flex-start")
-                .gap("2rem 6rem")
+                .gap("2rem")
                 .width_full()
                 .max_width("80rem")
                 .margin("0 auto")
-                .font_size("1rem"),
+                .font_size("1.125rem"),
             Style::new(".footer-group")
                 .flex()
                 .flex_column()
@@ -85,6 +85,16 @@ impl Component for Footer {
                 .block(),
             Style::new(".footer-logo:hover").background_color(theme.interactive_hover_color()),
             Style::new(".footer-logo svg").width("auto").height_full(),
+            Style::media_query(
+                "(min-width: 64rem)",
+                [
+                    Style::new(".footer-inner")
+                        .flex_row()
+                        .flex_wrap("nowrap")
+                        .gap("2rem 12rem")
+                        .font_size("1rem"),
+                ],
+            ),
         ]
     }
 }

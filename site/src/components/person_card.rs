@@ -95,6 +95,21 @@ impl Component for PersonCard<'_> {
                 .text_align_left(),
             Style::new(".person-body .caption").padding(".5rem 0 1rem 0").margin("0"),
             Style::new(".person-body p").padding(".35rem 0").margin("0"),
+            Style::media_query(
+                "(max-width: 63.999rem)",
+                [
+                    Style::new(".person-card").flex_column(),
+                    Style::new(".person-figure")
+                        .width_full()
+                        .flex_basis("auto"),
+                    Style::new(".person-image, .person-image picture, .person-image img")
+                        .height("auto"),
+                    Style::new(".person-image img")
+                        .property("max-height", "32rem")
+                        .property("object-position", "top"),
+                    Style::new(".person-body").padding("1.5rem"),
+                ],
+            ),
         ]
     }
 }
