@@ -22,7 +22,9 @@ impl Page for ServicesLinux {
     }
 
     fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
-        settings.title("Linux und Proxmox");
+        settings
+            .title("Linux und Proxmox")
+            .description("Wir bieten Beratung und Dienstleistungen rund um Linux.");
     }
 
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {

@@ -3,6 +3,7 @@ use anyhow::Context;
 use image::{DynamicImage, ImageReader, imageops::FilterType};
 use rayon::prelude::*;
 use std::{
+    borrow::Cow,
     collections::{BTreeMap, hash_map::DefaultHasher},
     fmt::{Display, Write},
     fs::{self, File},
@@ -97,6 +98,7 @@ impl ImageFormat {
 pub struct Picture<'a, Context> {
     handle: &'a Handle,
     class: Option<String>,
+    alt: Cow<'a, str>,
     context: PhantomData<Context>,
 }
 
@@ -105,12 +107,18 @@ impl<'a, Context> Picture<'a, Context> {
         Self {
             handle,
             class: None,
+            alt: Cow::Borrowed(""),
             context: PhantomData,
         }
     }
 
     pub fn class(mut self, class: impl Class<Context>) -> Self {
         self.class = Some(class.resolve());
+        self
+    }
+
+    pub fn alt(mut self, alt: impl Into<Cow<'a, str>>) -> Self {
+        self.alt = alt.into();
         self
     }
 }
@@ -142,10 +150,11 @@ impl<'a, Context> Widget<Context> for Picture<'a, Context> {
 
         write!(
             f,
-            "<img src=\"{}\" width=\"{}\" height=\"{}\" alt=\"\" loading=\"lazy\" decoding=\"async\">",
+            "<img src=\"{}\" width=\"{}\" height=\"{}\" alt=\"{}\" loading=\"lazy\" decoding=\"async\">",
             self.handle.fallback.location,
             self.handle.fallback.resolution.0,
-            self.handle.fallback.resolution.1
+            self.handle.fallback.resolution.1,
+            crate::html_sanitize(&self.alt)
         )?;
         write!(f, "</picture>")?;
 

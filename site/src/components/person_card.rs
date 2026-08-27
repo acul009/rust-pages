@@ -55,7 +55,12 @@ impl<'a> PersonCard<'a> {
 impl Component for PersonCard<'_> {
     fn view(&self) -> impl ToElement<'_, Self> {
         div![
-            div![picture(self.image).class("person-image")].class("person-figure"),
+            div![
+                picture(self.image)
+                    .alt(format!("Bild von {}", self.name))
+                    .class("person-image")
+            ]
+            .class("person-figure"),
             div![
                 h2!(self.name),
                 div![Container::new("i").child(self.caption)].class("caption"),

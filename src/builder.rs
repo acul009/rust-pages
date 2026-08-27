@@ -22,6 +22,7 @@ use crate::{
 pub struct SiteBuilder<Title, Theme> {
     default_title: Title,
     base_url: Option<String>,
+    language: Option<String>,
     output_dir: PathBuf,
     pages: Vec<Box<dyn PageLoaderWrapper>>,
     layouts: Vec<Box<dyn LayoutLoaderWrapper>>,
@@ -36,6 +37,7 @@ impl SiteBuilder<(), ()> {
         SiteBuilder {
             default_title: (),
             base_url: None,
+            language: None,
             output_dir: PathBuf::from("./build"),
             pages: Vec::new(),
             layouts: Vec::new(),
@@ -52,6 +54,7 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
         SiteBuilder {
             default_title: title.to_string(),
             base_url: self.base_url,
+            language: self.language,
             output_dir: self.output_dir,
             pages: self.pages,
             layouts: self.layouts,
@@ -64,6 +67,11 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
 
     pub fn base_url(mut self, base_url: impl Into<String>) -> Self {
         self.base_url = Some(base_url.into());
+        self
+    }
+
+    pub fn language(mut self, language: impl Into<String>) -> Self {
+        self.language = Some(language.into());
         self
     }
 
@@ -101,6 +109,7 @@ impl<Title, Theme> SiteBuilder<Title, Theme> {
         SiteBuilder {
             default_title: self.default_title,
             base_url: self.base_url,
+            language: self.language,
             output_dir: self.output_dir,
             pages: self.pages,
             layouts: self.layouts,
@@ -158,13 +167,47 @@ impl<Theme: crate::theme::Theme> SiteBuilder<String, Theme> {
             {
                 use std::fmt::Write;
 
-                finished_html.push_str("<!DOCTYPE html><html><head>");
+                finished_html.push_str("<!DOCTYPE html><html");
+                if let Some(language) = &self.language {
+                    write!(
+                        &mut finished_html,
+                        " lang=\"{}\"",
+                        html_sanitize(language)
+                    )?;
+                }
+                finished_html.push_str("><head>");
                 finished_html.push_str("<meta charset=\"utf-8\">");
                 finished_html.push_str(
                     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
                 );
+                if let Some(description) = &settings.description {
+                    write!(
+                        &mut finished_html,
+                        "<meta name=\"description\" content=\"{}\">",
+                        html_sanitize(description)
+                    )?;
+                }
+                if settings.show_in_sitemap {
+                    if let Some(base_url) = &self.base_url {
+                        let path = path.to_string_lossy().replace('\\', "/");
+                        let canonical = if path.trim_matches('/').is_empty() {
+                            format!("{}/", base_url.trim_end_matches('/'))
+                        } else {
+                            format!(
+                                "{}/{}/",
+                                base_url.trim_end_matches('/'),
+                                path.trim_matches('/')
+                            )
+                        };
+                        write!(
+                            &mut finished_html,
+                            "<link rel=\"canonical\" href=\"{}\">",
+                            html_sanitize(canonical)
+                        )?;
+                    }
+                }
                 if let Some(header) = &settings.custom_header {
-                    finished_html.push_str(&header);
+                    finished_html.push_str(header);
                 }
                 finished_html.push_str("<link rel=\"stylesheet\" href=\"/styles.css\">");
                 for script_url in &script_urls {

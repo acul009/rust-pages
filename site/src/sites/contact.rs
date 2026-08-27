@@ -29,7 +29,9 @@ impl Page for Contact {
     }
 
     fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
-        settings.title("Kontakt");
+        settings
+            .title("Kontakt")
+            .description("Kontaktieren Sie uns per E-Mail oder Telefon.");
     }
 
     fn view(_: &Self::Data) -> impl ToElement<'_, Self> {

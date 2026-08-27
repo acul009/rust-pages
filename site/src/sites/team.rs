@@ -22,7 +22,9 @@ impl Page for Team {
     }
 
     fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
-        settings.title("Unser Team");
+        settings
+            .title("Unser Team")
+            .description("Lernen Sie unser Team kennen.");
     }
 
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {

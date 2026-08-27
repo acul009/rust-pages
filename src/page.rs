@@ -24,6 +24,7 @@ pub trait PageWrapper {
 
 pub struct PageSettings {
     pub(crate) title: String,
+    pub(crate) description: Option<String>,
     pub(crate) custom_header: Option<String>,
     pub(crate) show_in_sitemap: bool,
 }
@@ -32,6 +33,7 @@ impl PageSettings {
     pub fn new(title: impl Into<String>) -> Self {
         Self {
             title: title.into(),
+            description: None,
             custom_header: None,
             show_in_sitemap: true,
         }
@@ -39,6 +41,11 @@ impl PageSettings {
 
     pub fn title(&mut self, title: impl Into<String>) -> &mut Self {
         self.title = title.into();
+        self
+    }
+
+    pub fn description(&mut self, description: impl Into<String>) -> &mut Self {
+        self.description = Some(description.into());
         self
     }
 

@@ -24,7 +24,9 @@ impl Page for ServicesEmail {
     }
 
     fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
-        settings.title("E-Mail");
+        settings
+            .title("E-Mail")
+            .description("Hier finden Sie alle Informationen rund um unsere E-Mail-Dienste.");
     }
 
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {

@@ -31,7 +31,9 @@ impl Page for Impressum {
     }
 
     fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
-        settings.title("Impressum");
+        settings
+            .title("Impressum")
+            .description("Hier finden Sie die rechtlich nötigen Angaben.");
     }
 
     fn view(_: &Self::Data) -> impl ToElement<'_, Self> {

@@ -119,6 +119,12 @@ impl Page for Index {
         })
     }
 
+    fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
+        settings
+            .title("Rahn IT-Systemtechnik")
+            .description("Professionelle und zuverlässige IT-Hilfe");
+    }
+
     fn view<'a>(data: &'a Self::Data) -> impl rust_pages::widget::ToElement<'a, Self> {
         div![
             h1!("Willkommen bei Rahn IT-Systemtechnik"),

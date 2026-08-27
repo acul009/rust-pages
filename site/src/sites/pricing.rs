@@ -26,7 +26,9 @@ impl Page for Pricing {
     }
 
     fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
-        settings.title("Preise");
+        settings
+            .title("Preise")
+            .description("Unsere Preise sind kein Geheimnis.");
     }
 
     fn view(_: &Self::Data) -> impl ToElement<'_, Self> {

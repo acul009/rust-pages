@@ -36,7 +36,9 @@ impl Page for Services {
     }
 
     fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
-        settings.title("Leistungen");
+        settings
+            .title("Leistungen")
+            .description("Von Administration über Netzwerktechnik bis zur Programmierung eigener Software - Bei uns finden Sie, was Sie brauchen.");
     }
 
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {

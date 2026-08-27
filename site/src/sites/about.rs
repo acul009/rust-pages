@@ -24,7 +24,9 @@ impl Page for About {
     }
 
     fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
-        settings.title("Unsere Prinzipien");
+        settings
+            .title("Unsere Prinzipien")
+            .description("Erfahren Sie, was uns wichtig ist.");
     }
 
     fn view(data: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {

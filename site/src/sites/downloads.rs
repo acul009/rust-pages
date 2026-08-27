@@ -18,7 +18,9 @@ impl Page for Downloads {
     }
 
     fn settings(_: &Self::Data, settings: &mut rust_pages::page::PageSettings) {
-        settings.title("Downloads");
+        settings
+            .title("Downloads")
+            .description("Hier finden Sie unsere Fernwartungs-Software und weitere Downloads.");
     }
 
     fn view(_: &Self::Data) -> impl rust_pages::widget::ToElement<'_, Self> {
