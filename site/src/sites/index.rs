@@ -3,9 +3,7 @@ use rust_pages::{
     b, br, div, h1, h2, p, page::Page, style::Style, theme::Theme, ul, widget::picture,
 };
 
-use crate::{
-    components::{no_cookies::NoCookies, site_data::asset_path},
-};
+use crate::components::{no_cookies::NoCookies, site_data::asset_path};
 use company_references::{Background, Company, CompanyReferences};
 
 mod company_references;
@@ -114,6 +112,13 @@ impl Page for Index {
                     Background::White,
                     "p-8",
                     picture::Handle::create(&asset_path("images/refs/brand.jpg"))?,
+                ),
+                Company::new(
+                    "Böck Staubschutzsysteme",
+                    "https://www.planschutzhuellen.de/",
+                    Background::Dark,
+                    "p-8",
+                    picture::Handle::create(&asset_path("images/refs/boeck.png"))?,
                 ),
             ],
         })
