@@ -77,7 +77,7 @@ impl Page for ServicesEmail {
         ]
     }
 
-    fn style(&self, _theme: &dyn Theme) -> Vec<Style<Self>> {
+    fn style(_theme: &dyn Theme) -> Vec<Style<Self>> {
         vec![Style::new(".plain-copy h3").padding("1.5rem 0 .25rem 0").margin("0")]
     }
 }

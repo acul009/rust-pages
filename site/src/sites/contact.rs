@@ -57,7 +57,7 @@ impl Page for Contact {
         ]
     }
 
-    fn style(&self, _theme: &dyn Theme) -> Vec<Style<Self>> {
+    fn style(_theme: &dyn Theme) -> Vec<Style<Self>> {
         vec![
             Style::new(".contact-card")
                 .flex()

@@ -56,7 +56,7 @@ impl Page for Pricing {
         ]
     }
 
-    fn style(&self, _theme: &dyn Theme) -> Vec<Style<Self>> {
+    fn style(_theme: &dyn Theme) -> Vec<Style<Self>> {
         vec![
             Style::new(".price-list").margin("2rem 0"),
             Style::new(".price-row")

@@ -47,7 +47,7 @@ impl Page for Redirect {
         ]
     }
 
-    fn style(&self, _theme: &dyn rust_pages::theme::Theme) -> Vec<rust_pages::style::Style<Self>> {
+    fn style(_theme: &dyn rust_pages::theme::Theme) -> Vec<rust_pages::style::Style<Self>> {
         vec![]
     }
 }

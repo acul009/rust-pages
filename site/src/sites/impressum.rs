@@ -58,7 +58,7 @@ impl Page for Impressum {
         ]
     }
 
-    fn style(&self, _theme: &dyn Theme) -> Vec<Style<Self>> {
+    fn style(_theme: &dyn Theme) -> Vec<Style<Self>> {
         vec![
             Style::new(".legal-table").width_full().property("border-collapse", "collapse").margin("2rem 0"),
             Style::new(".legal-table td").padding("1rem 0").property("vertical-align", "top").property("border-top", "1px solid rgba(255,255,255,0.15)"),

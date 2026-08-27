@@ -12,7 +12,7 @@ pub trait Page {
 
     fn settings<'a>(_data: &'a Self::Data, _settings: &mut PageSettings) {}
     fn view<'a>(data: &'a Self::Data) -> impl crate::widget::ToElement<'a, Self>;
-    fn style(&self, theme: &dyn crate::theme::Theme) -> Vec<Style<Self>>;
+    fn style(theme: &dyn crate::theme::Theme) -> Vec<Style<Self>>;
 }
 
 pub trait PageWrapper {
@@ -99,6 +99,8 @@ impl<P: Page> PageWrapper for PageContainer<P> {
     }
 
     fn style(&self, theme: &dyn crate::theme::Theme, stylesheet: &mut Stylesheet) {
+        let styles = P::style(theme);
+        stylesheet.add_styles(&styles);
         let view = P::view(&self.data).to_element();
         view.style(theme, stylesheet);
     }

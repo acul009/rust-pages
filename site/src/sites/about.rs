@@ -63,5 +63,5 @@ impl Page for About {
         ]
     }
 
-    fn style(&self, _theme: &dyn Theme) -> Vec<Style<Self>> { vec![] }
+    fn style(_theme: &dyn Theme) -> Vec<Style<Self>> { vec![] }
 }

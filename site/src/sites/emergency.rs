@@ -43,7 +43,7 @@ impl Page for Emergency {
         ]
     }
 
-    fn style(&self, _theme: &dyn Theme) -> Vec<Style<Self>> {
+    fn style(_theme: &dyn Theme) -> Vec<Style<Self>> {
         vec![
             Style::new(".cta")
                 .display("inline-block")
